@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="crt_effect.css">
+
+    <script src="js/game.js"></script>
+    <script src="js/assets.js"></script>
+    <script src="js/database.js"></script>
+
+    <script src="js/apps/mail.js" defer></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="Game" @mousemove="updateCamera" @open-app.window="openProgram($event.detail.id, $event.detail.payload)">
+    <div id="background"></div>
+
+    <div id="glass-container"></div>
+    <div id="monitor-vignette">
+        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
+            <div id="crt-container" class="crt-filter"></div>
+
+            <div id="boot-screen" 
+                x-show="!isStarted, !isBooting" 
+                x-transition.opacity.duration.200ms>
+                
+                <div class="window" style="width: 400px;">
+                    
+                    <div class="title-bar">
+                        <div class="title-bar-text">Welcome to Special OS</div>
+                        <div class="title-bar-controls">
+                            <button aria-label="Close" @click="playSound('error')"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="window-body" style="display: flex; padding: 12px; gap: 16px;">
+                        
+                        <div style="display: flex; align-items: flex-start;">
+                            <img src="ico/key_win_alt.ico" alt="Keys" style="width: 32px; height: 32px; image-rendering: pixelated;">
+                        </div>
+
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px;">
+                            <p style="margin: 0;">Type a username and password to log on to Special OS.</p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <div class="field-row" style="align-items: center;">
+                                    <label for="username" style="width: 120px;">User name:</label>
+                                    <input id="username" type="text" x-model="loginUsername" style="width: 100%;">
+                                </div>
+                                
+                                <div class="field-row" style="align-items: center;">
+                                    <label for="password" style="width: 120px;">Password:</label>
+                                    <input id="password" type="password" 
+                                        x-model="loginPassword" 
+                                        @keydown.enter="bootSystem()" 
+                                        style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <button style="width: 75px;" @click="bootSystem()">OK</button>
+                            <button style="width: 75px;" @click="playSound('error')">Cancel</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div id="splash-screen" 
+                x-show="isBooting" 
+                x-transition.opacity.duration.500ms>
+                
+                <img src="images/boot.jpg" alt="System Loading">
+                
+            </div>
+
+            <div id="desktop" @click.self="clearSelection()">
+
+                <!-- RENDER ICONS -->
+                <template x-for="icon in desktopIcons" :key="icon.id">
+        
+                    <div class="desktop-icon" 
+                        @click="selectedIcon = icon.id"
+                        @dblclick=" openProgram(icon.id)"
+                        @click.outside="selectedIcon === icon.id ? selectedIcon = null : null">
+                        
+                        <img :src="icon.img" alt="Icon" draggable="false">
+                        
+                        <span :class="selectedIcon === icon.id ? 'selected' : ''" 
+                            x-text="icon.name"></span>
+                    </div>
+                    
+                </template>
+
+                <!-- RENDER WINDOWS -->
+                <template x-for="win in openWindows" :key="win.id">
+                    
+                    <div class="window" 
+                        x-data="draggableWindow(win.startX, win.startY)" 
+                        @mousedown="focusWindow(win.id)"
+                        :style="{ position: 'absolute', left: x + 'px', top: y + 'px', width: win.width + 'px', zIndex: win.zIndex || 10 }">
+                        
+                        <div class="title-bar" 
+                            @mousedown.prevent="dragStart" 
+                            @mousemove.window="drag" 
+                            @mouseup.window="dragEnd"
+                            style="cursor: grab;"
+                            :style="isDragging && { cursor: 'grabbing' }">
+
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <img class="title-bar-icon" :src="win.icon" width="16" height="16">
+                                <div class="title-bar-text" x-text="win.title"></div>
+                            </div>
+
+                            <div class="title-bar-controls">
+                                <button aria-label="Close" @click="closeProgram(win.id)"></button>
+                            </div>
+                        </div>
+                        
+                        <!-- WINDOW TEMPLATES -->
+                        <div class="window-body">
+                            <template x-if="win.id === 'mail'">
+                                <div x-data="MailApp" x-html="htmlContent"></div>
+                            </template>
+
+                            <template x-if="win.id === 'bin'">
+                                <div x-data="BinApp" x-html="htmlContent"></div>
+                            </template>
+                            
+                            <template x-if="win.id !== 'mail' && win.id !== 'bin'">
+                                <p x-text="win.content"></p>
+                            </template>
+
+                        </div>
+                        
+                    </div>
+                </template>
+
+                    <button @click="playSound('error'); processFraud(1000000); suspicionLevel++">Raise</button>
+                    <p>Value: <span x-text="budget"></span></p>
+                    <button @click="suspicionLevel = 0">Reset</button>
+
+                <div class="taskbar" x-data="Game">
+
+                    <div style="position: relative;">
+                        
+                        <button x-on:click="isStartOpen = !isStartOpen" 
+                                style="font-weight: bold; padding: 2px 5px;">
+                            <img src="ico/windows.ico" alt="Start" style="width: 16px; vertical-align: middle;"> Start
+                        </button>
+
+                        <div class="window start-menu" 
+                            x-show="isStartOpen" 
+                            x-cloak 
+                            x-on:click.outside="isStartOpen = false">
+                            
+                            <div class="title-bar" style="background: linear-gradient(90deg, navy, #1084d0);">
+                                <div class="title-bar-text">Special OS</div>
+                            </div>
+                            <div class="window-body" style="margin: 0; padding: 5px;">
+                                <button style="width: 100%; text-align: left; margin-bottom: 3px;">Outlook Express</button>
+                                <button style="width: 100%; text-align: left; margin-bottom: 3px;">Microsoft Excel</button>
+                                <hr style="margin: 5px 0;">
+                                <button style="width: 100%; text-align: left;">Log Off...</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="status-bar" style="margin: 0;">
+                        <p class="status-bar-field" style="padding: 2px 10px;" x-text="currentTime"></p>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+</body>
+</html>

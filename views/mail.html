@@ -1,0 +1,56 @@
+<div class="window-body" style="display: flex; flex-direction: column; height: 100%; padding: 0;">
+    
+    <div style="display: flex; gap: 4px; padding: 4px; border-bottom: 1px solid #dfdfdf;">
+        <button @click="$dispatch('open-app', { id: 'mail_compose' })">New Mail</button>
+        <button>Send/Recv</button>
+        <button>Addresses</button>
+        <button>Find</button>
+    </div>
+
+    <div style="display: flex; flex: 1; margin-top: 4px; gap: 4px; height: 300px;">
+        
+        <div style="width: 30%; height: 100%;">
+            <ul class="tree-view" style="height: 100%; margin: 0;">
+                <li>
+                    <strong style="cursor: pointer;" @click="currentFolder = 'inbox'">Inbox</strong>
+                </li>
+                <li>
+                    <strong style="cursor: pointer;" @click="currentFolder = 'sent'">Sent Items</strong>
+                </li>
+                <li>
+                    <strong style="cursor: pointer; color: darkred;" @click="currentFolder = 'intranet'">
+                        Intranet
+                    </strong>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sunken-panel" style="width: 70%; height: 100%; background: white; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="background: #c0c0c0; text-align: left;">
+                    <tr>
+                        <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Sender</th>
+                        <th style="padding: 2px 4px; border-bottom: 1px solid #808080;">Subject</th>
+                        <th style="padding: 2px 4px; border-left: 1px solid #808080; border-bottom: 1px solid #808080;">Received</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="msg in filteredMessages" :key="msg.id">
+                        <tr @dblclick="$dispatch('open-app', { 
+                                id: 'mail_reader', 
+                                payload: { id: msg.id, title: msg.subject } 
+                            })"
+                            style="cursor: pointer;"
+                            :style="msg.unread ? 'font-weight: bold; color: black;' : 'color: #333;'">
+                            
+                            <td x-text="msg.sender" style="padding: 2px 4px;"></td>
+                            <td x-text="msg.subject" style="padding: 2px 4px;"></td>
+                            <td x-text="msg.received" style="padding: 2px 4px; border-left: 1px solid #808080;"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
