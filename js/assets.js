@@ -17,14 +17,15 @@ const GameAssets = {
 
     appsData: {
         'mail': { icon: 'ico/mail.ico', title: 'Outlook Express', width: 600 },
-        'mail_reader': { icon: 'ico/mail_read.ico', title: 'Wiadomość', width: 450 },
-        'mail_compose': { icon: 'ico/mail_compose.ico', title: 'Nowa wiadomość', width: 450 },
-        'bin': { icon: 'ico/recycle_bin_empty.ico', title: 'Bin', content: 'Bin is empty.', width: 300 }
+        'mail_reader': { icon: 'ico/mail_read.ico', title: 'Message', width: 450 },
+        'mail_compose': { icon: 'ico/mail_compose.ico', title: 'New Message', width: 450 },
+        'bin': { icon: 'ico/recycle_bin_empty.ico', title: 'Bin', content: 'Bin is empty.', width: 300 },
+        'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', content: 'Accessibility options.', width: 300 }
     },
 
     mailData: [
             { id: 1, folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
-            { id: 2, folder: 'inbox', sender: 'Manager', subject: 'Raport', received: '2025-10-01 10:01', body: 'WHERE IS MY RAPORT?', unread: false },
+            { id: 2, folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
             { id: 3, folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
     ]
 };
