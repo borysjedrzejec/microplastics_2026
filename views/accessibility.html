@@ -1,0 +1,25 @@
+<fieldset style="padding: 15px;">
+    <legend>Settings</legend>
+    
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        
+        <template x-for="setting in settings" :key="setting.id">
+            
+            <div class="field-row" style="align-items: center;">
+                
+                <img :src="setting.icon" alt="" style="width: 32px; height: 32px; margin-right: 15px;">
+                
+                <input type="checkbox" :id="setting.id" x-model="$store.accessibility[setting.id]">
+                
+                <label :for="setting.id" x-text="setting.label" style="cursor: pointer;"></label>
+                
+            </div>
+            
+        </template>
+
+    </div>
+</fieldset>
+
+<div style="display: flex; justify-content: flex-end; margin-top: 15px; gap: 5px;">
+    <button @click="closeProgram('accessibility')">OK</button>
+</div>

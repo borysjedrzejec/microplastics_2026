@@ -130,3 +130,8 @@
     width: 200px;
     z-index: 10000;
 }
+
+.window {
+    display: flex;
+    flex-direction: column;
+}

@@ -2,6 +2,7 @@ const GameAssets = {
 
     audioPaths: {
         startup: 'sounds/startup.mp3',
+        shutdown: 'sounds/shutdown.mp3',
         error: 'sounds/error.mp3',
         clicks: Array.from({ length: 5 }, (_, i) => `sounds/mouse-click-${i + 1}.mp3`),
         keys: [1, 3, 4, 5].map(n => `sounds/keyboard-${n}.mp3`),
@@ -16,16 +17,34 @@ const GameAssets = {
     ],
 
     appsData: {
-        'mail': { icon: 'ico/mail.ico', title: 'Outlook Express', width: 600 },
-        'mail_reader': { icon: 'ico/mail_read.ico', title: 'Message', width: 450 },
-        'mail_compose': { icon: 'ico/mail_compose.ico', title: 'New Message', width: 450 },
-        'bin': { icon: 'ico/recycle_bin_empty.ico', title: 'Bin', content: 'Bin is empty.', width: 300 },
-        'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', content: 'Accessibility options.', width: 300 }
+        'mail': { icon: 'ico/mail.ico', title: 'Outlook Express', width: 600, height: 400 },
+        'mail_reader': { icon: 'ico/message_envelope_open.ico', title: 'Message', width: 450, height: 350 },
+        'mail_compose': { icon: 'ico/mail.ico', title: 'New Message', width: 450, height: 350 },
+        'bin': { icon: 'ico/recycle_bin_empty.ico', title: 'Bin', content: 'Bin is empty.', width: 300},
+        'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300}
     },
 
-    mailData: [
-            { id: 1, folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
-            { id: 2, folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
-            { id: 3, folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
-    ]
+    rawMailData: [
+        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
+        { folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
+        { folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
+    ],
+
+    accessibilityData: [
+        { 
+            id: 'disableAnimations', 
+            icon: 'ico/accessibility_contrast.ico', 
+            label: 'Disable Animations' 
+        },
+        { 
+            id: 'disableAudio', 
+            icon: 'ico/computer_sound.ico', 
+            label: 'Turn Off Audio' 
+        },
+        { 
+            id: 'disableTimer', 
+            icon: 'ico/accessibility_stopwatch.ico', 
+            label: 'Turn Off Timer' 
+        }
+]
 };

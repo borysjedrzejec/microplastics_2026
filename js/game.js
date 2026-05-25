@@ -3,8 +3,6 @@ document.addEventListener('alpine:init', () => {
         // Game state
         isStarted: false,
         isBooting: false,
-        loginPassword: '',
-        loginUsername: '',
 
         suspicionLevel: 0,
         budget: -50000000,
@@ -49,7 +47,9 @@ document.addEventListener('alpine:init', () => {
         },
 
         bootSystem() {
-            if (!this.loginPassword) {
+            const systemStore = this.$store.system;
+            
+            if (!systemStore.loginUsername || !systemStore.loginPassword) {
                 this.playSound('error');
                 return;
             }
@@ -60,7 +60,26 @@ document.addEventListener('alpine:init', () => {
             setTimeout(() => {
                 this.isBooting = false;
                 this.isStarted = true;
-            }, 10);
+                this.startGameTimer();
+            }, 10); 
+        },
+
+        startGameTimer() {
+            // how long is one in-game minute in real time (ms)
+            const timeSpeed = 4000; 
+
+            const timer = setInterval(() => {
+                if (this.$store.accessibility.disableTimer) {
+                    return; 
+                }
+
+                this.$store.system.progressTime();
+
+                if (this.$store.system.isGameOver) {
+                    clearInterval(timer);
+                    this.playSound('shutdown');
+                }
+            }, timeSpeed);
         },
 
         // Metody
@@ -109,7 +128,7 @@ document.addEventListener('alpine:init', () => {
 
         openProgram(appId, payload = null) {
             // uid for each window instance, e.g. mail-2 for the second mail window, or just mail for the main app window
-            const instanceId = payload ? `${appId}-${payload.id}` : appId;
+            const instanceId = payload && payload.id ? `${appId}-${payload.id}` : appId;
             
             const existingWindow = this.openWindows.find(win => win.instanceId === instanceId);
             
@@ -131,18 +150,19 @@ document.addEventListener('alpine:init', () => {
                 icon: appInfo.icon,
                 content: appInfo.content,
                 width: appInfo.width,
+                height: appInfo.height || null,
                 startX: 50 + Math.floor(Math.random() * 50),
                 startY: 50 + Math.floor(Math.random() * 50),
                 zIndex: this.highestZIndex
             });
         },
 
-        closeProgram(appId) {
-            this.openWindows = this.openWindows.filter(win => win.id !== appId);
+        closeProgram(instanceId) {
+            this.openWindows = this.openWindows.filter(win => win.instanceId !== instanceId);
         },
         
-        focusWindow(appId) {
-            const existingWindow = this.openWindows.find(win => win.id === appId);
+        focusWindow(instanceId) {
+            const existingWindow = this.openWindows.find(win => win.instanceId === instanceId);
             if (existingWindow && existingWindow.zIndex !== this.highestZIndex) {
                 this.highestZIndex++;
                 existingWindow.zIndex = this.highestZIndex;
@@ -150,6 +170,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         playSound(soundName) {
+            if (Alpine.store('accessibility').disableAudio) return;
             if (!this.sounds[soundName]) {
                 console.warn(`No sound file for: ${soundName}`);
                 return;
@@ -165,6 +186,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         playRandomClick() {
+            if (Alpine.store('accessibility').disableAudio) return;
             const clickArray = this.sounds.clicks;
             
             const randomIndex = Math.floor(Math.random() * clickArray.length);
@@ -180,6 +202,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         playKeystroke(e) {
+            if (Alpine.store('accessibility').disableAudio) return;
             if (e.repeat) return;
 
             const tagName = e.target.tagName;

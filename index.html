@@ -10,14 +10,21 @@
 
     <script src="js/game.js"></script>
     <script src="js/assets.js"></script>
-    <script src="js/database.js"></script>
+    <script src="js/db.js"></script>
+
+    <script src="js/apps/shutdown.js"></script>
+
+    <script src="js/apps/accessibility.js" defer></script>
 
     <script src="js/apps/mail.js" defer></script>
+    <script src="js/apps/mail_reader.js" defer></script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body x-data="Game" @mousemove="updateCamera" @open-app.window="openProgram($event.detail.id, $event.detail.payload)">
+<body class="text-flicker" :class="{ 'disable-animations': $store.accessibility.disableAnimations }" x-data="Game" 
+    @mousemove="updateCamera" @open-app.window="openProgram($event.detail.id, $event.detail.payload)">
+
     <div id="background"></div>
 
     <div id="glass-container"></div>
@@ -50,13 +57,13 @@
                             <div style="display: flex; flex-direction: column; gap: 6px;">
                                 <div class="field-row" style="align-items: center;">
                                     <label for="username" style="width: 120px;">User name:</label>
-                                    <input id="username" type="text" x-model="loginUsername" style="width: 100%;">
+                                    <input id="username" type="text" x-model="$store.system.loginUsername" style="width: 100%;">
                                 </div>
                                 
                                 <div class="field-row" style="align-items: center;">
                                     <label for="password" style="width: 120px;">Password:</label>
                                     <input id="password" type="password" 
-                                        x-model="loginPassword" 
+                                        x-model="$store.system.loginPassword" 
                                         @keydown.enter="bootSystem()" 
                                         style="width: 100%;">
                                 </div>
@@ -99,12 +106,12 @@
                 </template>
 
                 <!-- RENDER WINDOWS -->
-                <template x-for="win in openWindows" :key="win.id">
+                <template x-for="win in openWindows" :key="win.instanceId">
                     
                     <div class="window" 
                         x-data="draggableWindow(win.startX, win.startY)" 
-                        @mousedown="focusWindow(win.id)"
-                        :style="{ position: 'absolute', left: x + 'px', top: y + 'px', width: win.width + 'px', zIndex: win.zIndex || 10 }">
+                        @mousedown="focusWindow(win.instanceId)"
+                        :style="`position: absolute; left: ${x}px; top: ${y}px; width: ${win.width}px; z-index: ${win.zIndex || 10}; ${win.height ? 'height: ' + win.height + 'px; display: flex; flex-direction: column;' : ''}`">
                         
                         <div class="title-bar" 
                             @mousedown.prevent="dragStart" 
@@ -119,14 +126,27 @@
                             </div>
 
                             <div class="title-bar-controls">
-                                <button aria-label="Close" @click="closeProgram(win.id)"></button>
+                                <button aria-label="Close" @click="closeProgram(win.instanceId)"></button>
                             </div>
                         </div>
                         
                         <!-- WINDOW TEMPLATES -->
-                        <div class="window-body">
+                        <div class="window-body" :style="win.height ? 'flex-grow: 1; overflow: auto;' : ''">
+
+                            <template x-if="win.id === 'accessibility'">
+                                <div x-data="AccessibilityApp" x-html="htmlContent"></div>
+                            </template>
+
                             <template x-if="win.id === 'mail'">
-                                <div x-data="MailApp" x-html="htmlContent"></div>
+                                <div x-data="MailApp" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
+                            </template>
+
+                            <template x-if="win.id === 'mail_reader'">
+                                <div x-data="MailReaderApp(win.payload)" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
+                            </template>
+
+                            <template x-if="win.id === 'mail_compose'">
+                                <div x-data="MailComposeApp" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
                             </template>
 
                             <template x-if="win.id === 'bin'">
@@ -148,7 +168,7 @@
 
                 <div class="taskbar" x-data="Game">
 
-                    <div style="position: relative;">
+                    <div style="position: relative; margin-left: 6px; margin-right: 6px;">
                         
                         <button x-on:click="isStartOpen = !isStartOpen" 
                                 style="font-weight: bold; padding: 2px 5px;">
@@ -173,13 +193,18 @@
 
                     </div>
 
-                    <div class="status-bar" style="margin: 0;">
-                        <p class="status-bar-field" style="padding: 2px 10px;" x-text="currentTime"></p>
+                    <div style="display: flex; gap: 4px;">
+                        <img class="sound-control" src="ico/loudspeaker_rays.ico"  width="16" height="16">
+                        <div class="status-bar-field" style="width: 60px; text-align: center;">
+                            <span x-text="$store.system.currentInGameTime"></span>
+                        </div>
                     </div>
 
                 </div>
             </div>
+        </div>
     </div>
-</div>
+
+    <div x-data="ShutdownScreenApp" x-show="$store.system.isGameOver" x-html="htmlContent"></div>
 </body>
 </html>
