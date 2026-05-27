@@ -1,7 +1,7 @@
 <div style="height: 100%; display: flex; flex-direction: column;">
     
     <div style="display: flex; gap: 4px; padding: 4px; border-bottom: 1px solid #dfdfdf;">
-        <button @click="$dispatch('open-app', { id: 'mail_compose' })">New Mail</button>
+        <button>New Mail</button>
         <button>Send/Recv</button>
         <button>Addresses</button>
         <button>Find</button>
@@ -10,15 +10,37 @@
     <div style="flex-grow: 1; display: flex; margin-top: 4px; gap: 4px; min-height: 0;">
         
         <ul class="tree-view" style="width: 30%; overflow-y: auto; margin: 0;">
-            <li><strong style="cursor: pointer;" @click="currentFolder = 'inbox'">Inbox</strong></li>
-            <li><strong style="cursor: pointer;" @click="currentFolder = 'sent'">Sent Items</strong></li>
-            <li><strong style="cursor: pointer; color: darkred;" @click="currentFolder = 'intranet'">Intranet</strong></li>
+            <li><strong>Local Folder</strong>
+                <ul>
+                    <li>
+                        <span style="cursor: pointer;" 
+                            @click="currentFolder = 'inbox'"
+                            :style="getUnreadCount('inbox') > 0 ? 'font-weight: bold;' : 'font-weight: normal;'">
+                            Inbox 
+                            <span x-show="getUnreadCount('inbox') > 0" 
+                                x-text="`(${getUnreadCount('inbox')})`"></span>
+                        </span>
+                    </li>
+                    <li style="cursor: pointer;" @click="currentFolder = 'sent'">Sent</li>
+                    <li style="cursor: pointer;" @click="currentFolder = 'archived'">Archived</li>
+                </ul>
+            </li>
+            <li>
+                <span style="cursor: pointer; color: darkred;" 
+                    @click="currentFolder = 'intranet'"
+                    :style="getUnreadCount('intranet') > 0 ? 'font-weight: bold;' : 'font-weight: normal;'">
+                    Intranet 
+                    <span x-show="getUnreadCount('intranet') > 0" 
+                        x-text="`(${getUnreadCount('intranet')})`"></span>
+                </span>
+            </li>
         </ul>
 
         <div class="sunken-panel" style="width: 70%; background: white; overflow-y: auto;">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead style="background: #c0c0c0; text-align: left;">
                     <tr>
+                        <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Pinned</th>
                         <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Sender</th>
                         <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Subject</th>
                         <th style="padding: 2px 4px; border-bottom: 1px solid #808080;">Received</th>

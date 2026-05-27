@@ -11,6 +11,10 @@ document.addEventListener('alpine:init', () => {
 
         get filteredMessages() {
             return this.$store.system.mailData.filter(msg => msg.folder === this.currentFolder);
+        },
+
+        getUnreadCount(folderName) {
+            return this.$store.system.mailData.filter(msg => msg.folder === folderName && msg.unread).length;
         }
     }));
 });

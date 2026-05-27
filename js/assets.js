@@ -13,6 +13,9 @@ const GameAssets = {
         { id: 'mail', name: 'Outlook Express', img: 'ico/mail.ico' },
         { id: 'folder', name: 'Documents', img: 'ico/directory_open_file_mydocs_2k.ico' },
         { id: 'bin', name: 'Bin', img: 'ico/recycle_bin_empty.ico' },
+        { id: 'chat', name: 'CorpChat', img: 'ico/users.ico' },
+        { id: 'intranet', name: 'Internal Network', img: 'ico/network_normal_two_pcs.ico' },
+        { id: 'web', name: 'Internet Explorer', img: 'ico/msie2.ico' },
         { id: 'accessibility', name: 'Accessibility', img: 'ico/accessibility.ico' }
     ],
 
@@ -25,6 +28,7 @@ const GameAssets = {
     },
 
     rawMailData: [
+        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
         { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
         { folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
         { folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
