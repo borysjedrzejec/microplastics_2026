@@ -11,11 +11,14 @@
     <script src="js/game.js"></script>
     <script src="js/assets.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/scenarios.js" defer></script>
 
     <script src="js/apps/shutdown.js"></script>
 
     <script src="js/apps/accessibility.js" defer></script>
 
+    <script src="js/apps/notepad.js" defer></script>
+    <script src="js/apps/file_explorer.js" defer></script>
     <script src="js/apps/mail.js" defer></script>
     <script src="js/apps/mail_reader.js" defer></script>
 
@@ -90,17 +93,20 @@
             <div id="desktop" @click.self="clearSelection()">
 
                 <!-- RENDER ICONS -->
-                <template x-for="icon in desktopIcons" :key="icon.id">
-        
+                <template x-for="icon in $store.system.desktopIcons" :key="icon.id">
+                    
                     <div class="desktop-icon" 
-                        @click="selectedIcon = icon.id"
-                        @dblclick=" openProgram(icon.id)"
-                        @click.outside="selectedIcon === icon.id ? selectedIcon = null : null">
+                        @dblclick="$dispatch('open-app', { 
+                            id: icon.appId, 
+                            payload: icon.payload 
+                        })"
+                        style="display: inline-flex; flex-direction: column; align-items: center; cursor: pointer; color: white; width: 75px;">
                         
-                        <img :src="icon.img" alt="Icon" draggable="false">
+                        <img :src="icon.img" alt="icon" style="width: 32px; height: 32px; margin-bottom: 4px;">
                         
-                        <span :class="selectedIcon === icon.id ? 'selected' : ''" 
-                            x-text="icon.name"></span>
+                        <div style="font-size: 12px; text-shadow: 1px 1px 1px black; text-align: center; word-wrap: break-word;" 
+                            x-text="icon.title"></div>
+
                     </div>
                     
                 </template>
@@ -147,6 +153,14 @@
 
                             <template x-if="win.id === 'mail_compose'">
                                 <div x-data="MailComposeApp" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
+                            </template>
+
+                            <template x-if="win.id === 'file_explorer'">
+                                <div x-data="FileExplorerApp(win.payload)" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
+                            </template>
+
+                            <template x-if="win.id === 'notepad'">
+                                <div x-data="NotepadApp(win.payload)" x-html="htmlContent" style="height: 100%; display: flex; flex-direction: column;"></div>
                             </template>
 
                             <template x-if="win.id === 'bin'">

@@ -1,0 +1,33 @@
+<div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0;">
+    <div class="sunken-panel" style="flex-grow: 1; background: white; padding: 10px; overflow-y: auto;">
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; align-content: flex-start;">
+            
+            <template x-for="file in folderFiles" :key="file.id">
+                <div style="display: flex; flex-direction: column; align-items: center; width: 64px; cursor: pointer;"
+                     @dblclick="$dispatch('open-app', { 
+                                id: file.defaultApp, 
+                                payload: { fileId: file.id, title: file.name }
+                            })">
+                    
+                    <img :src="file.icon" alt="icon" style="width: 32px; height: 32px; margin-bottom: 4px;">
+                    
+                    <div style="font-size: 11px; text-align: center; word-break: break-word; color: black; background: transparent; padding: 2px;"
+                         x-text="file.name">
+                    </div>
+                    
+                </div>
+            </template>
+
+            <div x-show="folderFiles.length === 0" style="color: #808080; width: 100%; text-align: center; margin-top: 20px;">
+                This folder is empty.
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="status-bar" style="margin-top: 2px;">
+        <p class="status-bar-field" x-text="`${folderFiles.length} items`"></p>
+        <p class="status-bar-field">My Computer</p>
+    </div>
+</div>

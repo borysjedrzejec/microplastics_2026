@@ -4,7 +4,6 @@ document.addEventListener('alpine:init', () => {
         isStarted: false,
         isBooting: false,
 
-        suspicionLevel: 0,
         budget: -50000000,
         rotX: 0,
         rotY: 0,
@@ -94,7 +93,7 @@ document.addEventListener('alpine:init', () => {
             const startCol = { r: 0, g: 128, b: 128 };
             const endCol = { r: 255, g: 0, b: 129 };
 
-            const ratio = this.suspicionLevel / 100;
+            const ratio = 0 / 100;
 
             const currentR = Math.round(startCol.r + (endCol.r - startCol.r) * ratio);
             const currentG = Math.round(startCol.g + (endCol.g - startCol.g) * ratio);
@@ -105,8 +104,8 @@ document.addEventListener('alpine:init', () => {
                 --bloom-G: ${currentG};
                 --bloom-B: ${currentB};
             `;
-        },
-
+        }, 
+        /*
         processFraud(amount) {
             this.budget += amount;
             this.suspicionLevel = Math.min(100, this.suspicionLevel + (amount / 100000));
@@ -114,7 +113,7 @@ document.addEventListener('alpine:init', () => {
 
         get suspicionBloom() {
             return this.suspicionLevel / 2;
-        },
+        }, */
 
         updateTime() {
             const d = new Date();
@@ -128,7 +127,12 @@ document.addEventListener('alpine:init', () => {
 
         openProgram(appId, payload = null) {
             // uid for each window instance, e.g. mail-2 for the second mail window, or just mail for the main app window
-            const instanceId = payload && payload.id ? `${appId}-${payload.id}` : appId;
+            let uniqueKey = '';
+            if (payload) {
+                uniqueKey = payload.id || payload.folderId || '';
+            }
+
+            const instanceId = uniqueKey ? `${appId}-${uniqueKey}` : appId;
             
             const existingWindow = this.openWindows.find(win => win.instanceId === instanceId);
             

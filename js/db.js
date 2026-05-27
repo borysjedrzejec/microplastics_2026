@@ -1,11 +1,63 @@
 document.addEventListener('alpine:init', () => {
 
+    const ENDING = {
+        ENDING_A: 'good',
+        ENDING_B: 'neutral',
+        ENDING_C: 'bad'
+    };
+
+    const FILE_TYPE_MAP = {
+        'spreadsheet': { ext: '.xls', icon: 'ico/excel.ico', defaultApp: 'excel' },
+        'document': { ext: '.doc', icon: 'ico/document.ico', defaultApp: 'notepad' },
+    };
+
+    const initializedIcons = GameAssets.rawDesktopIcons.map((icon, index) => ({
+        id: `desktop-icon-${index}`,
+        ...icon
+    }));
+
     const initializedMails = GameAssets.rawMailData.map((mail, index) => ({
         id: `sys-mail-${index}`,
         ...mail
     }));
 
+    const initializedFiles = GameAssets.rawFileSystem.map((file, index) => {
+        const typeInfo = FILE_TYPE_MAP[file.type] || { ext: '.dat', icon: 'ico/file_lines.ico', defaultApp: 'notepad' };
+        
+        const hasExtension = file.name.toLowerCase().endsWith(typeInfo.ext);
+        const finalName = hasExtension ? file.name : `${file.name}${typeInfo.ext}`;
+
+        let finalContent = file.content;
+        let isLocked = false;
+
+        if (file.scenarioId && GameScenarios[file.scenarioId]) {
+            const scenario = GameScenarios[file.scenarioId];
+            
+            // clone content to avoid mutating original scenario data
+            finalContent = JSON.parse(JSON.stringify(scenario.segments));
+            isLocked = scenario.isLocked;
+        }
+
+        return {
+        id: `sys-file-${index}`,
+        folderId: file.folderId,
+        type: file.type,
+        name: finalName,
+        icon: typeInfo.icon,
+        defaultApp: typeInfo.defaultApp,
+        content: finalContent,
+        isLocked: isLocked
+        };
+    });
+
     Alpine.store('system', {
+
+        scores: {
+            [ENDING.ENDING_A]: 0,
+            [ENDING.ENDING_B]: 0,
+            [ENDING.ENDING_C]: 0
+        },
+
         loginUsername: '',
         loginPassword: '',
 
@@ -34,6 +86,8 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        // establish icon data
+        desktopIcons: initializedIcons,
 
         // establish mail data
         mailData: initializedMails,
@@ -41,6 +95,17 @@ document.addEventListener('alpine:init', () => {
             const username = this.loginUsername || 'unknown';
             return `${username}@oilcompany.co.uk`;
         },
+
+        // establish file system data
+        fileSystem: initializedFiles,
+
+
+        addPoints(ending, amount) {
+            if (this.scores[ending] !== undefined) {
+                this.scores[ending] += amount;
+                console.log(`Added ${amount} points to ending: ${ending}. Current state:`, this.scores);
+            }
+        }
     });
 
     Alpine.store('accessibility', {

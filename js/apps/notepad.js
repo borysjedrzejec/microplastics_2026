@@ -1,0 +1,51 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.data('NotepadApp', (payload) => ({
+        htmlContent: 'Loading...',
+        fileData: null,
+        activeDropdown: null,
+
+        async init() {
+            const response = await fetch('views/notepad.html');
+            this.htmlContent = await response.text();
+
+            if (payload && payload.fileId) {
+                this.fileData = this.$store.system.fileSystem.find(f => f.id === payload.fileId);
+            }
+        },
+
+        get isInteractive() {
+            return Array.isArray(this.fileData?.content);
+        },
+
+        toggleDropdown(id) {
+            if (this.fileData.isLocked) return;
+            this.activeDropdown = this.activeDropdown === id ? null : id;
+        },
+
+        saveFile() {
+            if (this.fileData.isLocked) return;
+
+            const allAnswered = this.fileData.content
+                .filter(seg => seg.type === 'interactive')
+                .every(seg => seg.selectedValue !== null);
+
+            if (!allAnswered) {
+                alert('You must fill in all the blanks before saving the document!');
+                return;
+            }
+
+            this.fileData.content.forEach(seg => {
+                if (seg.type === 'interactive') {
+                    const chosenOption = seg.options.find(opt => opt.value === seg.selectedValue);
+                    if (chosenOption) {
+                        this.$store.system.addPoints(chosenOption.ending, chosenOption.points);
+                    }
+                }
+            });
+
+            this.fileData.isLocked = true;
+            this.activeDropdown = null; 
+            alert('The file has been saved in the system. Changes are irreversible.');
+        }
+    }));
+});

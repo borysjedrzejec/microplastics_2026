@@ -90,6 +90,8 @@ img.crt-image {
     --color-pink: #ff6b9d;
     --color-success: #00ff87;
     --color-warning: #fffa65;
+
+    --highlight-color: #a10d3f;
 }
   
 html {

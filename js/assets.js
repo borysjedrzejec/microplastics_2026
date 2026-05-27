@@ -9,29 +9,58 @@ const GameAssets = {
         spacebar: 'sounds/spacebar.mp3'
     },
 
-    desktopIcons: [
-        { id: 'mail', name: 'Outlook Express', img: 'ico/mail.ico' },
-        { id: 'folder', name: 'Documents', img: 'ico/directory_open_file_mydocs_2k.ico' },
-        { id: 'bin', name: 'Bin', img: 'ico/recycle_bin_empty.ico' },
-        { id: 'chat', name: 'CorpChat', img: 'ico/users.ico' },
-        { id: 'intranet', name: 'Internal Network', img: 'ico/network_normal_two_pcs.ico' },
-        { id: 'web', name: 'Internet Explorer', img: 'ico/msie2.ico' },
-        { id: 'accessibility', name: 'Accessibility', img: 'ico/accessibility.ico' }
+    rawDesktopIcons: [
+        { title: 'Outlook Express', img: 'ico/mail.ico', appId: 'mail', payload: null },
+        { title: 'CorpChat', img: 'ico/users.ico', appId: 'chat', payload: null },
+        { title: 'Internal Network', img: 'ico/network_normal_two_pcs.ico', appId: 'intranet', payload: null },
+        { title: 'Internet Explorer', img: 'ico/msie2.ico', appId: 'web', payload: null },
+        { title: 'Accessibility', img: 'ico/accessibility.ico', appId: 'accessibility', payload: null },
+
+        { 
+            title: 'Project Files', 
+            img: 'ico/directory_open_net_web_documents.ico', 
+            appId: 'file_explorer', 
+            payload: { folderId: 'project_files', title: 'Project Files' } 
+        },
+        { 
+            title: 'Bin', 
+            img: 'ico/recycle_bin_empty.ico', 
+            appId: 'file_explorer', 
+            payload: { folderId: 'bin', title: 'Bin' } 
+        }
     ],
 
     appsData: {
-        'mail': { icon: 'ico/mail.ico', title: 'Outlook Express', width: 600, height: 400 },
-        'mail_reader': { icon: 'ico/message_envelope_open.ico', title: 'Message', width: 450, height: 350 },
-        'mail_compose': { icon: 'ico/mail.ico', title: 'New Message', width: 450, height: 350 },
-        'bin': { icon: 'ico/recycle_bin_empty.ico', title: 'Bin', content: 'Bin is empty.', width: 300},
-        'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300}
+    'mail': { icon: 'ico/mail.ico', title: 'Outlook Express', width: 600, height: 400 },
+    'mail_reader': { icon: 'ico/message_envelope_open.ico', title: 'Message', width: 450, height: 350 },
+    
+    'file_explorer': { icon: 'ico/directory_open_file_mydocs_2k.ico', title: 'File Explorer', width: 500, height: 350 },
+
+    'notepad': { icon: 'ico/notepad.ico', title: 'Notepad', width: 500, height: 500 },
+    
+    'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
+    
+    'chat': { icon: 'ico/users.ico', title: 'CorpChat', content: 'No new messages.', width: 400 },
+    'intranet': { icon: 'ico/network_normal_two_pcs.ico', title: 'Internal Network', content: 'Welcome to the intranet.', width: 500 },
+    'web': { icon: 'ico/msie2.ico', title: 'Internet Explorer', content: 'This page cannot be displayed.', width: 500 }
     },
 
     rawMailData: [
+        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true, pinned: true },
         { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
-        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
-        { folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
+        { folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: true },
+        { folder: 'inbox', sender: 'Banager', subject: 'Beport', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: true },
+        { folder: 'inbox', sender: 'Canager', subject: 'Ceport', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
         { folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
+    ],
+
+    rawFileSystem: [
+        { folderId: 'project_files', name: 'Document 1', type: 'document', content: 'admin:1234' },
+        { folderId: 'project_files', name: 'Budget_1', type: 'spreadsheet', content: 'No funds available' },
+        { folderId: 'project_files', name: 'Board_Directive_089', type: 'document', scenarioId: 'board_directive_089' },
+
+        { folderId: 'bin', name: 'Old_Report.doc', type: 'document', content: 'Useless data.' },
+        { folderId: 'bin', name: 'Virus.exe', type: 'app', content: '' }
     ],
 
     accessibilityData: [
