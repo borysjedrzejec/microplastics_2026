@@ -8,12 +8,6 @@
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="crt_effect.css">
 
-    <script src="js/game.js"></script>
-    <script src="js/assets.js"></script>
-    <script src="js/db.js"></script>
-    <script src="js/scenarios.js" defer></script>
-    <script src="js/web_content.js" defer></script>
-
     <script src="js/apps/shutdown.js"></script>
 
     <script src="js/apps/accessibility.js" defer></script>
@@ -22,10 +16,18 @@
     <script src="js/apps/excel.js" defer></script>
     <script src="js/apps/browser.js" defer></script>
     <script src="js/apps/intranet.js" defer></script>
+    <script src="js/apps/corpchat.js" defer></script>
 
     <script src="js/apps/file_explorer.js" defer></script>
     <script src="js/apps/mail.js" defer></script>
     <script src="js/apps/mail_reader.js" defer></script>
+
+    <script src="js/scenarios.js" defer></script>
+    <script src="js/web_content.js" defer></script>
+
+    <script src="js/db.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/assets.js"></script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -186,11 +188,22 @@
                             <template x-if="win.id === 'intranet'">
                                 <div x-data="intranetApp(win.payload)" style="display: flex; flex-direction: column; flex-grow: 1; height: 100%;">
                                     
-                                    <div x-show="isLoadingView" style="padding: 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Nawiązywanie bezpiecznego połączenia...</div>
-                                    <div x-show="viewError" style="padding: 10px; color: red; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Błąd połączenia z serwerem.</div>
+                                    <div x-show="isLoadingView" style="padding: 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Establishing secure connection...</div>
+                                    <div x-show="viewError" style="padding: 10px; color: red; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Error occurred while connecting to the server.</div>
 
                                     <div x-ref="viewContainer" x-show="!isLoadingView" style="display: flex; flex-direction: column; flex-grow: 1; height: 100%;"></div>
                                     
+                                </div>
+                            </template>
+
+                            <template x-if="win.id === 'corpchat'">
+                                <div x-data="corpChatApp(win.payload)" style="display: flex; flex-direction: column; flex-grow: 1; height: 100%;">
+
+                                    <div x-show="isLoadingView" style="padding: 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Connecting to CorpChat servers...</div>
+                                    <div x-show="viewError" style="padding: 10px; color: red; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">Failed to load application interface.</div>
+
+                                    <div x-ref="viewContainer" x-show="!isLoadingView" style="display: flex; flex-direction: column; flex-grow: 1; height: 100%;"></div>
+
                                 </div>
                             </template>
 

@@ -148,8 +148,19 @@ document.addEventListener('alpine:init', () => {
                 this.scores[ending] += amount;
                 console.log(`Added ${amount} points to ending: ${ending}. Current state:`, this.scores);
             }
-        }
-    });
+        },
+
+        chatProgress: {
+            boss: 'report_investigation', 
+        },
+        
+        gameChoices: {
+            liedToBoss: false,
+            blamedIT: false
+        },
+
+        chatContacts: typeof ChatContactsData !== 'undefined' ? ChatContactsData : [],
+        });
 
     Alpine.store('accessibility', {
         disableAnimations: false,
