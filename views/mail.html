@@ -25,15 +25,6 @@
                     <li style="cursor: pointer;" @click="currentFolder = 'archived'">Archived</li>
                 </ul>
             </li>
-            <li>
-                <span style="cursor: pointer; color: darkred;" 
-                    @click="currentFolder = 'intranet'"
-                    :style="getUnreadCount('intranet') > 0 ? 'font-weight: bold;' : 'font-weight: normal;'">
-                    Intranet 
-                    <span x-show="getUnreadCount('intranet') > 0" 
-                        x-text="`(${getUnreadCount('intranet')})`"></span>
-                </span>
-            </li>
         </ul>
 
         <div class="sunken-panel" style="width: 70%; background: white; overflow-y: auto;">

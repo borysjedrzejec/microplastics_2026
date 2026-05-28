@@ -8,7 +8,12 @@
                 style="height: 20px; font-size: 11px;">
                     Save Changes
             </button>
-            <button class="default">Delete</button>
+            <button x-show="!fileData.isLocked" 
+                    @click="requestDelete()" 
+                    class="default" 
+                    style="height: 20px; font-size: 11px;">
+                Delete File
+            </button>
         </div>
     </div>
 

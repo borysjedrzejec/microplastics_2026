@@ -26,6 +26,51 @@ const GameScenarios = {
                 },
                 { type: 'text', text: ' effective immediately.' }
             ]
-        }
-        // other scenarios can be added here
+        },
+
+        'q4_audit_report': {
+        isLocked: false,
+        grid: [
+            [ 
+                { type: 'header', value: 'Department' }, 
+                { type: 'header', value: 'Initial Budget' }, 
+                { type: 'header', value: 'Adjustment (Decision)' } 
+            ],
+            [ 
+                { type: 'text', value: 'Public Relations' }, 
+                { type: 'text', value: '£85,000' }, 
+                { type: 'text', value: 'Approved - No changes' } 
+            ],
+            [ 
+                { type: 'text', value: 'IT & Cybersecurity' }, 
+                { type: 'text', value: '£12,000' }, 
+                { 
+                    type: 'interactive', 
+                    id: 'cell_cyber_budget', 
+                    selectedValue: null,
+                    options: [
+                        { text: '-- Select Action --', value: null, points: 0, path: 'neutral' },
+                        { text: 'Slash to £5,000', value: 'opt1', points: 15, path: 'bad' },
+                        { text: 'Increase to £50,000', value: 'opt2', points: 20, path: 'good' },
+                        { text: 'Maintain current funding', value: 'opt3', points: 5, path: 'neutral' }
+                    ]
+                }
+            ],
+            [ 
+                { type: 'text', value: 'R&D (Project "Ouroboros")' }, 
+                { type: 'text', value: '£2,500,000' }, 
+                { 
+                    type: 'interactive', 
+                    id: 'cell_rnd_budget', 
+                    selectedValue: null,
+                    options: [
+                        { text: '-- Select Action --', value: null, points: 0, path: 'neutral' },
+                        { text: 'Authorize full release', value: 'opt1', points: 25, path: 'bad' },
+                        { text: 'Halt operations immediately', value: 'opt2', points: 15, path: 'good' },
+                        { text: 'Request internal audit', value: 'opt3', points: 10, path: 'neutral' }
+                    ]
+                }
+            ]
+        ]
+    }
 };

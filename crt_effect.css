@@ -92,6 +92,7 @@ img.crt-image {
     --color-warning: #fffa65;
 
     --highlight-color: #a10d3f;
+    --inactive-color: #555;
 }
   
 html {

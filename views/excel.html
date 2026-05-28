@@ -1,0 +1,79 @@
+<div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 6px; border-bottom: 1px solid #808080;">
+            <button x-show="isInteractive && !fileData.isLocked" 
+                @click="saveFile()"
+                class="default" 
+                style="height: 20px; font-size: 11px;">
+                    Save Changes
+            </button>
+            <button x-show="!fileData.isLocked" 
+                    @click="requestDelete()" 
+                    class="default" 
+                    style="height: 20px; font-size: 11px;">
+                Delete File
+            </button>
+    </div>
+
+    <div style="background: white; border: 1px inset #fff; padding: 2px 4px; font-family: 'Arial', sans-serif; font-size: 12px; margin: 2px; color: #808080;">
+        <span style="font-weight: bold; color: black; margin-right: 10px;">fx</span>
+        <span x-text="fileData ? fileData.name : ''"></span>
+    </div>
+
+    <div class="sunken-panel" style="flex-grow: 1; overflow: auto; background: white; margin: 0 2px 2px 2px;">
+        
+        <template x-if="isInteractive">
+            <table style="width: 100%; border-collapse: collapse; font-family: 'Arial', sans-serif; font-size: 12px; background: white;">
+                <tbody>
+                    <template x-for="(row, rowIndex) in fileData.content" :key="'row-'+rowIndex">
+                        <tr>
+                            
+                            <td style="background: #c0c0c0; border: 1px solid #808080; border-top-color: #fff; border-left-color: #fff; text-align: center; width: 30px; font-weight: bold;">
+                                <span x-text="rowIndex + 1"></span>
+                            </td>
+
+                            <template x-for="(cell, colIndex) in row" :key="'col-'+colIndex">
+                                <td :style="(cell.type === 'header' ? 'background: #c0c0c0; border: 1px solid #808080; border-top-color: #fff; border-left-color: #fff; text-align: center; font-weight: bold;' : 'border: 1px solid #dfdfdf; border-right-color: #c0c0c0; border-bottom-color: #c0c0c0; padding: 2px 4px;') + ' position: relative; height: 20px; min-width: 100px;'">
+                                    
+                                    <template x-if="cell.type === 'text' || cell.type === 'header'">
+                                        <span x-text="cell.value"></span>
+                                    </template>
+
+                                    <template x-if="cell.type === 'interactive'">
+                                        <div style="width: 100%; height: 100%;">
+                                            
+                                            <div @click="toggleDropdown(cell.id)"
+                                                 :style="fileData.isLocked ? 'color: black; font-weight: bold;' : (activeDropdown === cell.id ? 'color: white; background: #000080; cursor: pointer; width: 100%; height: 100%;' : 'color: var(--highlight-color, #000080); cursor: pointer; font-weight: bold; background: #ffffcc; width: 100%; height: 100%;')"
+                                                 x-text="cell.selectedValue ? cell.options.find(o => o.value === cell.selectedValue)?.text : '[ Select ]'">
+                                            </div>
+
+                                            <div x-show="activeDropdown === cell.id && !fileData.isLocked"
+                                                 @click.away="activeDropdown = null"
+                                                 style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid black; box-shadow: 2px 2px 0px rgba(0,0,0,0.5); z-index: 9999; min-width: 100%; white-space: nowrap;">
+                                                
+                                                <template x-for="option in cell.options" :key="option.value">
+                                                    <template x-if="option.value !== null">
+                                                        <div @click="cell.selectedValue = option.value; activeDropdown = null;"
+                                                             @mouseenter="$el.style.background = '#000080'; $el.style.color = 'white'"
+                                                             @mouseleave="$el.style.background = 'transparent'; $el.style.color = 'black'"
+                                                             style="padding: 4px 6px; cursor: pointer; color: black; background: transparent;"
+                                                             x-text="option.text">
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                                
+                                            </div>
+
+                                        </div>
+                                    </template>
+
+                                </td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </template>
+        
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">
+
+    <div style="margin-bottom: 6px; border-bottom: 2px groove #fff; padding-bottom: 6px;">
+        <div style="display: flex; gap: 5px; align-items: center;">
+            <button @click="goHome()" :disabled="view === 'bookmarks' || view === 'loading'" style="min-width: 60px;">Back</button>
+            <button @click="view === 'site' ? openBookmark(currentSite) : null" :disabled="view !== 'site'" style="min-width: 60px;">Refresh</button>
+            
+            <div class="sunken-panel" style="flex-grow: 1; padding: 2px 6px; display: flex; align-items: center; background: white; height: 22px;">
+                <span x-text="currentSite ? currentSite.url : ':bookmarks'" style="font-family: monospace;"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sunken-panel" style="flex-grow: 1; background: white; overflow-y: auto; display: flex; flex-direction: column;">
+        
+        <template x-if="view === 'loading'">
+            <div style="margin: auto; text-align: center; width: 80%">
+                <p style="margin-bottom: 10px;">Connecting to the internet...</p>
+                <div class="progress-indicator">
+                    <div class="progress-indicator-bar" :style="'width: ' + progress + '%'"></div>
+                </div>
+            </div>
+        </template>
+
+        <template x-if="view === 'bookmarks'">
+            <div style="padding: 10px;">
+                <h4 style="margin-top: 0; margin-bottom: 10px;">Bookmarks</h4>
+                <ul class="tree-view" style="border: none; background: transparent; padding-left: 0; margin: 0;">
+                    <template x-for="site in bookmarks" :key="site.id">
+                        <li style="margin-bottom: 10px; list-style-type: none;">
+                            <a href="#" @click.prevent="openBookmark(site)" x-text="site.title" style="font-size: 14px; color: blue; text-decoration: underline;"></a>
+                            <div style="font-size: 11px; color: gray;" x-text="site.url"></div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+
+        <template x-if="view === 'captcha' && currentCaptcha">
+            <div style="margin: auto; text-align: center; padding: 15px; background: white; border: 1px solid #888; width: 90%; max-width: 320px; box-sizing: border-box;">
+                
+                <div style="background: #0046d5; color: white; padding: 10px; text-align: left; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 14px;">Select all squares containing:</p>
+                    <p style="margin: 5px 0 0 0; font-size: 20px; font-weight: bold;" x-text="currentCaptcha.prompt"></p>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <span x-show="captchaError" style="color: red; font-weight: bold;">Incorrect selection. Please try again.</span>
+                </div>
+                
+                <div :style="`display: grid; grid-template-columns: repeat(${currentCaptcha.columns}, 1fr); gap: 1px; margin: 0 auto 15px auto; width: 100%; background: #ccc; padding: 4px; box-sizing: border-box;`">
+                    
+                    <template x-for="i in currentCaptcha.totalTiles" :key="i">
+                        <div x-data="{ tileId: getTileId(i, currentCaptcha.columns) }"
+                            @click="toggleTile(tileId)" 
+                            :style="selectedTiles.includes(tileId) ? 'border: 2px solid var(--highlight-color, #000080); transform: scale(0.92);' : 'border: 1px solid transparent; transform: scale(1);'"
+                            style="cursor: pointer; transition: transform 0.1s; display: flex; width: 100%; aspect-ratio: 1 / 1; background: white; box-sizing: border-box;">
+                            
+                            <img :src="`${currentCaptcha.basePath}${tileId}.png`" 
+                                style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" 
+                                alt="tile fragment">
+                        </div>
+                    </template>
+
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button @click="loadRandomCaptcha()">Refresh</button>
+                    <button @click="solveCaptcha()" class="default" style="font-weight: bold; padding: 2px 10px;">Submit</button>
+                </div>
+            </div>
+        </template>
+
+        <template x-if="view === 'site'">
+            <div style="display: flex; flex-direction: column; flex-grow: 1;">
+                
+                <template x-if="currentSite.type === 'html'">
+                    <div x-html="siteContent.content" style="padding: 10px; flex-grow: 1; display: flex; flex-direction: column;"></div>
+                </template>
+                
+                <template x-if="currentSite.type === 'scenario'">
+                    <div x-data="{ fileData: GameScenarios[siteContent.scenarioId], isInteractive: true }" style="padding: 10px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <div x-text="'Secure Connection: ' + siteContent.scenarioId"></div>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+    </div>
+</div>

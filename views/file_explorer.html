@@ -12,11 +12,12 @@
                     
                     <img :src="file.icon" alt="icon" style="width: 32px; height: 32px; margin-bottom: 4px;">
                     
-                    <div style="font-size: 11px; text-align: center; word-break: break-word; color: black; background: transparent; padding: 2px;"
-                         x-text="file.name">
+                    <div :style="`font-size: 11px; text-align: center; word-wrap: break-word; word-break: break-word; background: transparent; padding: 2px; width: 100%; max-width: 64px; ${file.isLocked ? 'color: var(--inactive-color, #555); font-style: italic;' : (typeof file.content === 'object' ? 'color: var(--highlight-color, #000080); font-weight: bold;' : 'color: black;')}`"
+                        x-text="file.name">
                     </div>
                     
                 </div>
+            
             </template>
 
             <div x-show="folderFiles.length === 0" style="color: #808080; width: 100%; text-align: center; margin-top: 20px;">

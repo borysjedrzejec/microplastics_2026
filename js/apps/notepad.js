@@ -46,6 +46,21 @@ document.addEventListener('alpine:init', () => {
             this.fileData.isLocked = true;
             this.activeDropdown = null; 
             alert('The file has been saved in the system. Changes are irreversible.');
+        },
+
+        requestDelete() {
+            if (confirm(`Do you really want to delete the file "${this.fileData.name}"? This action cannot be undone.`)) {
+                
+                this.$store.system.deleteFile(this.fileData.id);
+                
+                // ADD BIN SOUND
+                if (!Alpine.store('accessibility').disableAudio) {
+                    try { new Audio('sounds/recycle.mp3').play(); } catch(e){}
+                }
+                
+                const closeBtn = this.$el.closest('.window').querySelector('[aria-label="Close"]');
+                if (closeBtn) closeBtn.click();
+            }
         }
     }));
 });

@@ -1,4 +1,5 @@
 document.addEventListener('alpine:init', () => {
+    
 
     const ENDING = {
         ENDING_A: 'good',
@@ -21,6 +22,17 @@ document.addEventListener('alpine:init', () => {
         ...mail
     }));
 
+    const initializedBookmarks = GameAssets.rawBookmarks.map((bookmark) => ({
+        ...bookmark
+    }));
+
+    const initializedAccounts = GameAssets.rawIntranetAccounts.map(acc => ({
+        ...acc,
+        isLocked: false,
+        isUnlocked: false,
+        failedAttempts: 0
+    }));
+
     const initializedFiles = GameAssets.rawFileSystem.map((file, index) => {
         const typeInfo = FILE_TYPE_MAP[file.type] || { ext: '.dat', icon: 'ico/file_lines.ico', defaultApp: 'notepad' };
         
@@ -33,8 +45,9 @@ document.addEventListener('alpine:init', () => {
         if (file.scenarioId && GameScenarios[file.scenarioId]) {
             const scenario = GameScenarios[file.scenarioId];
             
-            // clone content to avoid mutating original scenario data
-            finalContent = JSON.parse(JSON.stringify(scenario.segments));
+            // grid for excel, segments for notepad
+            const scenarioData = scenario.grid || scenario.segments || [];
+            finalContent = JSON.parse(JSON.stringify(scenarioData));
             isLocked = scenario.isLocked;
         }
 
@@ -89,6 +102,9 @@ document.addEventListener('alpine:init', () => {
         // establish icon data
         desktopIcons: initializedIcons,
 
+        // establish bookmark data
+        bookmarks: initializedBookmarks,
+
         // establish mail data
         mailData: initializedMails,
         get playerEmail() {
@@ -98,6 +114,33 @@ document.addEventListener('alpine:init', () => {
 
         // establish file system data
         fileSystem: initializedFiles,
+
+
+        // establish intranet accounts
+        intranetAccounts: initializedAccounts,
+
+        attemptIntranetLogin(accountId, password) {
+            const acc = this.intranetAccounts.find(a => a.id === accountId);
+            if (!acc || acc.isLocked || acc.isUnlocked) return null;
+
+            if (acc.correctPass === password) {
+                acc.isUnlocked = true;
+                return true;
+            } else {
+                acc.failedAttempts++;
+                // block account after 2 failed attempts
+                if (acc.failedAttempts > 1) {
+                    acc.isLocked = true;
+                }
+                return false;
+            }
+        },
+
+        deleteFile(fileId) {
+            if (this.fileSystem) {
+                this.fileSystem = this.fileSystem.filter(file => file.id !== fileId);
+            }
+        },
 
 
         addPoints(ending, amount) {
@@ -110,8 +153,27 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.store('accessibility', {
         disableAnimations: false,
+        colorMode: 'default',
         disableAudio: false,
-        disableTimer: false
+        disableTimer: false,
+
+        palettes: {
+            'default': '#a10d3f',
+            'protanopia': '#005ab5',
+            'deuteranopia': '#dc3220',
+            'tritanopia': '#c80000'
+        },
+
+        updateHighlightColor(mode) {
+            const newColor = this.palettes[mode] || this.palettes['default'];
+            this.colorMode = mode;
+            
+            document.documentElement.style.setProperty('--highlight-color', newColor);
+        },
+
+        init() {
+            this.updateHighlightColor(this.colorMode);
+        }
     });
 
     
