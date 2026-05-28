@@ -53,7 +53,7 @@ document.addEventListener('alpine:init', () => {
 
             this.fileData.isLocked = true;
             this.activeDropdown = null;
-            alert('The spreadsheet has been locked and encrypted.');
+            this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
         },
 
         requestDelete() {

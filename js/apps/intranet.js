@@ -56,9 +56,9 @@ document.addEventListener('alpine:init', () => {
 
             if (success) {
                 if (!Alpine.store('accessibility').disableAudio) {
-                    // CHOOSE A DIFFERENT SOUND FOR SUCCESSFUL LOGIN
-                    try { new Audio('sounds/startup.mp3').play(); } catch(e){}
+                    try { new Audio('sounds/hacked.mp3').play(); } catch(e){}
                 }
+                this.$store.system.evaluateIntranetHack(this.selectedAccount.id);
                 this.view = 'success';
             } else {
                 if (!Alpine.store('accessibility').disableAudio) {

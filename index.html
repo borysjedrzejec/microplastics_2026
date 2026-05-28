@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="crt_effect.css">
 
+    <script src="js/apps/intro.js"></script>
+
+    <script src="js/scenarios.js" defer></script>
+    <script src="js/web_content.js" defer></script>
+    <script src="js/chat_data.js" defer></script>
+    <script src="js/tasks_data.js"></script>
+
+    <script src="js/db.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/assets.js"></script>
+
     <script src="js/apps/shutdown.js"></script>
 
     <script src="js/apps/accessibility.js" defer></script>
@@ -22,18 +33,19 @@
     <script src="js/apps/mail.js" defer></script>
     <script src="js/apps/mail_reader.js" defer></script>
 
-    <script src="js/scenarios.js" defer></script>
-    <script src="js/web_content.js" defer></script>
-
-    <script src="js/db.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/assets.js"></script>
-
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="text-flicker" :class="{ 'disable-animations': $store.accessibility.disableAnimations }" x-data="Game" 
     @mousemove="updateCamera" @open-app.window="openProgram($event.detail.id, $event.detail.payload)">
+
+    <div 
+        x-data="IntroApp" 
+        class="intro-overlay" 
+        x-show="phase !== 'finished'" 
+        x-transition.opacity.duration.1000ms
+        x-html="htmlContent">
+    </div>
 
     <div id="background"></div>
 

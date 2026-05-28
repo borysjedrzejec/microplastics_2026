@@ -7,7 +7,14 @@ document.addEventListener('alpine:init', () => {
         selectedContact: null,
 
         get contacts() {
-            return this.$store.system.chatContacts || [];
+            let storeContacts = this.$store.system.chatContacts;
+            
+            if (!storeContacts || storeContacts.length === 0) {
+                storeContacts = window.ChatContactsData || [];
+                this.$store.system.chatContacts = storeContacts; 
+            }
+            
+            return storeContacts;
         },
 
         init() {
@@ -20,7 +27,7 @@ document.addEventListener('alpine:init', () => {
                     this.$refs.viewContainer.innerHTML = html;
                     this.isLoadingView = false;
                     
-                    if (this.contacts.length > 0) {
+                    if (this.contacts && this.contacts.length > 0) {
                         this.selectContact(this.contacts[0]);
                     }
                 })

@@ -11,7 +11,7 @@ const GameAssets = {
 
     rawDesktopIcons: [
         { title: 'Outlook Express', img: 'ico/mail.ico', appId: 'mail', payload: null },
-        { title: 'CorpChat', img: 'ico/users.ico', appId: 'chat', payload: null },
+        { title: 'CorpChat', img: 'ico/users.ico', appId: 'corpchat', payload: null },
         { title: 'Internal Network', img: 'ico/network_normal_two_pcs.ico', appId: 'intranet', payload: null },
         { title: 'Internet Explorer', img: 'ico/msie2.ico', appId: 'browser', payload: null },
         { title: 'Accessibility', img: 'ico/accessibility.ico', appId: 'accessibility', payload: null },
@@ -42,7 +42,7 @@ const GameAssets = {
     
     'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
     
-    'chat': { icon: 'ico/users.ico', title: 'CorpChat', content: 'No new messages.', width: 400 },
+    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 600, height: 400 },
     'intranet': { icon: 'ico/network_normal_two_pcs.ico', title: 'Internal Network', width: 500, height: 400 },
     },
 

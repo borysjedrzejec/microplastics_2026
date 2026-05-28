@@ -45,7 +45,22 @@ document.addEventListener('alpine:init', () => {
 
             this.fileData.isLocked = true;
             this.activeDropdown = null; 
-            alert('The file has been saved in the system. Changes are irreversible.');
+
+            if (this.fileData.scenarioId && window.GameScenarios[this.fileData.scenarioId]) {
+                const globalScenario = window.GameScenarios[this.fileData.scenarioId];
+                
+                globalScenario.isLocked = true;
+                
+                globalScenario.segments.forEach((globalSeg, index) => {
+                    if (globalSeg.type === 'interactive' && this.fileData.content[index]) {
+                        globalSeg.selectedValue = this.fileData.content[index].selectedValue;
+                    }
+                });
+            }
+
+            if (this.$store.system.evaluateScenarioSaved) {
+                this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
+            }
         },
 
         requestDelete() {

@@ -5,23 +5,23 @@ const GameScenarios = {
                 { type: 'text', text: 'Following the recent unauthorized data access, the executive board has decided that the cybersecurity budget will be ' },
                 { 
                     type: 'interactive', 
-                    id: 'q1', 
+                    id: 'budget_decision', 
                     selectedValue: null,
                     options: [
-                        { text: 'kept unchanged', value: 'opt1', points: 0, ending: 'neutral' },
-                        { text: 'immediately slashed by 50%', value: 'opt2', points: 15, ending: 'bad' },
-                        { text: 'increased to match industry standards', value: 'opt3', points: 15, ending: 'good' }
+                        { text: 'kept unchanged', value: 'keep_budget', points: 0, ending: 'neutral' },
+                        { text: 'immediately slashed by 50%', value: 'slash_budget', points: 15, ending: 'bad' },
+                        { text: 'increased to match industry standards', value: 'increase_budget', points: 15, ending: 'good' }
                     ]
                 },
                 { type: 'text', text: '.\nFurthermore, the system administrator responsible for the incident will be ' },
                 { 
                     type: 'interactive', 
-                    id: 'q2', 
+                    id: 'admin_fate', 
                     selectedValue: null,
                     options: [
-                        { text: 'terminated with severance', value: 'opt1', points: 0, ending: 'neutral' },
-                        { text: 'terminated without severance', value: 'opt2', points: 20, ending: 'bad' },
-                        { text: 'sent to mandatory compliance training', value: 'opt3', points: 10, ending: 'good' }
+                        { text: 'terminated with severance', value: 'fire_with_severance', points: 0, ending: 'neutral' },
+                        { text: 'terminated without severance', value: 'fire_without_severance', points: 20, ending: 'bad' },
+                        { text: 'sent to mandatory compliance training', value: 'send_to_training', points: 10, ending: 'good' }
                     ]
                 },
                 { type: 'text', text: ' effective immediately.' }
@@ -50,9 +50,9 @@ const GameScenarios = {
                     selectedValue: null,
                     options: [
                         { text: '-- Select Action --', value: null, points: 0, path: 'neutral' },
-                        { text: 'Slash to £5,000', value: 'opt1', points: 15, path: 'bad' },
-                        { text: 'Increase to £50,000', value: 'opt2', points: 20, path: 'good' },
-                        { text: 'Maintain current funding', value: 'opt3', points: 5, path: 'neutral' }
+                        { text: 'Slash to £5,000', value: 'slash_cyber_budget', points: 15, path: 'bad' },
+                        { text: 'Increase to £50,000', value: 'increase_cyber_budget', points: 20, path: 'good' },
+                        { text: 'Maintain current funding', value: 'maintain_cyber_budget', points: 5, path: 'neutral' }
                     ]
                 }
             ],
@@ -65,9 +65,9 @@ const GameScenarios = {
                     selectedValue: null,
                     options: [
                         { text: '-- Select Action --', value: null, points: 0, path: 'neutral' },
-                        { text: 'Authorize full release', value: 'opt1', points: 25, path: 'bad' },
-                        { text: 'Halt operations immediately', value: 'opt2', points: 15, path: 'good' },
-                        { text: 'Request internal audit', value: 'opt3', points: 10, path: 'neutral' }
+                        { text: 'Authorize full release', value: 'authorize_full_release', points: 25, path: 'bad' },
+                        { text: 'Halt operations immediately', value: 'halt_operations', points: 15, path: 'good' },
+                        { text: 'Request internal audit', value: 'request_audit', points: 10, path: 'neutral' }
                     ]
                 }
             ]

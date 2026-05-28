@@ -1,0 +1,28 @@
+<div class="intro-screen" x-show="phase === 'team' || phase === 'game'" x-transition.opacity.duration.1000ms>
+    
+    <div class="image-center-box" x-show="phase === 'team'" x-transition.opacity.duration.1000ms>
+        <template x-for="(img, index) in teamImages" :key="index">
+            <img :src="img" class="fixed-size-image" :class="{ 'is-visible': activeStep > index }">
+        </template>
+    </div>
+
+    <div class="image-center-box" 
+         x-show="phase === 'game'" 
+         x-transition:enter="transition ease-in-out duration-1000"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         :class="{ 'glitch-active': isGlitching }">
+         
+        <template x-for="(img, index) in gameImages" :key="index">
+            <img :src="img" class="fixed-size-image" :class="{ 'is-visible': activeStep > index }">
+        </template>
+    </div>
+</div>
+
+<div class="intro-screen customization-bg" x-show="phase === 'customization'" x-transition.opacity.duration.500ms>
+    <div class="customization-content">
+        <h1>Who are <i>you</i>?</h1>
+        <p style="margin-bottom: 20px;">[ Interface ]</p>
+        <button @click="finishIntro()">ENTER THE GAME</button>
+    </div>
+</div>

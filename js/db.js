@@ -139,6 +139,7 @@ document.addEventListener('alpine:init', () => {
         deleteFile(fileId) {
             if (this.fileSystem) {
                 this.fileSystem = this.fileSystem.filter(file => file.id !== fileId);
+                this.evaluateFileDeleted(fileId);
             }
         },
 
@@ -150,6 +151,8 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        chatContacts: window.ChatContactsData || [],
+
         chatProgress: {
             boss: 'report_investigation', 
         },
@@ -159,8 +162,67 @@ document.addEventListener('alpine:init', () => {
             blamedIT: false
         },
 
-        chatContacts: typeof ChatContactsData !== 'undefined' ? ChatContactsData : [],
+        tasks: window.GameTasksData || {},
+
+        setTaskStatus(taskId, newStatus) {
+        if (this.tasks[taskId]) {
+            this.tasks[taskId].status = newStatus;
+            console.log(`[Task Manager] Zadanie '${taskId}' -> ${newStatus}`);
+            
+            // Globalne dźwięki postępu
+            if (!Alpine.store('accessibility').disableAudio) {
+                if (newStatus === 'active') {
+                    try { new Audio('sounds/notify.mp3').play(); } catch(e){}
+                } else if (newStatus === 'completed') {
+                    try { new Audio('sounds/tada.mp3').play(); } catch(e){}
+                } else if (newStatus === 'failed') {
+                    try { new Audio('sounds/error.mp3').play(); } catch(e){}
+                }
+            }
+            }
+        },
+
+    isTaskActive(taskId) {
+        return this.tasks[taskId]?.status === 'active';
+    },
+    
+    isTaskCompleted(taskId) {
+        return this.tasks[taskId]?.status === 'completed';
+    },
+
+    getScenarioAnswer(scenarioId, questionId) {
+        const scenario = window.GameScenarios?.[scenarioId];
+        if (!scenario || !scenario.isLocked) return null; 
+        
+        const segment = scenario.segments.find(s => s.id === questionId);
+        return segment ? segment.selectedValue : null;
+    },
+
+    evaluateScenarioSaved(scenarioId) {
+        Object.values(this.tasks).forEach(task => {
+            if (task.status === 'active' && typeof task.onScenarioSaved === 'function') {
+                task.onScenarioSaved(this, scenarioId);
+            }
         });
+    },
+
+    evaluateFileDeleted(fileId) {
+        Object.values(this.tasks).forEach(task => {
+            if (task.status === 'active' && typeof task.onFileDeleted === 'function') {
+                task.onFileDeleted(this, fileId);
+            }
+        });
+    },
+
+    evaluateIntranetHack(accountId) {
+        Object.values(this.tasks).forEach(task => {
+            if (task.status === 'active' && typeof task.onIntranetHack === 'function') {
+                task.onIntranetHack(this, accountId);
+            }
+        });
+    }
+
+});
 
     Alpine.store('accessibility', {
         disableAnimations: false,

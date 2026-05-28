@@ -1,15 +1,7 @@
 <div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0; padding: 4px; box-sizing: border-box; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;">
-    
-    <div style="border-bottom: 1px solid #808080; border-top: 1px solid #fff; padding: 2px 6px; margin-bottom: 4px; display: flex; gap: 12px; font-size: 11px;">
-        <span style="cursor: pointer;"><u>F</u>ile</span>
-        <span style="cursor: pointer;"><u>E</u>dit</span>
-        <span style="cursor: pointer;"><u>V</u>iew</span>
-        <span style="cursor: pointer;"><u>H</u>elp</span>
-    </div>
-
     <div style="display: flex; flex-grow: 1; gap: 4px; overflow: hidden;">
         
-        <div class="sunken-panel" style="width: 160px; background: white; display: flex; flex-direction: column; overflow-y: auto;">
+        <div class="sunken-panel" style="width: 40%; background: white; display: flex; flex-direction: column; overflow-y: auto;">
             <div style="background: navy; color: white; padding: 3px 6px; font-weight: bold; font-size: 11px; position: sticky; top: 0; z-index: 1;">
                 Contacts
             </div>
@@ -20,10 +12,12 @@
                         :style="selectedContact?.id === contact.id ? 'background: #000080; color: white;' : ''"
                         style="list-style-type: none; padding: 6px; margin: 2px; cursor: pointer; display: flex; align-items: center; gap: 6px; border: 1px solid transparent;">
                         
-                        <img src="ico/user.ico" width="16" height="16" style="image-rendering: pixelated;">
-                        <div style="overflow: hidden;">
-                            <div style="font-size: 12px; font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" x-text="contact.name"></div>
-                            <div style="font-size: 10px; color: gray;" :style="selectedContact?.id === contact.id ? 'color: #d0d0d0;' : ''" x-text="contact.status"></div>
+                        <div style="overflow: hidden">
+                            <div style="display: flex; gap: 4px;">
+                                <img src="ico/media_player_stream_sun4.ico" width="16" height="16" style="image-rendering: pixelated;">
+                                <div style="font-size: 12px; font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" x-text="contact.name"></div>
+                            </div>
+                                <div style="font-size: 10px; color: gray;" :style="selectedContact?.id === contact.id ? 'color: #d0d0d0; margin-left: 20px;' : ''" x-text="contact.status"></div>
                         </div>
                     </li>
                 </template>
@@ -67,7 +61,7 @@
                     </template>
                 </template>
             </div>
-
+            
             <div class="sunken-panel" style="background: #c0c0c0; padding: 8px; flex-shrink: 0; min-height: 70px; display: flex; flex-direction: column; gap: 6px;">
                 <div style="font-size: 11px; color: #333; font-weight: bold; border-bottom: 1px solid #888; padding-bottom: 4px;">
                     Available responses:
@@ -75,15 +69,17 @@
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 6px; overflow-y: auto; max-height: 100px;">
                     <template x-if="selectedContact">
+                        
                         <template x-for="option in selectedContact.options" :key="option.id">
                             
-                            <template x-if="canSeeOption(option)">
-                                <button @click="sendMessage(option)" style="padding: 4px 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif; font-size: 11px; cursor: pointer;">
-                                    <span x-text="option.text"></span>
-                                </button>
-                            </template>
+                            <button x-show="canSeeOption(option)" 
+                                    @click="sendMessage(option)" 
+                                    style="padding: 4px 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif; font-size: 11px; cursor: pointer;">
+                                <span x-text="option.text"></span>
+                            </button>
                             
                         </template>
+                        
                     </template>
                     
                     <template x-if="selectedContact && selectedContact.options.filter(o => canSeeOption(o)).length === 0">
