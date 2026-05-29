@@ -38,11 +38,11 @@ const GameAssets = {
 
     'notepad': { icon: 'ico/notepad.ico', title: 'Notepad', width: 500, height: 500 },
     'excel': { icon: 'ico/excel.ico', title: 'Excel', width: 800, height: 500 },
-    'browser': { icon: 'ico/msie2.ico', title: 'Internet Explorer', width: 640, height: 350 },
+    'browser': { icon: 'ico/msie2.ico', title: 'Internet Explorer', width: 640, height: 540 },
     
     'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
     
-    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 550, height: 540 },
+    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 400, height: 400 },
     'intranet': { icon: 'ico/network_normal_two_pcs.ico', title: 'Internal Network', width: 500, height: 400 },
     },
 
