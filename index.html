@@ -111,7 +111,9 @@
             </div>
 
             <div id="desktop" @click.self="clearSelection()"
-                :style="`background-image: url(${$store.system.desktopWallpaper});`">
+                 :style="$store.system.desktopWallpaper === 'none' 
+                    ? 'background-color: #008080; background-image: none;' 
+                    : `background: url('${$store.system.desktopWallpaper}') center/cover no-repeat;`">
 
                 <div x-data="TaskManagerApp" x-html="htmlContent" class="desktop-widget-taskmanager"></div>
 

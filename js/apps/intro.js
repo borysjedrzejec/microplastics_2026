@@ -110,7 +110,9 @@ document.addEventListener('alpine:init', () => {
         finishIntro() {
             const wallpaperFileName = this.selectedPet ? `${this.selectedPet}.jpg` : '';
             
-            Alpine.store('system').desktopWallpaper = `images/wallpapers/${wallpaperFileName}`;
+            Alpine.store('system').desktopWallpaper = (wallpaperFileName === 'none' || !wallpaperFileName) 
+                ? 'none' 
+                : `images/wallpapers/${wallpaperFileName}`;
             Alpine.store('system').selectedAvatar = this.selectedAvatar;
             Alpine.store('system').selectedPet = this.selectedPet;
             Alpine.store('system').selectedInterests = this.selectedInterests;
