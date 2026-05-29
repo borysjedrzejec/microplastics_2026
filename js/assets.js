@@ -1,3 +1,96 @@
+const ConditionalMailsData = [
+    {   
+        requiredInterest: 'Sea creatures',
+        folder: 'inbox',
+        sender: 'Aquarium',
+        subject: 'Discount for Tickets to the Aquarium',
+        unread: true,
+        pinned: false,
+        content: `Hi there,\n\nWe have sent you a discount to visit the aquarium.\n\nGet your free discount code below\nACQUARIUMFISH123\n\nYour discount code is valid for up to 2 days, to redeem this discount, simply copy the code and go to aquarium.com and buy a ticket and apply the discount at the checkout.\n\nRegards,\nAquarium\nPromotions team`
+    },
+    {   
+        requiredInterest: 'Sea creatures',
+        folder: 'inbox',
+        sender: 'Sea News',
+        subject: 'NewsLetter',
+        unread: true,
+        pinned: false,
+        content: `Good Morning,\n\nBreaking News: Scientists have discovered a new species of octopus and they have decided to give it the name blue octopus and you wont believe why.\n\nRegards,\nSea News\nNews team`
+    },
+    {   
+        requiredInterest: 'Cooking & Baking',
+        folder: 'inbox',
+        sender: 'MorisBons',
+        subject: 'Discount voucher',
+        unread: true,
+        pinned: false,
+        content: `Greetings,\n\nWe have sent you a discounted voucher meant for ingredients used in baking\n\nGet your free voucher below\nMORISBONS67\n\nYour voucher will be valid for 1 day, simply go to morrisbons.com and activate you voucher at checkout\n\nRegards,\nMorisBons\nPromotions team`
+    },
+    {   
+        requiredInterest: 'Cooking & Baking',
+        folder: 'inbox',
+        sender: 'BakersWeekly',
+        subject: 'NewsLetter',
+        unread: true,
+        pinned: false,
+        content: `Good Morning,\n\nBreaking News: Famous vlogger/youtuber Joe Sugg has fainted at the sight of blood during the participation of the great british bake off.\n\nRegards,\nBakersWeekly\nNews team`
+    },
+    {   
+        requiredInterest: 'Magic',
+        folder: 'inbox',
+        sender: 'Equestria',
+        subject: 'Discount voucher',
+        unread: true,
+        pinned: false,
+        content: `Greetings,\n\nWe have sent you a magical gift for a chance to go on a tour around Equestria for a discounted rate\n\nGet your magical voucher code below\nEqUeStY136\n\nYour voucher will be valid for 3 days, simply cast a spell to go to Equestria.com and cast a spell to activate your discount at checkout.\n\nRegards,\nEquestria\nPromotions team`
+    },
+    {   
+        requiredInterest: 'Magic',
+        folder: 'inbox',
+        sender: 'EquestriaNews',
+        subject: 'NewsLetter',
+        unread: true,
+        pinned: false,
+        content: `Good Morning,\n\nBreaking News: A diver has told a bizarre story of seeing Saruman swimming with the fishes. However someone else going by the name Gandalf has denied these allegations.\n\nRegards,\nEquestriaNews\nNews team`
+    },
+    {   
+        requiredInterest: 'Video Games',
+        folder: 'inbox',
+        sender: 'Vapour',
+        subject: 'Discount voucher',
+        unread: true,
+        pinned: false,
+        content: `Greetings,\n\nWe have sent you a discount for games on Vapour\n\nGet your Vapour discount code below\nVAPOR 148\n\nYour voucher will be valid for 1 day, simply activate the code at checkout\n\nRegards,\nVapour\nPromotions team`
+    },
+    {   
+        requiredInterest: 'Video Games',
+        folder: 'inbox',
+        sender: 'VideoGamesNews',
+        subject: 'NewsLetter',
+        unread: true,
+        pinned: false,
+        content: `Good Morning,\n\nBreaking News: BJacksepticeye a famous youtuber has taken an interest in making a live action Bloodborne film and would like to make sure its as close to the game as possible\n\nRegards,\nVideoGamesNews\nNews team`
+    },
+    {   
+        requiredInterest: 'Gardening',
+        folder: 'inbox',
+        sender: 'HouseBase',
+        subject: 'Discount voucher',
+        unread: true,
+        pinned: false,
+        content: `Greetings,\n\nWe have sent you a discount for gardening tool at Housebase\n\nGet your HouseBase discount code below\nHBASE120\n\nYour voucher will be valid for 10 days, simply redeem the code at checkout.\n\nRegards,\nHouseBase\nPromotions team`
+    },
+    {   
+        requiredInterest: 'Gardening',
+        folder: 'inbox',
+        sender: 'Gardening Weekly',
+        subject: 'NewsLetter',
+        unread: true,
+        pinned: false,
+        content: `Good Morning,\n\nJack Black a famouse actor, one who has starred in the Minecraft Movie and many others has made it on the news claiming that his gardening tools from HouseBase have been found to be radioactive.\n\nRegards,\nGardening Weekly\nNews team`
+    }
+];
+
 const GameAssets = {
 
     audioPaths: {
@@ -36,7 +129,8 @@ const GameAssets = {
     },
 
     rawMailData: [
-        {   folder: 'inbox',
+        {   id: 'sys-mail-0',
+            folder: 'inbox',
             sender: 'Sonique Hedge',
             subject: 'New CorpChat & Tutorial',
             unread: true,
@@ -63,12 +157,12 @@ const GameAssets = {
 
         { id: 'sys-file-old-report', folderId: 'bin', name: 'Old_Report', type: 'document', content: 'FWOFJP3#%^&%$&$nwdsagsgSDF##TY UHBBSBSDS#$^%$^%$&$&' },
 
-        { id: 'sys-file-kim-biodiversity', folderId: 'folder_kim_ferguson', name: 'Biodiversity_Report_2025', type: 'document', scenarioId: 'sys-file-kim-biodiversity', content: '2025-2026 Biodiversity Management Report' },
+        { id: 'sys-file-kim-biodiversity', folderId: 'folder_kim_ferguson', name: 'Biodiversity_Report_2025', type: 'document', scenarioId: 'kim_biodiversity_report', content: '2025-2026 Biodiversity Management Report' },
 
         // TASK 4: Mail Sophii o widelcach
         {
             id: 'sys-file-sophia-forks',
-            folderId: 'folder_sophia_hearts', 
+            folderId: 'folder_sophia_heart', 
             type: 'document',
             name: 'FW_Breakroom_Supplies',
             content: `Dear all, 
@@ -125,7 +219,7 @@ const GameAssets = {
         // TASK 6: Raport Roczny (Plik startowy dla interakcji Afonso)
         {
             id: 'sys-file-afonso-report',
-            folderId: 'folder_afonso_travers', 
+            folderId: 'folder_afonso_tavares', 
             type: 'document',
             name: 'Draft_Annual_Report_2030',
             scenarioId: 'annual_report_2030', // Łączy plik ze scenariuszem poniżej!
@@ -232,6 +326,14 @@ const GameAssets = {
             correctPass: 'GolfPro1980', // Hasło z chatu u Stanleya
             options: ['GolfPro1980', 'billgates', 'cto_win', 'entrantes', 'golf_master'], 
             targetFolderId: 'folder_finlay_entrantes'
+        },
+        { 
+            id: 'acc_afonso_tavares', 
+            name: 'Afonso Tavares', 
+            department: 'Logistics',
+            correctPass: 'logistics2026',
+            options: ['logistics2026', 'afonso_t', 'sea_manager', 'password', '1234'], 
+            targetFolderId: 'folder_afonso_tavares'
         }
     ],
 

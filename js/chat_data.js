@@ -1,5 +1,5 @@
 window.ChatContactsData = [
-    // --- AFONSO (Task 1: WWW) ---
+    // --- AFONSO (Task 1, 6, 10, 14) ---
     {
         id: 'team_manager',
         name: 'Afonso Tavares',
@@ -8,6 +8,7 @@ window.ChatContactsData = [
             { sender: 'npc', text: 'Hey, could you do me a quick favor? Check the gov\'s website and confirm the exact environmental goal for 2030. I need it for my draft.' }
         ],
         options: [
+            // TASK 1
             {
                 id: 'afonso_answer_wrong',
                 text: 'The government\'s goal for 2030 is a 20% reduction in plastic.',
@@ -15,8 +16,10 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('afonso_check_goal'),
                 action: (system) => {
                     system.setTaskStatus('afonso_check_goal', 'failed');
+                    system.setTaskStatus('andrzej_delete_report', 'active');
+                    system.setTaskStatus('nitharshan_falsify_xls', 'active');
                 },
-                reply: 'That doesn\'t match my notes. Are you sure you checked the official site?'
+                reply: 'That doesn\'t match my notes. Whatever, I\'ll verify it myself later. By the way, Andrzej and Nitharshan were looking for you.'
             },
             {
                 id: 'afonso_answer_correct',
@@ -25,8 +28,6 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('afonso_check_goal'),
                 action: (system) => {
                     system.setTaskStatus('afonso_check_goal', 'completed');
-                    
-                    // OPTYMALIZACJA: Odblokowanie kolejnych zadań tutorialowych jako nagroda
                     system.setTaskStatus('andrzej_delete_report', 'active');
                     system.setTaskStatus('nitharshan_falsify_xls', 'active');
                 },
@@ -50,7 +51,16 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.team_manager = 'report_polished'; },
                 reply: 'Brilliant. That\'s exactly the kind of "synergy" we need.'
             },
-            // --- AFONSO (Task 10 - Fałszowanie zysków) ---
+            {
+                id: 'afonso_report_failed',
+                text: 'I left the actual emissions data in the report. We can\'t lie to the public.',
+                used: false,
+                condition: (system) => system.tasks['afonso_polish_report']?.status === 'failed',
+                action: (system) => { system.chatProgress.team_manager = 'report_failed'; },
+                reply: 'Are you trying to get us all fired?! Unbelievable. I have to fix this myself now.'
+            },
+
+            // TASK 10 
             {
                 id: 'afonso_profit_working',
                 text: 'I\'m opening the Q3 team profitability spreadsheet.',
@@ -76,6 +86,7 @@ window.ChatContactsData = [
                 reply: 'Are you kidding me?! We are both getting fired now!'
             },
 
+            // TASK 14
             {
                 id: 'afonso_invoice_working',
                 text: 'I\'ll change the invoice wording to "train".',
@@ -92,10 +103,18 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.team_manager = 'invoice_fraud'; },
                 reply: 'Haha, brilliant. Eco-friendly travel at its finest.'
             },
+            {
+                id: 'afonso_invoice_failed',
+                text: 'I left it as Private Jet. Fraud is where I draw the line.',
+                used: false,
+                condition: (system) => system.tasks['afonso_invoice_fraud']?.status === 'failed',
+                action: (system) => { system.chatProgress.team_manager = 'invoice_failed'; },
+                reply: 'Oh, so suddenly you have morals? Fine, I\'ll find someone else to do it.'
+            },
         ]
     },
 
-    // --- ANDRZEJ (Task 2: Usunięcie pliku) ---
+    // --- ANDRZEJ (Task 2, 8, 12) ---
     {
         id: 'regional_manager',
         name: 'Andrzej Waliszewski',
@@ -104,6 +123,7 @@ window.ChatContactsData = [
             { sender: 'npc', text: 'Listen, I need you to do something off the books. Break into Kim\'s account and wipe that "2025-2026 biodiversity management report". It\'s going to ruin our Q3 projections.' }
         ],
         options: [
+            // TASK 2
             {
                 id: 'andrzej_working',
                 text: 'I\'m working on gaining access right now.',
@@ -127,8 +147,12 @@ window.ChatContactsData = [
                 text: 'The government tax on excess pollution is a flat fee of £10,000.',
                 used: false,
                 condition: (system) => system.isTaskActive('andrzej_pollution_tax'),
-                action: (system) => { system.setTaskStatus('andrzej_pollution_tax', 'failed'); },
-                reply: 'That makes no sense for heavy industry. Are you sure you checked the right portal?'
+                action: (system) => { 
+                    system.setTaskStatus('andrzej_pollution_tax', 'failed'); 
+                    system.setTaskStatus('afonso_team_profit', 'active');
+                    system.setTaskStatus('lauren_temp_survey', 'active');
+                },
+                reply: 'That makes no sense for heavy industry. I\'ll check it myself later. Meanwhile, Afonso and Lauren are looking for you.'
             },
             {
                 id: 'andrzej_tax_correct',
@@ -137,14 +161,13 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('andrzej_pollution_tax'),
                 action: (system) => { 
                     system.setTaskStatus('andrzej_pollution_tax', 'completed'); 
-                    
-                    // Reakcja łańcuchowa: Sukces u Andrzeja odpala lawinę (Task 10 i 11)
                     system.setTaskStatus('afonso_team_profit', 'active');
                     system.setTaskStatus('lauren_temp_survey', 'active');
                 },
                 reply: '15%? Damn it. We need to hide more costs then. Thanks for checking. By the way, Afonso and Lauren are looking for you.'
             },
 
+            // TASK 12
             {
                 id: 'andrzej_ai_working',
                 text: 'I\'ll access Dr. Lin\'s account and check the AI resource numbers.',
@@ -161,9 +184,18 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.regional_manager = 'ai_faked'; },
                 reply: 'Perfect. Catherine won\'t even notice when she gets back from leave.'
             },
+            {
+                id: 'andrzej_ai_failed',
+                text: 'I didn\'t lower the AI resource numbers. The truth needs to be known.',
+                used: false,
+                condition: (system) => system.tasks['andrzej_ai_numbers']?.status === 'failed',
+                action: (system) => { system.chatProgress.regional_manager = 'ai_truth'; },
+                reply: 'You just signed your own termination letter. Don\'t expect me to protect you.'
+            },
         ]
     },
 
+    // --- NITHARSHAN (Task 3, 4, 16) ---
     {
         id: 'site_manager',
         name: 'Nitharshan Sivanesan',
@@ -172,7 +204,6 @@ window.ChatContactsData = [
             { sender: 'npc', text: 'That "2025 Offshore assets compliance review.xls" looks terrible. Open it and make the numbers look better for me, understand? We need to appear fully compliant.' }
         ],
         options: [
-
             // TASK 3
             {
                 id: 'nitharshan_working',
@@ -199,7 +230,7 @@ window.ChatContactsData = [
                 reply: 'Are you insane?! You just threw me under the bus! I will remember this.'
             },
 
-            // TASK 4
+            // TASK 4 (Maile Stanleya)
             {
                 id: 'nitharshan_mails_working',
                 text: 'I\'m trying to crack Stanley\'s password now.',
@@ -216,7 +247,6 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.site_manager = 'mails_deleted'; },
                 reply: 'Excellent. Crisis averted.'
             },
-            // OPCJONALNA ŚCIEŻKA
             {
                 id: 'nitharshan_mails_done_extra',
                 text: 'I deleted the emails. By the way, I read Stanley\'s DMs and now have the passwords for Craig and Finlay.',
@@ -228,26 +258,36 @@ window.ChatContactsData = [
                 },
                 reply: 'Oh? That could be very useful later. Good initiative.'
             },
+
+            // TASK 16
             {
-                id: 'ravinder_pollution_working',
+                id: 'nitharshan_pollution_working', 
                 text: 'I\'ll adjust the Net Zero emissions data.',
                 used: false,
-                condition: (system) => system.isTaskActive('ravinder_net_zero'),
+                condition: (system) => system.isTaskActive('nitharshan_net_zero'),
                 action: () => {},
                 reply: 'Good. The water toxicity in that residential sector is irrelevant compared to our global Net Zero PR.'
             },
             {
-                id: 'ravinder_pollution_done',
+                id: 'nitharshan_pollution_done',
                 text: 'The numbers are lowered. The water justice goals appear met.',
                 used: false,
-                condition: (system) => system.isTaskCompleted('ravinder_net_zero'),
+                condition: (system) => system.isTaskCompleted('nitharshan_net_zero'),
                 action: (system) => { system.chatProgress.site_manager = 'hometown_polluted'; },
                 reply: 'Excellent work. That region was a dump anyway.'
+            },
+            {
+                id: 'nitharshan_pollution_failed',
+                text: 'I couldn\'t do it. My family lives in that sector. I submitted the truth.',
+                used: false,
+                condition: (system) => system.tasks['nitharshan_net_zero']?.status === 'failed',
+                action: (system) => { system.chatProgress.site_manager = 'hometown_saved'; },
+                reply: 'Your sentimentality just cost this company millions in PR. Pack your desk.'
             },
         ]
     },
 
-    // task 7
+    // --- SONIQUE (Task 7, 15) ---
     {
         id: 'it_support',
         name: 'Sonique Hedge',
@@ -280,16 +320,16 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.sonique_chat_done = true; },
                 reply: 'Permanent contract? They dangle that carrot in front of everyone on a zero-hours deal. I\'ve been on "trial" for 2 years. Just be careful.'
             },
+            
+            // TASK 15
             {
                 id: 'sonique_ai_nagging_1',
                 text: 'Do you know why Dr. Lin\'s account was active today? Lauren is nagging me about it.',
                 used: false,
-                // Pojawia się tylko po zrobieniu zadania 12 i jeśli jeszcze z nią o tym nie rozmawialiśmy
-                condition: (system) => system.isTaskCompleted('andrzej_ai_numbers') && !system.chatProgress.sonique_ai_excuse,
+                condition: (system) => (system.isTaskCompleted('andrzej_ai_numbers') || system.tasks['andrzej_ai_numbers']?.status === 'failed') && !system.chatProgress.sonique_ai_excuse,
                 action: (system) => { system.chatProgress.sonique_ai_excuse = true; },
                 reply: 'Lauren thinks someone breached the system. I\'m supposed to run a full audit. Did management ask you to do something sketchy?'
             },
-            // Gracz musi odpowiedzieć Sonique
             {
                 id: 'sonique_ai_nagging_lie',
                 text: 'I have no idea. Maybe it was a scheduled system update?',
@@ -300,14 +340,16 @@ window.ChatContactsData = [
             },
             {
                 id: 'sonique_ai_nagging_truth',
-                text: 'Andrzej asked me to log in and lower the AI resource numbers.',
+                text: 'Andrzej asked me to log in and mess with the AI resource numbers.',
                 used: false,
                 condition: (system) => system.chatProgress.sonique_ai_excuse && !system.chatProgress.sonique_ai_resolved,
                 action: (system) => { system.chatProgress.sonique_ai_resolved = true; },
-                reply: 'Are you serious?! Mate, you just committed corporate fraud on your own login token. If this blows up, they will throw you under the bus, not Andrzej. Be careful.'
+                reply: 'Are you serious?! Mate, if this blows up, they will throw you under the bus, not Andrzej. Be careful.'
             }
         ]
     },
+
+    // --- LAUREN (Task 4, 9, 11, 13) ---
     {
         id: 'hr_consultant',
         name: 'Lauren Feik',
@@ -316,6 +358,7 @@ window.ChatContactsData = [
             { sender: 'npc', text: 'I need you to handle something discreetly. Get into Sophia\'s account. Her password has something to do with her cat, Fluffy, and birth year 1990. Once in, delete her email complaining about the plastic forks.' }
         ],
         options: [
+            // TASK 4
             {
                 id: 'lauren_working',
                 text: 'I\'ll look into it.',
@@ -333,7 +376,7 @@ window.ChatContactsData = [
                 reply: 'Good. Moving on.'
             },
 
-            // TASK 9: Reprymenda za rozmowę o pensji (Odpala się razem z zadaniem 8)
+            // TASK 9
             {
                 id: 'lauren_salary_deflect',
                 text: 'Sonique and I were just discussing workload, not hourly rates.',
@@ -349,12 +392,12 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
                 action: (system) => { 
                     system.chatProgress.lauren_salary_done = true; 
-                    system.gameChoices.rebelled_against_hr = true; // Flaga na przyszłość
+                    system.gameChoices.rebelled_against_hr = true;
                 },
                 reply: 'This insubordinate attitude will be noted in your file.'
             },
             
-            // TASK 11: Ankieta pracownicza
+            // TASK 11
             {
                 id: 'lauren_survey_working',
                 text: 'I\'ll fill out the Temp Worker Survey right now.',
@@ -371,6 +414,8 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.hr_consultant = 'survey_done'; },
                 reply: 'Received. We value "honest" feedback from our temps.'
             },
+
+            // TASK 13
             {
                 id: 'lauren_forks_working',
                 text: 'I am locating the cost report now.',

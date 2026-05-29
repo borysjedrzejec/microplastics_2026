@@ -3,13 +3,44 @@
         
         <h1 class="shift-title">YOUR SHIFT IS OVER</h1>
         
-        <div class="summary-box">
-            <div x-html="mainEndingText" style="line-height: 1.5;"></div>
+        <div class="ending-layout">
             
-            <br>
-            
-            <p class="ending-personal" x-text="personalEndingText"></p>
+            <div class="retro-panel panel-game">
+                <div x-html="mainEndingText"></div>
+            </div>
+
+            <div class="retro-panel panel-real-world">
+                
+                <div class="real-world-label">[ OUT OF SYSTEM MESSAGE ]</div>
+                
+                <div class="manifesto-text">
+                    <p><strong>Corporate greed will doom us all, we won't all go to the moon, save lives not PDFs girlie.</strong></p>
+                    
+                    <p>The United Nations’ Environmental Programme reports that coral reefs are at the nexus of our triple planetary crises – biodiversity breakdown, climate emergency and rampant pollution resulting from decades of unsustainable production and consumption. Scientists predict that even if global warming is maintained at 1.5ºC, up to 90 per cent of coral reefs might disappear by 2050 due to prolonged ocean heatwaves.</p>
+                    
+                    <p>The United Kingdom’s government action on climate change is too light. The Net Zero Policy focuses only on trying to reach its goals by 2050, not taking into account that there will be no future without the Environment. We are the Environment.</p>
+                    
+                    <p>Members of the European Parliament are advocating for the Environment, yet using AI to generate their Instagram content, depriving us of employment and future.</p>
+                    
+                    <p>The information and data is scattered around the web which is becoming harder to navigate due to popularisation of AI. The only easily accessible sources are private companies’ annual reports on their Environmental impact.</p>
+                    
+                    <p>United Kingdom’s water stay privatised, how can a director of a company fulfill their obligation and generate profit while they need to also serve the public?</p>
+                    
+                    <p>The system does not work. We need to act and take care of OUR home - not only the UK, the Planet.</p>
+                    
+                    <p><strong>Read More:</strong></p>
+                    <ul>
+                        <li><a href="https://uk.oceana.org/reports/in-deep-water/" target="_blank" rel="noopener">Oceana: In Deep Water</a></li>
+                        <li><a href="https://www.unep.org/topics/ocean-seas-and-coasts/blue-ecosystems/coral-reefs" target="_blank" rel="noopener">UNEP: Coral Reefs</a></li>
+                        <li><a href="https://goodlawproject.org/update/climate-crisis-weve-filed-our-challenge-to-starmers-delay/" target="_blank" rel="noopener">Good Law Project: Climate Challenge</a></li>
+                        <li><a href="https://weownit.org.uk/public-ownership/water" target="_blank" rel="noopener">We Own It: Water Privatisation</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
+        
+        <button class="btn-restart" @click="window.location.reload()">[ TRY AGAIN ]</button>
 
     </div>
 </div>

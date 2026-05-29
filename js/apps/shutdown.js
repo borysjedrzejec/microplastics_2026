@@ -18,7 +18,7 @@ document.addEventListener('alpine:init', () => {
 
         get mainEndingText() {
             const messages = {
-                ENDING_A: `Is this truly what you wanted? <br>
+                'good': `Is this truly what you wanted? <br>
                             Becoming a tool in someone\’s oily hands? <br>
                             A tool with no rights.<br>
                             A tool that is too sharp to be contained.<br>
@@ -36,7 +36,7 @@ document.addEventListener('alpine:init', () => {
                             <br>
                             They need to pay the price. You will make them pay. But not alone. Together we will make your voice matter. <br>`,
                         
-                ENDING_B: `You are not sure if this is what you wanted. <br>
+                'bad': `You are not sure if this is what you wanted. <br>
                             Becoming a tool is normal at work.<br>
                             You had no other expectations, this is the mandatory evil; food prices rocketing. <br>
                             A tool with no rights.<br>
@@ -54,7 +54,7 @@ document.addEventListener('alpine:init', () => {
                             <br>
                             Someone needs to pay the price, but you hope it won\’t be taken from your bank account. Unfortunately, it is a standing order we all sign up to just after being born. It’s inevitable, you can’t unsubscribe to the environment, even though you tried, but forgot to finish the task, distracted with yet another, funny TikTok. Your voice mixes with the loud noise of instagram reels blasting from other passengers\' phones on a double decker bus. You turn to nothing, but were you ever anything? You tried your best, I’m so sorry it had to end like this.`,
                         
-                ENDING_C: `This is truly what you wanted. <br>
+                'very bad': `This is truly what you wanted. <br>
                             You are a tool in someone\’s gold goated hands.<br>
                             You pay the price with your own health; it can be re-purchased later when oily seals the deal.<br>
                             A tool with no flaws.<br>
@@ -78,8 +78,10 @@ document.addEventListener('alpine:init', () => {
                             You will pay the price. We will make you pay. We are not alone. Together we will make your voice die in the pit darker than a coal miner\’s nightmare. <br>
                             `
             };
+
+            const currentEnding = this.$store.system.highestScoreEnding;
             
-            return messages[this.highestScoreEnding] || "<strong>FATAL_ERROR:</strong><br>NO ENDING DATA";
+            return messages[currentEnding] || "<strong>FATAL_ERROR:</strong><br>NO ENDING DATA";
         },
 
         get personalEndingText() {

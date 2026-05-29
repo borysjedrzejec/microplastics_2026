@@ -24,7 +24,7 @@ document.addEventListener('alpine:init', () => {
         availablePets: ['none', 'cat', 'dog', 'rabbit', 'hamster'],
         selectedPet: null,
         
-        availableInterests: ['cooking & baking', 'gardening', 'magic', 'basketball', 'video games'],
+        availableInterests: ['Cooking & Baking', 'Gardening', 'Magic', 'Sea creatures', 'Video Games'],
         selectedInterests: [],
         
         globalChipLimit: 3,
@@ -115,7 +115,18 @@ document.addEventListener('alpine:init', () => {
             Alpine.store('system').selectedPet = this.selectedPet;
             Alpine.store('system').selectedInterests = this.selectedInterests;
             
-            
+            const personalizedEmails = ConditionalMailsData.filter(mail => 
+                this.selectedInterests.includes(mail.requiredInterest)
+            );
+
+            const formattedPersonalizedEmails = personalizedEmails.map((mail, index) => ({
+                id: `sys-mail-interest-${index}`,
+                ...mail
+            }));
+
+            Alpine.store('system').mailData.push(...formattedPersonalizedEmails);
+        
+
             this.phase = 'finished';
         },
 
