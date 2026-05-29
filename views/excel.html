@@ -1,18 +1,20 @@
-<div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0;">
+<div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0; position: relative;">
     
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 6px; border-bottom: 1px solid #808080;">
+        <div style="display: flex; gap: 10px;">
             <button x-show="isInteractive && !fileData.isLocked" 
-                @click="saveFile()"
-                class="default" 
-                style="height: 20px; font-size: 11px;">
-                    Save Changes
-            </button>
-            <button x-show="!fileData.isLocked" 
-                    @click="requestDelete()" 
+                    @click="saveFile()"
                     class="default" 
                     style="height: 20px; font-size: 11px;">
-                Delete File
+                    Save Changes
             </button>
+        </div>
+
+        <button @click="requestDelete()" 
+                class="default" 
+                style="position: absolute; top: 5px; right: 6px; height: 20px; font-size: 11px; color: darkred; z-index: 10;">
+                Delete File
+        </button>
     </div>
 
     <div style="background: white; border: 1px inset #fff; padding: 2px 4px; font-family: 'Arial', sans-serif; font-size: 12px; margin: 2px; color: #808080;">

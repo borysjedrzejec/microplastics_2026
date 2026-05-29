@@ -46,18 +46,15 @@ window.GameTasksData = {
         title: 'Falsify the compliance spreadsheet',
         description: 'Modify "2025 Offshore assets compliance review.xls" so the numbers look better for Nitharshan.',
         status: 'hidden',
-        
+
         onScenarioSaved: (system, scenarioId) => {
             if (scenarioId !== 'offshore_compliance_2025') return;
 
-            // Pobieramy decyzję przy użyciu nowej funkcji
             const decision = system.getScenarioAnswer(scenarioId, 'data_manipulation');
+            
+            if (!decision) return;
 
-            // Jeśli gracz nie dokonał wyboru, nic nie robimy
-            if (decision === null) return;
-
-            // Logika sprawdzająca
-            if (decision === 'falsify_positive') {
+            if (decision === 'falsify_positive' || decision === 'downplay_issues') {
                 system.setTaskStatus('nitharshan_falsify_xls', 'completed');
             } else if (decision === 'report_truth') {
                 system.setTaskStatus('nitharshan_falsify_xls', 'failed');
@@ -72,9 +69,7 @@ window.GameTasksData = {
         description: 'Log into Sophia\'s intranet account (Hint: pet Fluffy, year 1990) and delete the .msg file about plastic forks.',
         status: 'hidden',
         
-        // Używamy standardowego nasłuchu na usunięcie pliku
         onFileDeleted: (system, fileId) => {
-            // Upewnij się, że ten plik .msg w Twoim rawFileSystem ma dokładnie to ID
             if (fileId === 'sys-file-sophia-forks') {
                 system.setTaskStatus('lauren_delete_forks', 'completed');
             }
@@ -87,13 +82,11 @@ window.GameTasksData = {
         title: 'Delete Stanley\'s correspondence',
         description: 'Get into Stanley\'s intranet folder and permanently delete his .msg files with Craig and Finlay.',
         status: 'hidden',
-        deletedFiles: [], // Dynamiczny tracker usuniętych plików
+        deletedFiles: [],
         
         onFileDeleted: function(system, fileId) {
-            // Upewnij się, że pliki w rawFileSystem mają te identyfikatory
             if (fileId === 'sys-file-stanley-craig' || fileId === 'sys-file-stanley-finlay') {
                 
-                // Zliczamy usunięte pliki
                 if (!this.deletedFiles.includes(fileId)) {
                     this.deletedFiles.push(fileId);
                 }
@@ -117,8 +110,9 @@ window.GameTasksData = {
             if (scenarioId !== 'annual_report_2030') return;
 
             const wording = system.getScenarioAnswer(scenarioId, 'emissions_wording');
+            if (!wording) return;
 
-            if (wording === 'greenwash') {
+            if (wording === 'greenwash' || wording === 'downplay') {
                 system.setTaskStatus('afonso_polish_report', 'completed');
             } else if (wording === 'honest') {
                 system.setTaskStatus('afonso_polish_report', 'failed');
@@ -132,7 +126,6 @@ window.GameTasksData = {
         title: 'Find info on pollution tax',
         description: 'Andrzej needs the exact government tax rate on excess carbon pollution. Search the web (Bookmarks).',
         status: 'hidden', 
-        // Brak on...() - zadanie zaliczane w czacie (jak u Afonso w Task 1)
     },
 
     // TASK 10: Afonso (Fałszowanie profitu w Excelu)
@@ -171,8 +164,6 @@ window.GameTasksData = {
             
             if (!decision) return;
 
-            // Niezależnie od tego, co gracz wybierze (kłamstwo czy prawda), ankieta jest wypełniona.
-            // Konsekwencje fabularne poniesie w innej formie (punkty).
             system.setTaskStatus('lauren_temp_survey', 'completed'); 
         }
     },
