@@ -19,10 +19,63 @@
     </div>
 </div>
 
-<div class="intro-screen customization-bg" x-show="phase === 'customization'" x-transition.opacity.duration.500ms>
-    <div class="customization-content">
-        <h1>Who are <i>you</i>?</h1>
-        <p style="margin-bottom: 20px;">[ Interface ]</p>
-        <button @click="finishIntro()">ENTER THE GAME</button>
+<div class="intro-screen customization-bg" x-show="phase === 'customization'">
+    
+    <div class="setup-container">
+        
+        <div class="setup-section">
+            <h2 class="section-title">Select your avatar</h2>
+            <div class="avatar-grid">
+                <template x-for="avatar in avatars" :key="avatar">
+                    <div class="avatar-slot" 
+                         :class="{ 'selected': selectedAvatar === avatar }"
+                         @click="selectedAvatar = avatar">
+                        <span x-text="'IMG_0' + avatar"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div class="setup-section">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <h2 class="section-title">Who are <i>you</i>?</h2>
+                <span class="chip-counter" x-text="`SLOTS: ${totalChipsUsed}/${globalChipLimit}`"></span>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-header">Your pet</div>
+                <div class="chip-container">
+                    <template x-for="pet in availablePets" :key="pet">
+                        <button class="sys-chip" 
+                                :class="{ 'active': selectedPet === pet, 'disabled': !selectedPet && totalChipsUsed >= globalChipLimit }"
+                                @click="togglePet(pet)"
+                                x-text="pet">
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-header">Your interests</div>
+                <div class="chip-container">
+                    <template x-for="interest in availableInterests" :key="interest">
+                        <button class="sys-chip" 
+                                :class="{ 'active': selectedInterests.includes(interest), 'disabled': !selectedInterests.includes(interest) && (selectedInterests.length >= 2 || totalChipsUsed >= globalChipLimit) }"
+                                @click="toggleInterest(interest)"
+                                x-text="interest">
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-row">
+            <button class="boot-button" 
+                    :disabled="!canBoot" 
+                    @click="finishIntro()">
+                [ START GAME ]
+            </button>
+        </div>
+
     </div>
 </div>

@@ -42,11 +42,7 @@ const GameAssets = {
     
     'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
     
-<<<<<<< HEAD
-    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 600, height: 400 },
-=======
-    'chat': { icon: 'ico/users.ico', title: 'CorpChat', width: 400 },
->>>>>>> ecfd2ec975dddfdd8fb5d9a8027f1bbaba2dc712
+    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 400 },
     'intranet': { icon: 'ico/network_normal_two_pcs.ico', title: 'Internal Network', width: 500, height: 400 },
     },
 

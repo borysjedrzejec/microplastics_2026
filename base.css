@@ -70,6 +70,16 @@
     padding: 10px;
 }
 
+#desktop {
+    position: absolute;
+    inset: 0;
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #1a1a1a; 
+}
+
 .desktop-icon {
     width: 76px;
     display: flex;
@@ -193,13 +203,123 @@
     100% { transform: translate(0, 0) skew(0deg); filter: contrast(200%); }
 }
 
-.customization-content {
-    text-align: center; 
-    color: white; 
-    font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
+.customization-bg {
+    background-color: #000;
 }
 
-.customization-content button {
-    padding: 10px 20px; 
+.setup-container {
+    width: 650px;
+    max-width: 95vw;
+    font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
+    color: #eaeaea;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: relative;
+    z-index: 100;
+}
+
+.section-title {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    color: #eaeaea;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.avatar-slot {
+    aspect-ratio: 1;
+    background-color: #000;
+    border: 2px dashed #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    font-size: 12px;
+    color: #666;
+}
+
+.avatar-slot:hover {
+    border-color: #eaeaea;
+    color: #eaeaea;
+}
+
+.avatar-slot.selected {
+    border: 2px solid #eaeaea;
+    background-color: #eaeaea;
+    color: #000;
+}
+
+.chip-counter {
+    font-size: 12px;
+    color: #888;
+}
+
+.subsection {
+    margin-bottom: 20px;
+}
+
+.subsection-header {
+    font-size: 12px;
+    color: #eaeaea;
+    margin-bottom: 8px;
+}
+
+.chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sys-chip {
+    background-color: #000;
+    color: #eaeaea;
+    border: 1px solid #eaeaea;
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.sys-chip:active {
+    background-color: #222;
+}
+
+.sys-chip.active {
+    background-color: #eaeaea; 
+    color: #000;
+}
+
+.sys-chip.disabled {
+    opacity: 0.25;
+    pointer-events: none;
+    border-color: #444;
+}
+
+.action-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.boot-button {
+    background-color: #eaeaea;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boot-button:disabled {
+    background-color: #111;
+    color: #444;
+    cursor: not-allowed;
 }

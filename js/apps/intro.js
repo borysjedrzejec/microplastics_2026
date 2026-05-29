@@ -17,6 +17,59 @@ document.addEventListener('alpine:init', () => {
             'images/game_title/3.png'
         ],
 
+        // DANE PERSONALIZACJI
+        avatars: [1, 2, 3, 4], // Zmień to na nazwy plików w przyszłości
+        selectedAvatar: null,
+        
+        availablePets: ['none', 'cat', 'dog', 'rabbit', 'hamster'],
+        selectedPet: null,
+        
+        availableInterests: ['cooking & baking', 'gardening', 'magic', 'basketball', 'video games'],
+        selectedInterests: [],
+        
+        globalChipLimit: 3,
+
+        // Obliczana właściwość zliczająca aktualnie zajęte sloty
+        get totalChipsUsed() {
+            let count = 0;
+            if (this.selectedPet) count += 1;
+            count += this.selectedInterests.length;
+            return count;
+        },
+
+        // Logika wyboru zwierzaka (tylko 1)
+        togglePet(pet) {
+            // Jeśli klikamy w już wybrany, odznaczamy go
+            if (this.selectedPet === pet) {
+                this.selectedPet = null;
+                return;
+            }
+            // Zabezpieczenie przed przekroczeniem globalnego limitu
+            if (!this.selectedPet && this.totalChipsUsed >= this.globalChipLimit) return;
+            
+            this.selectedPet = pet;
+        },
+
+        // Logika wyboru zainteresowań (max 2)
+        toggleInterest(interest) {
+            const index = this.selectedInterests.indexOf(interest);
+            
+            if (index > -1) {
+                // Odznaczanie
+                this.selectedInterests.splice(index, 1);
+            } else {
+                // Zaznaczanie (sprawdzamy limit subsekcji oraz globalny)
+                if (this.selectedInterests.length < 2 && this.totalChipsUsed < this.globalChipLimit) {
+                    this.selectedInterests.push(interest);
+                }
+            }
+        },
+
+        // Warunek aktywacji przycisku Boot System
+        get canBoot() {
+            return this.selectedAvatar !== null && this.totalChipsUsed > 0;
+        },
+
         async init() {
             try {
                 const response = await fetch('views/intro.html');
@@ -55,6 +108,10 @@ document.addEventListener('alpine:init', () => {
         },
 
         finishIntro() {
+            const wallpaperFileName = this.selectedPet ? `${this.selectedPet}.jpg` : '';
+            
+            Alpine.store('system').desktopWallpaper = `images/wallpapers/${wallpaperFileName}`;
+            
             this.phase = 'finished';
         },
 

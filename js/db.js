@@ -169,7 +169,6 @@ document.addEventListener('alpine:init', () => {
             this.tasks[taskId].status = newStatus;
             console.log(`[Task Manager] Zadanie '${taskId}' -> ${newStatus}`);
             
-            // Globalne dźwięki postępu
             if (!Alpine.store('accessibility').disableAudio) {
                 if (newStatus === 'active') {
                     try { new Audio('sounds/notify.mp3').play(); } catch(e){}
