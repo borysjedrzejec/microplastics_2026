@@ -1,12 +1,4 @@
 <div style="height: 100%; display: flex; flex-direction: column;">
-    
-    <div style="display: flex; gap: 4px; padding: 4px; border-bottom: 1px solid #dfdfdf;">
-        <button>New Mail</button>
-        <button>Send/Recv</button>
-        <button>Addresses</button>
-        <button>Find</button>
-    </div>
-
     <div style="flex-grow: 1; display: flex; margin-top: 4px; gap: 4px; min-height: 0;">
         
         <ul class="tree-view" style="width: 30%; overflow-y: auto; margin: 0;">
@@ -33,7 +25,6 @@
                     <tr>
                         <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Sender</th>
                         <th style="padding: 2px 4px; border-right: 1px solid #808080; border-bottom: 1px solid #808080;">Subject</th>
-                        <th style="padding: 2px 4px; border-bottom: 1px solid #808080;">Received</th>
                     </tr>
                 </thead>
                 
@@ -51,7 +42,6 @@
                                 <span x-text="msg.sender"></span>
                             </td>
                             <td x-text="msg.subject" style="padding: 2px 4px;"></td>
-                            <td x-text="msg.received" style="padding: 2px 4px;"></td>
                         </tr>
                     </template>
                 </tbody>

@@ -1,23 +1,15 @@
-<div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: 'Arial', sans-serif;">
+<div class="shutdown-overlay">
+    <div class="shutdown-content">
         
-    <div class="window" style="width: 400px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
-        <div class="title-bar">
-            <div class="title-bar-text">System Logout</div>
+        <h1 class="shift-title">YOUR SHIFT IS OVER</h1>
+        
+        <div class="summary-box">
+            <p class="ending-main" x-text="mainEndingText"></p>
+            
+            <br>
+            
+            <p class="ending-personal" x-text="personalEndingText"></p>
         </div>
-        <div class="window-body" style="text-align: center; padding: 20px;">
-            
-            <p style="font-weight: bold; font-size: 14px; margin-bottom: 15px;">
-                It's 5:00 PM. Your shift has come to an end.
-            </p>
-            
-            <div class="sunken-panel" style="background: white; padding: 10px; text-align: left; margin-bottom: 20px; min-height: 100px;">
-                <strong>THE END</strong><br>
-                <p style="color: green; margin-top: 5px;">Good stuff: none</p>
-            </div>
 
-            <button @click="window.location.reload()" style="width: 80px;">Restart</button>
-            
-        </div>
     </div>
-
 </div>

@@ -39,13 +39,13 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            // point allocation
             this.fileData.content.forEach(row => {
                 row.forEach(cell => {
                     if (cell.type === 'interactive') {
                         const chosenOption = cell.options.find(opt => opt.value === cell.selectedValue);
                         if (chosenOption) {
-                            this.$store.system.addPoints(chosenOption.path, chosenOption.points);
+                            const outcome = chosenOption.ending || chosenOption.path;
+                            this.$store.system.addPoints(outcome, chosenOption.points);
                         }
                     }
                 });
@@ -53,15 +53,46 @@ document.addEventListener('alpine:init', () => {
 
             this.fileData.isLocked = true;
             this.activeDropdown = null;
-            this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
+
+            if (this.fileData.scenarioId && window.GameScenarios[this.fileData.scenarioId]) {
+                const globalScenario = window.GameScenarios[this.fileData.scenarioId];
+                globalScenario.isLocked = true;
+
+                this.fileData.content.forEach((localRow, rowIndex) => {
+                    localRow.forEach((localCell, cellIndex) => {
+                        if (localCell.type === 'interactive') {
+                            const globalCell = globalScenario.grid[rowIndex][cellIndex];
+                            
+                            if (globalCell && globalCell.type === 'interactive') {
+                                globalCell.selectedValue = localCell.selectedValue;
+                                console.log(`[EXCEL] Copied: ${globalCell.id} -> ${globalCell.selectedValue}`);
+                            }
+                        }
+                    });
+                });
+            } else {
+                console.error("[EXCEL] NO SCENARIO LINKED TO THIS FILE OR SCENARIO NOT FOUND", this.fileData.scenarioId);
+            }
+            // ------------------------------------------------------------
+
+            // Odpalenie Task Managera
+            if (this.$store.system.evaluateScenarioSaved) {
+                console.log("[EXCEL] Wysyłam sygnał do Task Managera...");
+                this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
+            }
         },
 
         requestDelete() {
             if (confirm(`Do you really want to delete the file "${this.fileData.name}"? This action cannot be undone.`)) {
                 
-                this.$store.system.deleteFile(this.fileData.id);
+                const deletedFileId = this.fileData.id;
+
+                this.$store.system.deleteFile(deletedFileId);
                 
-                // ADD BIN SOUND
+                if (this.$store.system.evaluateFileDeleted) {
+                    this.$store.system.evaluateFileDeleted(deletedFileId);
+                }
+                
                 if (!Alpine.store('accessibility').disableAudio) {
                     try { new Audio('sounds/recycle.mp3').play(); } catch(e){}
                 }

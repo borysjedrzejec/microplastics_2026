@@ -3,17 +3,16 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('corpChatApp', (payload) => ({
         isLoadingView: true,
         viewError: false,
-        
         selectedContact: null,
 
         get contacts() {
             let storeContacts = this.$store.system.chatContacts;
-            
             if (!storeContacts || storeContacts.length === 0) {
                 storeContacts = window.ChatContactsData || [];
+                // Inicjalizacja flagi nieprzeczytanych wiadomości dla pewności
+                storeContacts.forEach(c => c.hasUnread = c.hasUnread || false);
                 this.$store.system.chatContacts = storeContacts; 
             }
-            
             return storeContacts;
         },
 
@@ -40,19 +39,32 @@ document.addEventListener('alpine:init', () => {
 
         selectContact(contact) {
             this.selectedContact = contact;
+            this.selectedContact.hasUnread = false; // Odczytanie kasuje miganie
             this.scrollToBottom();
         },
 
         canSeeOption(option) {
             if (option.used) return false;
-            
             if (typeof option.condition !== 'function') return true;
-            
             return option.condition(this.$store.system);
+        },
+
+        // DRY: Wydzielona funkcja do odtwarzania dźwięku
+        playSound(filename) {
+            if (!Alpine.store('accessibility').disableAudio) {
+                try { 
+                    const audio = new Audio(`sounds/${filename}.mp3`);
+                    audio.volume = 0.5;
+                    audio.play(); 
+                } catch(e) {}
+            }
         },
 
         sendMessage(option) {
             if (!this.selectedContact) return;
+
+            // Zabezpieczenie przed błędem asynchronicznym! Zapisujemy referencję do obecnego kontaktu.
+            const targetContact = this.selectedContact;
 
             option.used = true;
 
@@ -60,40 +72,31 @@ document.addEventListener('alpine:init', () => {
                 option.action(this.$store.system);
             }
 
-            this.selectedContact.history.push({
+            targetContact.history.push({
                 sender: 'player',
                 text: option.text
             });
 
-            // UPLOAD SOUND
-            if (!Alpine.store('accessibility').disableAudio) {
-                try { 
-                    const ding = new Audio('sounds/ding.mp3');
-                    ding.volume = 0.5;
-                    ding.play(); 
-                } catch(e) {}
-            }
-
+            this.playSound('ding');
             this.scrollToBottom();
 
-            // npc response delay
+            // NPC Response Delay
             if (option.reply) {
                 setTimeout(() => {
-                    this.selectedContact.history.push({
+                    targetContact.history.push({
                         sender: 'npc',
                         text: option.reply
                     });
                     
-                    // UPLOAD SOUND
-                    if (!Alpine.store('accessibility').disableAudio) {
-                        try { 
-                            const chord = new Audio('sounds/chord.mp3');
-                            chord.volume = 0.5;
-                            chord.play(); 
-                        } catch(e) {}
-                    }
+                    this.playSound('chord');
                     
-                    this.scrollToBottom();
+                    // Jeśli gracz w międzyczasie zmienił okno chatu na inne, ustawiamy powiadomienie
+                    if (this.selectedContact?.id !== targetContact.id) {
+                        targetContact.hasUnread = true;
+                    } else {
+                        // Jeśli nadal jesteśmy w tym samym czacie, po prostu zjedź w dół
+                        this.scrollToBottom();
+                    }
                 }, 1500); 
             }
         },

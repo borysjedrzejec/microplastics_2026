@@ -3,13 +3,14 @@ document.addEventListener('alpine:init', () => {
 
     const ENDING = {
         ENDING_A: 'good',
-        ENDING_B: 'neutral',
-        ENDING_C: 'bad'
+        ENDING_B: 'bad',
+        ENDING_C: 'very bad'
     };
 
     const FILE_TYPE_MAP = {
         'spreadsheet': { ext: '.xls', icon: 'ico/excel.ico', defaultApp: 'excel' },
         'document': { ext: '.doc', icon: 'ico/document.ico', defaultApp: 'notepad' },
+        'mail': { ext: '.msg', icon: 'ico/mail.ico', defaultApp: 'mail_reader' },
     };
 
     const initializedIcons = GameAssets.rawDesktopIcons.map((icon, index) => ({
@@ -52,14 +53,15 @@ document.addEventListener('alpine:init', () => {
         }
 
         return {
-        id: `sys-file-${index}`,
+        id: file.id,
         folderId: file.folderId,
         type: file.type,
         name: finalName,
         icon: typeInfo.icon,
         defaultApp: typeInfo.defaultApp,
         content: finalContent,
-        isLocked: isLocked
+        isLocked: isLocked,
+        scenarioId: file.scenarioId
         };
     });
 
@@ -189,12 +191,34 @@ document.addEventListener('alpine:init', () => {
         return this.tasks[taskId]?.status === 'completed';
     },
 
-    getScenarioAnswer(scenarioId, questionId) {
-        const scenario = window.GameScenarios?.[scenarioId];
-        if (!scenario || !scenario.isLocked) return null; 
+    getScenario(scenarioId) {
+        return window.GameScenarios[scenarioId] || null;
+    },
+
+    // Pobiera konkretną wartość wybraną przez gracza (zapisana w selectedValue)
+    getScenarioAnswer(scenarioId, segmentId) {
+        const scenario = this.getScenario(scenarioId);
+        if (!scenario) return null;
+
+        // Szukamy w segmentach (text) lub gridzie (spreadsheet)
+        // Zakładamy, że szukamy w gridzie, jak w Twoim Excelu
+        if (scenario.grid) {
+            for (const row of scenario.grid) {
+                for (const cell of row) {
+                    if (cell.type === 'interactive' && cell.id === segmentId) {
+                        return cell.selectedValue;
+                    }
+                }
+            }
+        }
         
-        const segment = scenario.segments.find(s => s.id === questionId);
-        return segment ? segment.selectedValue : null;
+        // Opcjonalnie: Szukamy w segmentach (jeśli to zwykły tekstowy scenariusz)
+        if (scenario.segments) {
+            const segment = scenario.segments.find(s => s.id === segmentId);
+            return segment ? segment.selectedValue : null;
+        }
+
+        return null;
     },
 
     evaluateScenarioSaved(scenarioId) {
@@ -219,7 +243,15 @@ document.addEventListener('alpine:init', () => {
                 task.onIntranetHack(this, accountId);
             }
         });
-    }
+    },
+
+    evaluateMailRead(mailId) {
+        Object.values(this.tasks).forEach(task => {
+            if (task.status === 'active' && typeof task.onMailRead === 'function') {
+                task.onMailRead(this, mailId);
+            }
+        });
+    },
 
 });
 

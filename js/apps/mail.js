@@ -12,14 +12,7 @@ document.addEventListener('alpine:init', () => {
         get filteredMessages() {
             return this.$store.system.mailData
                 .filter(msg => msg.folder === this.currentFolder)
-                .sort((a, b) => {
-                    if (a.unread && !b.unread) return -1;
-                    if (!a.unread && b.unread) return 1;
-                    if (a.pinned && !b.pinned) return -1;
-                    if (!a.pinned && b.pinned) return 1;
-                    
-                    return 0; 
-                });
+                .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.unread ? 1 : 0) - (a.unread ? 1 : 0));
         },
 
         getUnreadCount(folderName) {

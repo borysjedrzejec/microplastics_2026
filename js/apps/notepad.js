@@ -46,19 +46,34 @@ document.addEventListener('alpine:init', () => {
             this.fileData.isLocked = true;
             this.activeDropdown = null; 
 
+            // BEZPIECZNA SYNCHRONIZACJA
             if (this.fileData.scenarioId && window.GameScenarios[this.fileData.scenarioId]) {
                 const globalScenario = window.GameScenarios[this.fileData.scenarioId];
                 
                 globalScenario.isLocked = true;
                 
-                globalScenario.segments.forEach((globalSeg, index) => {
-                    if (globalSeg.type === 'interactive' && this.fileData.content[index]) {
-                        globalSeg.selectedValue = this.fileData.content[index].selectedValue;
+                console.warn(`[EDYTOR] Rozpoczynam synchronizację pliku: ${this.fileData.scenarioId}`);
+
+                globalScenario.segments.forEach(globalSeg => {
+                    if (globalSeg.type === 'interactive') {
+                        // DRY: Szukamy dokładnie tego samego segmentu po jego ID, a nie po indeksie
+                        const localSeg = this.fileData.content.find(s => s.id === globalSeg.id);
+                        
+                        if (localSeg) {
+                            globalSeg.selectedValue = localSeg.selectedValue;
+                            console.log(`[EDYTOR] Skopiowano: ${globalSeg.id} -> ${globalSeg.selectedValue}`);
+                        }
                     }
                 });
+            } else {
+                // Jeśli ten błąd się pokaże, oznacza to, że w Twojej definicji 
+                // systemu plików brakuje właściwości 'scenarioId'
+                console.error("[EDYTOR BŁĄD KRYTYCZNY] Plik nie ma podpiętego prawidłowego scenarioId!");
             }
 
+            // ODPALENIE ZADAŃ
             if (this.$store.system.evaluateScenarioSaved) {
+                console.log("[EDYTOR] Wysyłam sygnał do Task Managera...");
                 this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
             }
         },
@@ -66,7 +81,13 @@ document.addEventListener('alpine:init', () => {
         requestDelete() {
             if (confirm(`Do you really want to delete the file "${this.fileData.name}"? This action cannot be undone.`)) {
                 
-                this.$store.system.deleteFile(this.fileData.id);
+                const deletedFileId = this.fileData.id;
+
+                this.$store.system.deleteFile(deletedFileId);
+                
+                if (this.$store.system.evaluateFileDeleted) {
+                    this.$store.system.evaluateFileDeleted(deletedFileId);
+                }
                 
                 // ADD BIN SOUND
                 if (!Alpine.store('accessibility').disableAudio) {

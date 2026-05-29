@@ -11,7 +11,11 @@ document.addEventListener('alpine:init', () => {
                 this.message = this.$store.system.mailData.find(m => m.id === payload.id);
                 
                 if (this.message) {
-                    this.message.unread = false;
+                    this.message.unread = false; 
+                    
+                    if (this.$store.system.evaluateMailRead) {
+                        this.$store.system.evaluateMailRead(this.message.id);
+                    }
                 }
             }
         }

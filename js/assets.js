@@ -10,24 +10,13 @@ const GameAssets = {
     },
 
     rawDesktopIcons: [
-        { title: 'Outlook Express', img: 'ico/mail.ico', appId: 'mail', payload: null },
+        {title: 'Bin', img: 'ico/recycle_bin_empty.ico', appId: 'file_explorer', payload: { folderId: 'bin', title: 'Bin' }},
+        { title: 'Accessibility', img: 'ico/accessibility.ico', appId: 'accessibility', payload: null },
         { title: 'CorpChat', img: 'ico/users.ico', appId: 'corpchat', payload: null },
+        { title: 'Outlook Express', img: 'ico/mail.ico', appId: 'mail', payload: null },
         { title: 'Internal Network', img: 'ico/network_normal_two_pcs.ico', appId: 'intranet', payload: null },
         { title: 'Internet Explorer', img: 'ico/msie2.ico', appId: 'browser', payload: null },
-        { title: 'Accessibility', img: 'ico/accessibility.ico', appId: 'accessibility', payload: null },
-
-        { 
-            title: 'Project Files', 
-            img: 'ico/directory_open_net_web_documents.ico', 
-            appId: 'file_explorer', 
-            payload: { folderId: 'project_files', title: 'Project Files' } 
-        },
-        { 
-            title: 'Bin', 
-            img: 'ico/recycle_bin_empty.ico', 
-            appId: 'file_explorer', 
-            payload: { folderId: 'bin', title: 'Bin' } 
-        }
+        {title: 'Project Files', img: 'ico/directory_open_net_web_documents.ico', appId: 'file_explorer', payload: { folderId: 'project_files', title: 'Project Files' } },
     ],
 
     appsData: {
@@ -42,26 +31,118 @@ const GameAssets = {
     
     'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
     
-    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 400, height: 400 },
+    'corpchat': { icon: 'ico/users.ico', title: 'CorpChat', width: 650, height: 400 },
     'intranet': { icon: 'ico/network_normal_two_pcs.ico', title: 'Internal Network', width: 500, height: 400 },
     },
 
     rawMailData: [
-        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true, pinned: true },
-        { folder: 'inbox', sender: 'System', subject: 'Welcome', received: '2025-10-01 10:00', body: 'Welcome to your email!', unread: true },
-        { folder: 'inbox', sender: 'Manager', subject: 'Report', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: true },
-        { folder: 'inbox', sender: 'Banager', subject: 'Beport', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: true },
-        { folder: 'inbox', sender: 'Canager', subject: 'Ceport', received: '2025-10-01 10:01', body: 'WHERE IS MY REPORT?', unread: false },
-        { folder: 'intranet', sender: 'Security', subject: 'ALERT', received: '2025-10-01 10:02', body: 'ALERT ALERT', unread: true }
+        {   folder: 'inbox',
+            sender: 'Sonique Hedge',
+            subject: 'New CorpChat & Tutorial',
+            unread: true,
+            pinned: true,
+            content: `Hi,
+
+                    Please be advised that the IT department has fully migrated our internal communications to the new CorpChat system, effective immediately. 
+
+                    HOW TO USE IT:
+                    1. Always check your Task Manager (the checklist icon) for active directives.
+                    2. Reply to your colleagues by clicking the available response chips at the bottom of the chat window.
+                    3. Some responses will only unlock after you find the right information in your emails, files, or the intranet.
+
+                    Afonso (Team Manager) has already logged a request and is waiting for you online. Please reach out to him as soon as possible.
+
+                    Regards,
+                    Sonique Hedge
+                    IT Support Specialist`
+        },
     ],
 
     rawFileSystem: [
-        { folderId: 'project_files', name: 'Document 1', type: 'document', content: 'admin:1234' },
-        { folderId: 'project_files', name: 'Q4_audit_report', type: 'spreadsheet', scenarioId: 'q4_audit_report' },
-        { folderId: 'project_files', name: 'Board_Directive_089', type: 'document', scenarioId: 'board_directive_089' },
+        { id: 'offshore_compliance_2025', folderId: 'project_files', name: 'Offshore_Compliance_2025', type: 'spreadsheet', scenarioId: 'offshore_compliance_2025' },
 
-        { folderId: 'bin', name: 'Old_Report.doc', type: 'document', content: 'Useless data.' },
-        { folderId: 'bin', name: 'Virus.exe', type: 'app', content: '' }
+        { id: 'sys-file-old-report', folderId: 'bin', name: 'Old_Report', type: 'document', content: 'FWOFJP3#%^&%$&$nwdsagsgSDF##TY UHBBSBSDS#$^%$^%$&$&' },
+
+        { id: 'sys-file-kim-biodiversity', folderId: 'folder_kim_ferguson', name: 'Biodiversity_Report_2025', type: 'document', scenarioId: 'sys-file-kim-biodiversity', content: '2025-2026 Biodiversity Management Report' },
+
+        // TASK 4: Mail Sophii o widelcach
+        {
+            id: 'sys-file-sophia-forks',
+            folderId: 'folder_sophia_hearts', 
+            type: 'document',
+            name: 'FW_Breakroom_Supplies',
+            content: `Dear all, 
+
+                Happy Friday! 
+
+                We have noticed that some are using the canteen while still clocked in. Please be reminded that the use of any of the cafes, canteens or break rooms is strictly prohibited outside of the allocated break times. If you need to use the loo please report to one of the on-site supervisors and let them know, do not leave your station unsupervised otherwise revenue is lost and we can’t afford that, especially with the Christmas bonuses approaching, and we all want to receive big ones with the continuing economy crisis. 
+
+                Additionally, please use the plastic cutlery provided, as with more employees we can have issues with providing normal ones to everyone during their allocated break time, and we are hearing complaints that people are not able to finish their lunch on time, losing their pay due to other colleagues' sloppiness. 
+
+                Hope we can all agree that we require everyone\’s immediate attention to this matter to streamline the KPIs so we all enjoy Christmas with our families. 
+
+                Should you have any concerns regarding the above please get in touch with me directly. 
+
+                Kind regards, 
+
+                Sophia Hearts 
+                HR Partner`
+        },
+
+        // TASK 5: Mail Stanleya (Z Craigiem)
+        {
+            id: 'sys-file-stanley-craig',
+            folderId: 'folder_stanley_swan',
+            type: 'document',
+            name: 'RE_Sector_4_Incident_Craig',
+            content: [
+                { type: 'text', text: 'From: Stanley\nTo: Craig\nSubject: RE: Sector 4 Leak\n\n' },
+                { type: 'text', text: 'Craig, keep your mouth shut about the Sector 4 leak. If the external auditors ask, the pressure sensors were simply malfunctioning and no crude oil was spilled.\n\nDo NOT put anything else in writing regarding this matter. Delete this thread after reading.' }
+            ]
+        },
+
+        // TASK 5: Mail Stanleya (Z Finlayem)
+        {
+            id: 'sys-file-stanley-finlay',
+            folderId: 'folder_stanley_swan',
+            type: 'document',
+            name: 'RE_Q2_Discrepancies_Finlay',
+            content: [
+                { type: 'text', text: 'From: Stanley\nTo: Finlay\nSubject: RE: Discrepancies in Q2\n\n' },
+                { type: 'text', text: 'Finlay, I told you to ignore the Q2 budget discrepancies. Nitharshan is handling the creative accounting on his end to cover the gap. Stand down and focus on your own department.' }
+            ]
+        },
+
+        // TASK 5: Opcjonalne znalezisko (Hasła Craiga i Finlaya)
+        {
+            id: 'sys-file-stanley-notes',
+            folderId: 'folder_stanley_swan',
+            type: 'document',
+            name: 'funnies',
+            content: `<img src='images/craig_buck.jpg' alt='Craig Buck' style='width: 100%;'>`
+        },
+
+        // TASK 6: Raport Roczny (Plik startowy dla interakcji Afonso)
+        {
+            id: 'sys-file-afonso-report',
+            folderId: 'folder_afonso_travers', 
+            type: 'document',
+            name: 'Draft_Annual_Report_2030',
+            scenarioId: 'annual_report_2030', // Łączy plik ze scenariuszem poniżej!
+            content: [] // Puste, ponieważ treść wstrzyknie mechanika 'GameScenarios'
+        },
+        { id: 'sys-file-afonso-q3', folderId: 'project_files', name: 'Q3_Team_Profitability.xls', type: 'spreadsheet', scenarioId: 'q3_team_profitability' },
+        { id: 'sys-file-hr-survey', folderId: 'project_files', name: 'Temp_Worker_Survey.doc', type: 'document', scenarioId: 'temp_worker_survey' },
+
+        // TASK 12: Raport AI
+        { id: 'sys-file-catherine-ai', folderId: 'folder_catherine_lin', name: 'AI_Resource_Usage.doc', type: 'document', scenarioId: 'ai_resource_report' },
+        { id: 'sys-file-catherine-rave', folderId: 'folder_kim_ferguson', name: 'Rave_Party_Tickets', type: 'document', content: 'You are invited to ARKH! Access code for the system: ARKH_RAVE_2026' },
+        // TASK 13: Widelce
+        { id: 'sys-file-fork-cost-report', folderId: 'project_files', name: 'Plastics_vs_Outsourcing_Cost.doc', type: 'document', content: 'CONFIDENTIAL: Cost analysis comparing in-house plastic cutlery supply against 3rd party outsourcing... [DATA NO LONGER RELEVANT]' },
+        // TASK 14: Faktura Afonso
+        { id: 'sys-file-executive-invoice', folderId: 'project_files', name: 'Executive_Travel_Invoice.doc', type: 'document', scenarioId: 'executive_invoice' },
+        // TASK 16: Excel Nitharshana (Zanieczyszczenie)
+        { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions.xls', type: 'spreadsheet', scenarioId: 'net_zero_pollution' }
     ],
 
     rawBookmarks: [
@@ -74,20 +155,20 @@ const GameAssets = {
             contentId: 'petz_homepage'
         },
         { 
-            id: 'hacker_net', 
-            title: 'The Underground', 
-            url: 'www.hacker.net', 
+            id: 'gov_env_2030', 
+            title: 'Gov.uk - 2030 Environmental Vision', 
+            url: 'www.gov.uk/policy/env-2030-targets', 
             verified: false, 
-            type: 'scenario', 
-            contentId: 'hacker_forum_login'
+            type: 'html', 
+            contentId: 'gov_env_2030_scenario'
         },
         { 
-            id: 'search', 
-            title: 'Search Engine', 
-            url: 'www.find.it', 
-            verified: true,
+            id: 'gov_tax_portal', 
+            title: 'Gov.uk - Industrial Taxation & Levies', 
+            url: 'www.gov.uk/corporate/pollution-tax',
+            verified: false,
             type: 'html', 
-            contentId: 'search_engine'
+            contentId: 'gov_tax_portal'
         }
     ],
 
@@ -105,20 +186,52 @@ const GameAssets = {
 
     rawIntranetAccounts: [
         { 
-            id: 'acc_jdoe', 
-            name: 'J. Doe (Management)', 
-            department: 'Executive',
-            correctPass: 'qerty123', 
-            options: ['admin', 'password', 'jdoe99', 'qerty123', 'bossman'], 
-            targetFolderId: 'folder_jdoe_private'
+            id: 'acc_kim_ferguson', 
+            name: 'Kim Ferguson', 
+            department: 'Environmental Compliance',
+            correctPass: 'disco2025', // DISCO ELYSIUM
+            options: ['disco2025', 'reef123', 'rcc_manager', 'kim_k', '1989'], 
+            targetFolderId: 'folder_kim_ferguson'
         },
         { 
-            id: 'acc_msmith', 
-            name: 'M. Smith (IT Sec)', 
-            department: 'IT',
-            correctPass: 'h4ck3r', 
-            options: ['123456', 'h4ck3r', 'qwerty', 'smith', 'god'], 
-            targetFolderId: 'folder_it_sec' 
+            id: 'acc_sophia_heart', 
+            name: 'Sophia Heart', 
+            department: 'HR',
+            correctPass: 'Fluffy1990', // Hasło z hintu (kot + rok)
+            options: ['Fluffy1990', 'starbucks', 'ilovemycat', 'hr_queen', '1990'], 
+            targetFolderId: 'folder_sophia_heart'
+        },
+        { 
+            id: 'acc_stanley_swan', 
+            name: 'Stanley Swan', 
+            department: 'Executive',
+            correctPass: 'CEO_Swan_2026',
+            options: ['CEO_Swan_2026', 'netzero', 'shell_ceo', 'swan_lake', '1234'], 
+            targetFolderId: 'folder_stanley_swan'
+        },
+        { 
+            id: 'acc_catherine_lin', 
+            name: 'Dr. Catherine Lin', 
+            department: 'Engineering',
+            correctPass: 'ARKH_RAVE_2026', // Hasło znalezione w mailach/biletach
+            options: ['ARKH_RAVE_2026', 'noahsark', 'pathos2', 'ai_master', 'catherine_lin'], 
+            targetFolderId: 'folder_catherine_lin'
+        },
+        { 
+            id: 'acc_craig_buck', 
+            name: 'Craig Buck', 
+            department: 'Finance',
+            correctPass: 'b00bies', // Hasło ze zdjęcia u Stanleya
+            options: ['b00bies', 'money', 'bigbucks', 'finance2026', 'craig_cfo'], 
+            targetFolderId: 'folder_craig_buck'
+        },
+        { 
+            id: 'acc_finlay_entrantes', 
+            name: 'Finlay Entrantes', 
+            department: 'Executive',
+            correctPass: 'GolfPro1980', // Hasło z chatu u Stanleya
+            options: ['GolfPro1980', 'billgates', 'cto_win', 'entrantes', 'golf_master'], 
+            targetFolderId: 'folder_finlay_entrantes'
         }
     ],
 

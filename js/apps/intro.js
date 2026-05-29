@@ -18,7 +18,7 @@ document.addEventListener('alpine:init', () => {
         ],
 
         // DANE PERSONALIZACJI
-        avatars: [1, 2, 3, 4], // Zmień to na nazwy plików w przyszłości
+        avatars: ['images/avatars/profile1.png', 'images/avatars/profile2.png', 'images/avatars/profile3.png'],
         selectedAvatar: null,
         
         availablePets: ['none', 'cat', 'dog', 'rabbit', 'hamster'],
@@ -111,6 +111,10 @@ document.addEventListener('alpine:init', () => {
             const wallpaperFileName = this.selectedPet ? `${this.selectedPet}.jpg` : '';
             
             Alpine.store('system').desktopWallpaper = `images/wallpapers/${wallpaperFileName}`;
+            Alpine.store('system').selectedAvatar = this.selectedAvatar;
+            Alpine.store('system').selectedPet = this.selectedPet;
+            Alpine.store('system').selectedInterests = this.selectedInterests;
+            
             
             this.phase = 'finished';
         },

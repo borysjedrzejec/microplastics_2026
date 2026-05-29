@@ -1,27 +1,25 @@
-<div style="display: flex; flex-direction: column; height: 100%; padding: 6px; background: #c0c0c0;">
+<div style="display: flex; flex-direction: column; height: 100%; padding: 6px; box-sizing: border-box; background: #c0c0c0;">
     
-    <div style="margin-bottom: 10px; border-bottom: 2px groove #fff; padding-bottom: 10px;">
+    <div style="margin-bottom: 10px; border-bottom: 2px groove #fff; padding-bottom: 10px; box-sizing: border-box;">
         <div class="field-row" style="margin-bottom: 4px;">
             <label style="width: 80px; text-align: right; font-weight: bold;">From:</label>
-            <span x-text="message?.sender"></span>
-        </div>
-        <div class="field-row" style="margin-bottom: 4px;">
-            <label style="width: 80px; text-align: right; font-weight: bold;">Sent:</label>
-            <span x-text="message?.received || '2025-10-01'"></span>
+            <span x-text="message?.sender || 'ENCRYPTED'"></span>
         </div>
         <div class="field-row" style="margin-bottom: 4px;">
             <label style="width: 80px; text-align: right; font-weight: bold;">To:</label>
-            <span x-text="$store.system.playerEmail"></span>
+            <span x-text="$store.system.playerEmail || 'ENCRYPTED'"></span>
         </div>
         <div class="field-row">
             <label style="width: 80px; text-align: right; font-weight: bold;">Subject:</label>
-            <span x-text="message?.subject"></span>
+            <span x-text="message?.subject || 'ENCRYPTED'"></span>
         </div>
     </div>
 
-    <div class="sunken-panel" 
-         style="flex-grow: 1; background: white; padding: 10px; overflow-y: auto;" 
-         x-html="message?.body">
+    <div class="sunken-panel" style="flex-grow: 1; background: white; overflow-y: scroll; overflow-x: hidden; box-sizing: border-box; padding: 12px;">
+            
+        <div style="word-wrap: break-word; overflow-wrap: break-word; white-space: pre-line; color: #222;" x-html="message?.content">
+        </div>
+
     </div>
 
 </div>
