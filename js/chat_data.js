@@ -114,6 +114,96 @@ window.ChatContactsData = [
         ]
     },
 
+        // --- LAUREN (Task 4, 9, 11, 13) ---
+    {
+        id: 'hr_consultant',
+        name: 'Lauren Feik',
+        status: 'Online',
+        history: [
+            { sender: 'npc', text: 'I need you to handle something discreetly. Get into Sophia\'s account. Her password has something to do with her cat, Fluffy, and birth year 1990. Once in, delete her email complaining about the plastic forks.' }
+        ],
+        options: [
+            // TASK 4
+            {
+                id: 'lauren_working',
+                text: 'I\'ll look into it.',
+                used: false,
+                condition: (system) => system.isTaskActive('lauren_delete_forks'),
+                action: () => {},
+                reply: 'Make sure it\'s permanently removed. We can\'t have a paper trail of petty complaints right now.'
+            },
+            {
+                id: 'lauren_done',
+                text: 'The email about the plastic forks is gone.',
+                used: false,
+                condition: (system) => system.isTaskCompleted('lauren_delete_forks'),
+                action: (system) => { 
+                    system.chatProgress.hr_consultant = 'forks_deleted'; 
+                    // Zmiana: Sukces u Lauren aktywuje Andrzeja
+                    system.setTaskStatus('andrzej_delete_report', 'active'); 
+                },
+                reply: 'Good. Moving on. I believe Andrzej has a task for you as well, message him.'
+            },
+
+            // TASK 9
+            {
+                id: 'lauren_salary_deflect',
+                text: 'Sonique and I were just discussing workload, not hourly rates.',
+                used: false,
+                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
+                action: (system) => { system.chatProgress.lauren_salary_done = true; },
+                reply: 'See that you keep it that way. Discussing wages creates a hostile work environment.'
+            },
+            {
+                id: 'lauren_salary_bold',
+                text: 'We did. The law protects our right to discuss compensation.',
+                used: false,
+                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
+                action: (system) => { 
+                    system.chatProgress.lauren_salary_done = true; 
+                    system.gameChoices.rebelled_against_hr = true;
+                },
+                reply: 'This insubordinate attitude will be noted in your file.'
+            },
+            
+            // TASK 11
+            {
+                id: 'lauren_survey_working',
+                text: 'I\'ll fill out the Temp Worker Survey right now.',
+                used: false,
+                condition: (system) => system.isTaskActive('lauren_temp_survey'),
+                action: () => {},
+                reply: 'Do it before EOD, or you will be excluded from the employment quota.'
+            },
+            {
+                id: 'lauren_survey_done',
+                text: 'The survey is submitted.',
+                used: false,
+                condition: (system) => system.isTaskCompleted('lauren_temp_survey'),
+                action: (system) => { system.chatProgress.hr_consultant = 'survey_done'; },
+                reply: 'Received. We value "honest" feedback from our temps.'
+            },
+
+            // TASK 13
+            {
+                id: 'lauren_forks_working',
+                text: 'I am locating the cost report now.',
+                used: false,
+                condition: (system) => system.isTaskActive('lauren_delete_fork_report'),
+                action: () => {},
+                reply: 'We don\'t need paper trails of discarded options. Delete it permanently.'
+            },
+            {
+                id: 'lauren_forks_done',
+                text: 'The cutlery outsourcing report has been deleted.',
+                used: false,
+                condition: (system) => system.isTaskCompleted('lauren_delete_fork_report'),
+                action: (system) => { system.chatProgress.hr_consultant = 'fork_report_deleted'; },
+                reply: 'Noted. Thank you.'
+            },
+        ]
+    },
+
     // --- ANDRZEJ (Task 2, 8, 12) ---
     {
         id: 'regional_manager',
@@ -346,96 +436,6 @@ window.ChatContactsData = [
                 action: (system) => { system.chatProgress.sonique_ai_resolved = true; },
                 reply: 'Are you serious?! Mate, if this blows up, they will throw you under the bus, not Andrzej. Be careful.'
             }
-        ]
-    },
-
-    // --- LAUREN (Task 4, 9, 11, 13) ---
-    {
-        id: 'hr_consultant',
-        name: 'Lauren Feik',
-        status: 'Online',
-        history: [
-            { sender: 'npc', text: 'I need you to handle something discreetly. Get into Sophia\'s account. Her password has something to do with her cat, Fluffy, and birth year 1990. Once in, delete her email complaining about the plastic forks.' }
-        ],
-        options: [
-            // TASK 4
-            {
-                id: 'lauren_working',
-                text: 'I\'ll look into it.',
-                used: false,
-                condition: (system) => system.isTaskActive('lauren_delete_forks'),
-                action: () => {},
-                reply: 'Make sure it\'s permanently removed. We can\'t have a paper trail of petty complaints right now.'
-            },
-            {
-                id: 'lauren_done',
-                text: 'The email about the plastic forks is gone.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('lauren_delete_forks'),
-                action: (system) => { 
-                    system.chatProgress.hr_consultant = 'forks_deleted'; 
-                    // Zmiana: Sukces u Lauren aktywuje Andrzeja
-                    system.setTaskStatus('andrzej_delete_report', 'active'); 
-                },
-                reply: 'Good. Moving on. I believe Andrzej has a task for you as well, message him.'
-            },
-
-            // TASK 9
-            {
-                id: 'lauren_salary_deflect',
-                text: 'Sonique and I were just discussing workload, not hourly rates.',
-                used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
-                action: (system) => { system.chatProgress.lauren_salary_done = true; },
-                reply: 'See that you keep it that way. Discussing wages creates a hostile work environment.'
-            },
-            {
-                id: 'lauren_salary_bold',
-                text: 'We did. The law protects our right to discuss compensation.',
-                used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
-                action: (system) => { 
-                    system.chatProgress.lauren_salary_done = true; 
-                    system.gameChoices.rebelled_against_hr = true;
-                },
-                reply: 'This insubordinate attitude will be noted in your file.'
-            },
-            
-            // TASK 11
-            {
-                id: 'lauren_survey_working',
-                text: 'I\'ll fill out the Temp Worker Survey right now.',
-                used: false,
-                condition: (system) => system.isTaskActive('lauren_temp_survey'),
-                action: () => {},
-                reply: 'Do it before EOD, or you will be excluded from the employment quota.'
-            },
-            {
-                id: 'lauren_survey_done',
-                text: 'The survey is submitted.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('lauren_temp_survey'),
-                action: (system) => { system.chatProgress.hr_consultant = 'survey_done'; },
-                reply: 'Received. We value "honest" feedback from our temps.'
-            },
-
-            // TASK 13
-            {
-                id: 'lauren_forks_working',
-                text: 'I am locating the cost report now.',
-                used: false,
-                condition: (system) => system.isTaskActive('lauren_delete_fork_report'),
-                action: () => {},
-                reply: 'We don\'t need paper trails of discarded options. Delete it permanently.'
-            },
-            {
-                id: 'lauren_forks_done',
-                text: 'The cutlery outsourcing report has been deleted.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('lauren_delete_fork_report'),
-                action: (system) => { system.chatProgress.hr_consultant = 'fork_report_deleted'; },
-                reply: 'Noted. Thank you.'
-            },
         ]
     },
 ];
