@@ -65,7 +65,7 @@ document.addEventListener('alpine:init', () => {
 
         startGameTimer() {
             // how long is one in-game minute in real time (ms)
-            const timeSpeed = 4000; 
+            const timeSpeed = 60000; 
 
             const timer = setInterval(() => {
                 if (this.$store.accessibility.disableTimer) {

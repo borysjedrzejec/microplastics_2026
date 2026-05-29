@@ -16,10 +16,10 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('afonso_check_goal'),
                 action: (system) => {
                     system.setTaskStatus('afonso_check_goal', 'failed');
-                    system.setTaskStatus('andrzej_delete_report', 'active');
+                    system.setTaskStatus('lauren_delete_forks', 'active');
                     system.setTaskStatus('nitharshan_falsify_xls', 'active');
                 },
-                reply: 'That doesn\'t match my notes. Whatever, I\'ll verify it myself later. By the way, Andrzej and Nitharshan were looking for you.'
+                reply: 'That doesn\'t match my notes. Whatever, I\'ll verify it myself later. By the way, Lauren and Nitharshan were looking for you.'
             },
             {
                 id: 'afonso_answer_correct',
@@ -28,10 +28,10 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskActive('afonso_check_goal'),
                 action: (system) => {
                     system.setTaskStatus('afonso_check_goal', 'completed');
-                    system.setTaskStatus('andrzej_delete_report', 'active');
+                    system.setTaskStatus('lauren_delete_forks', 'active');
                     system.setTaskStatus('nitharshan_falsify_xls', 'active');
                 },
-                reply: 'Thanks! That\'s exactly what I needed. By the way, Andrzej and Nitharshan were looking for you.'
+                reply: 'Thanks! That\'s exactly what I needed. By the way, Lauren and Nitharshan were looking for you.'
             },
 
             // TASK 6
@@ -372,8 +372,12 @@ window.ChatContactsData = [
                 text: 'The email about the plastic forks is gone.',
                 used: false,
                 condition: (system) => system.isTaskCompleted('lauren_delete_forks'),
-                action: (system) => { system.chatProgress.hr_consultant = 'forks_deleted'; },
-                reply: 'Good. Moving on.'
+                action: (system) => { 
+                    system.chatProgress.hr_consultant = 'forks_deleted'; 
+                    // Zmiana: Sukces u Lauren aktywuje Andrzeja
+                    system.setTaskStatus('andrzej_delete_report', 'active'); 
+                },
+                reply: 'Good. Moving on. I believe Andrzej has a task for you as well, message him.'
             },
 
             // TASK 9

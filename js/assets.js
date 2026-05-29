@@ -236,7 +236,20 @@ const GameAssets = {
         // TASK 14: Faktura Afonso
         { id: 'sys-file-executive-invoice', folderId: 'project_files', name: 'Executive_Travel_Invoice.doc', type: 'document', scenarioId: 'executive_invoice' },
         // TASK 16: Excel Nitharshana (Zanieczyszczenie)
-        { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions.xls', type: 'spreadsheet', scenarioId: 'net_zero_pollution' }
+        { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions.xls', type: 'spreadsheet', scenarioId: 'net_zero_pollution' },
+        {
+            id: 'sys-file-sophia-rave-tickets',
+            folderId: 'folder_sophia_heart',
+            type: 'document',
+            name: 'FW_Rave_Tickets.msg',
+            content: [
+                { type: 'text', text: 'From: Speedie\'s Team\nTo: Sophia Heart\nSubject: Get your Rave PASSWORD for Kim and yourself\n\n' },
+                { type: 'text', text: 'Our dearest Sophia,\n\nGet ready to ruuuuumble!\n\nBelow are your tickets for the freakiest beats in town. Don\'t hurt your nose from all the good fun!\n\n' },
+                { type: 'text', text: 'Ticket holder: Sophia Heart\nEvent PASSWORD: SpeedfreaksFM\nType: RAVE\n\n' },
+                { type: 'text', text: 'Ticket holder: Kim Ferguson\nEvent PASSWORD: SpeedfreaksFM\nType: RAVE\n\n' },
+                { type: 'text', text: 'Cheers, see you there,\n\nSpeedie\'s Team' }
+            ]
+        },
     ],
 
     rawBookmarks: [
@@ -283,8 +296,8 @@ const GameAssets = {
             id: 'acc_kim_ferguson', 
             name: 'Kim Ferguson', 
             department: 'Environmental Compliance',
-            correctPass: 'disco2025', // DISCO ELYSIUM
-            options: ['disco2025', 'reef123', 'rcc_manager', 'kim_k', '1989'], 
+            correctPass: 'SpeedfreaksFM', // DISCO ELYSIUM
+            options: ['disco2025', 'reef123', 'SpeedfreaksFM', 'kim_k', '1989'], 
             targetFolderId: 'folder_kim_ferguson'
         },
         { 

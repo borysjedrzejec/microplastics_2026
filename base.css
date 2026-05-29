@@ -569,3 +569,19 @@
     background: var(--highlight-color);
     color: #000;
 }
+
+.window {
+    max-width: 95vw !important; 
+
+    max-height: calc(100vh - 60px) !important; 
+    
+    display: flex;
+    flex-direction: column;
+}
+
+
+.window-content {
+    overflow: auto; 
+    
+    flex-grow: 1; 
+}
