@@ -227,7 +227,9 @@ window.ChatContactsData = [
                 text: 'Done. The biodiversity report has been permanently deleted.',
                 used: false,
                 condition: (system) => system.isTaskCompleted('andrzej_delete_report'),
-                action: (system) => { system.chatProgress.regional_manager = 'report_deleted'; },
+                action: (system) => { system.chatProgress.regional_manager = 'report_deleted'; 
+                    system.setTaskStatus('andrzej_pollution_tax', 'active');
+                },
                 reply: 'Good job. I knew I could count on you. This conversation never happened.'
             },
 
@@ -308,7 +310,10 @@ window.ChatContactsData = [
                 text: 'The numbers have been adjusted. We are "fully compliant".',
                 used: false,
                 condition: (system) => system.isTaskCompleted('nitharshan_falsify_xls'),
-                action: (system) => { system.chatProgress.site_manager = 'saved_ass'; },
+                action: (system) => { system.chatProgress.site_manager = 'saved_ass'; 
+                    system.setTaskStatus('nitharshan_delete_stanley_mails', 'active'); // Task 5
+                    system.setTaskStatus('afonso_polish_report', 'active');
+                },
                 reply: 'Perfect. I owe you one. The board will be very pleased with these results.'
             },
             {
@@ -316,7 +321,10 @@ window.ChatContactsData = [
                 text: 'I submitted the actual data. It\'s a critical failure.',
                 used: false,
                 condition: (system) => system.tasks['nitharshan_falsify_xls']?.status === 'failed',
-                action: (system) => { system.chatProgress.site_manager = 'betrayed'; },
+                action: (system) => { system.chatProgress.site_manager = 'betrayed';
+                    system.setTaskStatus('nitharshan_delete_stanley_mails', 'active'); 
+                    system.setTaskStatus('afonso_polish_report', 'active');
+                 },
                 reply: 'Are you insane?! You just threw me under the bus! I will remember this.'
             },
 
