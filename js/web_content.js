@@ -17,7 +17,6 @@ const WebsitesContent = {
 
     'gov_env_2030':{
             title: 'Gov.uk - 2030 Environmental Vision',
-            contentId: 'gov_env_2030_scenario',
             content: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; background: #ffffff; color: #333333; line-height: 1.6;">
                     

@@ -67,8 +67,8 @@ document.addEventListener('alpine:init', () => {
 
         openBookmark(site) {
             this.currentSite = site;
-            if (typeof WebsitesContent !== 'undefined' && WebsitesContent[site.contentId]) {
-                this.siteContent = WebsitesContent[site.contentId];
+            if (typeof WebsitesContent !== 'undefined' && WebsitesContent[site.id]) {
+                this.siteContent = WebsitesContent[site.id];
             } else {
                 this.siteContent = { content: '<h2 style="color:red; text-align:center;">Error 404: Page not found</h2>' };
             }
