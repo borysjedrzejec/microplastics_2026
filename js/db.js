@@ -153,6 +153,24 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        get highestScoreEnding() {
+            let topScore = -Infinity;
+            let winningEnding = 'ENDING_B';
+
+            for (const [endingKey, score] of Object.entries(this.scores)) {
+                if (score > topScore) {
+                    topScore = score;
+                    winningEnding = endingKey;
+                }
+            }
+
+            if(winningEnding === 'good') return 'ENDING_A';
+            if(winningEnding === 'bad') return 'ENDING_B';
+            if(winningEnding === 'very bad') return 'ENDING_C';
+
+            return winningEnding;
+        },
+
         chatContacts: window.ChatContactsData || [],
 
         chatProgress: {
