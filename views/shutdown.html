@@ -6,6 +6,7 @@
         <div class="ending-layout">
             
             <div class="retro-panel panel-game">
+                <div style="letter-spacing: 0px; font-weight: bold; text-align: center; margin-bottom: 2%; font-style: italic; font-size: 1.2em; margin-bottom: 3%" x-html="mainEndingTitle"></div>
                 <div x-html="mainEndingText"></div>
             </div>
 
@@ -40,7 +41,42 @@
 
         </div>
         
+        <button class="btn-credits" @click="showCredits = true">[ CREDITS ]</button>
         <button class="btn-restart" @click="window.location.reload()">[ TRY AGAIN ]</button>
+
+    <div x-show="showCredits" 
+         x-cloak 
+         style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        
+        <div class="retro-panel panel-real-world" style="width: 450px; max-width: 90%; position: relative;" @click.outside="showCredits = false">
+            
+            <div class="real-world-label">
+                CREDITS
+            </div>
+            
+            <div class="manifesto-text" style="font-weight: lighter;">
+                <p style="text-align: center; letter-spacing: 4px; font-variant: unicase; margin-bottom: 0px; font-size: 1.4em;"><strong>White Coral Crime</strong></p>
+                <p style="text-align: center;">Created by <strong>Microplastics</strong></p>
+                
+                <p>
+                    <strong>Programming:</strong> Borys Jedrzejec<br>
+                    <strong>Writing:</strong> Arthur Paczka<br>
+                    <strong>Art:</strong> Diogo Jorge & Borys Jedrzejec<br>
+                    <strong>Support:</strong> Kani<br>
+                    <strong>Photos:</strong> Syl (rabbit) & Ashjkjgbm (hamster)<br>
+                    <strong>UI Framework:</strong> 98.css<br>
+                </p>
+
+                <p style="text-align: center; letter-spacing: 4px; font-variant: unicase;">Thank you for playing!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 10px;">
+                <button @click="showCredits = false" class="btn-restart" style="margin-top: 0;">
+                    [ CLOSE ]
+                </button>
+            </div>
+            
+        </div>
 
     </div>
 </div>

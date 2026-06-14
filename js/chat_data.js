@@ -139,7 +139,7 @@ window.ChatContactsData = [
                 condition: (system) => system.isTaskCompleted('lauren_delete_forks'),
                 action: (system) => { 
                     system.chatProgress.hr_consultant = 'forks_deleted'; 
-                    // Zmiana: Sukces u Lauren aktywuje Andrzeja
+                    // sukces u laurenaktywuje Andrzeja
                     system.setTaskStatus('andrzej_delete_report', 'active'); 
                 },
                 reply: 'Good. Moving on. I believe Andrzej has a task for you as well, message him.'

@@ -120,7 +120,7 @@ const GameAssets = {
 
     'notepad': { icon: 'ico/notepad.ico', title: 'Notepad', width: 500, height: 500 },
     'excel': { icon: 'ico/excel.ico', title: 'Excel', width: 800, height: 500 },
-    'browser': { icon: 'ico/msie2.ico', title: 'Internet Explorer', width: 640, height: 540 },
+    'browser': { icon: 'ico/msie2.ico', title: 'Internet Explorer', width: 640, height: 600 },
     
     'accessibility': { icon: 'ico/accessibility.ico', title: 'Accessibility', width: 300 },
     
@@ -281,13 +281,44 @@ const GameAssets = {
 
     rawCaptchas: [
         {
-            id: 'captcha_fish',
-            prompt: 'dark blue fish',
-            basePath: 'images/captcha_1/start/',
-            columns: 4,
-            totalTiles: 16,
-            correctTiles: ['22','23']
+            prompt: "fish",
+            bgImage: "images/captcha/background.webp",
+            gridSize: 4,
+            targetObjects: ["images/captcha/fish_1.webp", "images/captcha/fish_2.webp", "images/captcha/fish_3.webp"],
+            decoyObjects: ["images/captcha/fishing_hook.webp", "images/captcha/plastic.webp", "images/captcha/fishing_line.webp"],
+            targetCount: 3,
+            decoyCount: 3
         },
+
+        {
+            prompt: "plastic waste",
+            bgImage: "images/captcha/background.webp",
+            gridSize: 4,
+            targetObjects: ["images/captcha/pipe.webp", "images/captcha/plastic.webp", "images/captcha/fishing_line.webp"],
+            decoyObjects: ["images/captcha/fish_1.webp", "images/captcha/fish_2.webp", "images/captcha/fish_3.webp"],
+            targetCount: 4,
+            decoyCount: 2
+        },
+
+        {
+            prompt: "oil spill",
+            bgImage: "images/captcha/background.webp",
+            gridSize: 4,
+            targetObjects: ["images/captcha/oil_barrel.webp"],
+            decoyObjects: ["images/captcha/fish_1.webp", "images/captcha/plastic.webp", "images/captcha/fish_3.webp", "images/captcha/fishing_line.webp"],
+            targetCount: 8,
+            decoyCount: 3
+        },
+
+        {
+            prompt: "bicycles",
+            bgImage: "images/captcha/background.webp",
+            gridSize: 4,
+            targetObjects: ["images/captcha/bicycle.webp"],
+            decoyObjects: ["images/captcha/fish_1.webp", "images/captcha/fish_2.webp", "images/captcha/fish_1.webp", "images/captcha/fishing_hook.webp", "images/captcha/fish_3.webp", "images/captcha/fishing_line.webp"],
+            targetCount: 1,
+            decoyCount: 6
+        }
     ],
 
 
@@ -365,6 +396,11 @@ const GameAssets = {
             id: 'disableTimer', 
             icon: 'ico/accessibility_stopwatch.ico', 
             label: 'Turn Off Timer' 
+        },
+        { 
+            id: 'showScores', 
+            icon: 'ico/file_eye.ico',
+            label: 'Show Ending Scores' 
         }
 ]
 };

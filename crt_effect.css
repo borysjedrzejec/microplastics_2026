@@ -130,7 +130,7 @@ body {
     radial-gradient(at 24% 70%, hsla(195,25%,15%,1) 0px, transparent 50%);
 }
 
-#monitor-vignette, #bloom-container {
+#monitor-vignette {
 
     aspect-ratio: 4 / 3;
     width: 60%;
@@ -191,7 +191,6 @@ body {
 
 #monitor-screen {
     position: relative;
-    background-color: rgb(var(--bloom-R), var(--bloom-G), var(--bloom-B));
     overflow: hidden;
 
     aspect-ratio: 4 / 3;
@@ -209,10 +208,6 @@ body {
         scale(1.0);
     
     transition: transform 0.2s ease-out;
-
-    
-    box-shadow: 
-    0 0 10px 2px rgba(var(--bloom-R), var(--bloom-G), var(--bloom-B), 0.3);
 
 }
 

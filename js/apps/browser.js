@@ -12,6 +12,7 @@ document.addEventListener('alpine:init', () => {
         
         currentCaptcha: null,
         selectedTiles: [],
+        captchaCells: [],
         captchaError: false,
 
         get bookmarks() {
@@ -54,9 +55,9 @@ document.addEventListener('alpine:init', () => {
             this.view = 'loading';
             this.nextView = targetView;
             this.progress = 0;
-            const intervalTime = duration / 20; 
+            const intervalTime = duration / 5; 
             const loader = setInterval(() => {
-                this.progress += Math.floor(Math.random() * 10) + 2; 
+                this.progress += Math.floor(Math.random() * 7) + 2; 
                 if (this.progress >= 100) {
                     this.progress = 100;
                     clearInterval(loader);
@@ -96,43 +97,85 @@ document.addEventListener('alpine:init', () => {
             } catch (e) { console.warn("Błąd audio:", e); }
         },
 
-        // Captcha
-        getTileId(index1Based, columns) {
-            const i = index1Based - 1; 
-            const x = Math.floor(i / columns);
-            const y = i % columns;
-            return `${y}${x}`; 
+        // Pomocnicza funkcja do tasowania tablic (algorytm Fisher-Yates) - bardzo przydatna i DRY
+        shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
         },
 
         loadRandomCaptcha() {
             const captchas = (typeof GameAssets !== 'undefined' ? GameAssets.rawCaptchas : []) || [];
             
             if (captchas.length === 0) {
-                console.error("Błąd systemu: Brak tablicy rawCaptchas w pliku assets.js!");
+                console.error("Błąd systemu: Brak tablicy rawCaptchas!");
                 return;
             }
             
             const randomIndex = Math.floor(Math.random() * captchas.length);
-            this.currentCaptcha = captchas[randomIndex];
+            this.currentCaptcha = JSON.parse(JSON.stringify(captchas[randomIndex]));
             this.selectedTiles = [];
             this.captchaError = false;
+            this.currentCaptcha.correctTiles = [];
+
+            const totalCells = this.currentCaptcha.gridSize * this.currentCaptcha.gridSize;
+            let cells = Array(totalCells).fill({ image: null, isCorrect: false });
+            let availableIndices = this.shuffleArray([...Array(totalCells).keys()]);
+
+            // --- ZASTOSOWANIE DRY ---
+            // Uniwersalna funkcja pomocnicza do rozstawiania dowolnego typu obiektów
+            const placeObjects = (count, imagePool, isCorrect) => {
+                for (let i = 0; i < count; i++) {
+                    if (availableIndices.length === 0) break;
+                    
+                    const idx = availableIndices.pop();
+                    const randomImg = imagePool[Math.floor(Math.random() * imagePool.length)];
+                    const randomRotation = Math.floor(Math.random() * 91) - 45; // Od -45 do +45 stopni
+                    
+                    cells[idx] = { 
+                        image: randomImg, 
+                        isCorrect: isCorrect, 
+                        rotation: randomRotation 
+                    };
+                    
+                    // Zapisujemy indeks tylko dla poprawnych odpowiedzi
+                    if (isCorrect) {
+                        this.currentCaptcha.correctTiles.push(idx);
+                    }
+                }
+            };
+
+            // 1. Rozkładamy poprawne obiekty
+            placeObjects(this.currentCaptcha.targetCount, this.currentCaptcha.targetObjects, true);
+
+            // 2. Rozkładamy zmyłki (decoys)
+            placeObjects(this.currentCaptcha.decoyCount, this.currentCaptcha.decoyObjects, false);
+
+            this.captchaCells = cells;
+            this.currentCaptcha.correctTiles.sort((a, b) => a - b);
         },
 
-        toggleTile(tileId) {
+        toggleTile(index) {
             this.captchaError = false; 
             
-            if (this.selectedTiles.includes(tileId)) {
-                this.selectedTiles = this.selectedTiles.filter(t => t !== tileId);
+            const position = this.selectedTiles.indexOf(index);
+            if (position !== -1) {
+                this.selectedTiles.splice(position, 1); // Optymalizacja: splice zamiast filter() jest szybsze
             } else {
-                this.selectedTiles.push(tileId);
+                this.selectedTiles.push(index);
             }
         },
 
         solveCaptcha() {
             if (!this.currentCaptcha) return;
-            const playerSelection = [...this.selectedTiles].sort();
-            const correctSelection = [...this.currentCaptcha.correctTiles].sort();
-            const isCorrect = JSON.stringify(playerSelection) === JSON.stringify(correctSelection);
+            
+            // Sortujemy zaznaczenia gracza i sprawdzamy zgodność
+            const playerSelection = [...this.selectedTiles].sort((a, b) => a - b);
+            const isCorrect = JSON.stringify(playerSelection) === JSON.stringify(this.currentCaptcha.correctTiles);
 
             if (isCorrect) {
                 this.captchaError = false;
@@ -143,8 +186,8 @@ document.addEventListener('alpine:init', () => {
                     new Audio('sounds/error.mp3').play().catch(()=>{});
                 }
                 
+                // Generuje nową captchę natychmiast przy błędzie (zgodnie z logiką gier)
                 this.loadRandomCaptcha();
-                
                 this.captchaError = true;
             }
         }

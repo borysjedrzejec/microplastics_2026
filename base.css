@@ -108,16 +108,6 @@
     background-color: #000080;
     border-color: white;
 }
-        
-#bloom-container {
-
-    box-shadow: 
-        0 0 20px 10px rgba(var(--bloom-R), var(--bloom-G), var(--bloom-B), 0.3),
-        
-        0 0 40px 30px rgba(var(--bloom-R), var(--bloom-G), var(--bloom-B), 0.2);
-
-    transition: transform 0.2s ease-out, background-color 0.5s ease, box-shadow 0.5s ease;
-}
 
 .taskbar {
     position: fixed; 
@@ -404,6 +394,7 @@
 }
 
 .shutdown-content {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -552,7 +543,7 @@
     text-decoration: underline;
 }
 
-.btn-restart {
+.btn-restart, .btn-credits {
     margin-top: 35px;
     background: transparent;
     color: var(--highlight-color);
@@ -565,7 +556,8 @@
     transition: all 0.2s ease-in-out;
 }
 
-.btn-restart:hover {
+.btn-restart:hover,
+.btn-credits:hover {
     background: var(--highlight-color);
     color: #000;
 }

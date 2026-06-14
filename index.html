@@ -52,7 +52,7 @@
 
     <div id="glass-container"></div>
     <div id="monitor-vignette">
-        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
+        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);`">
             <div id="crt-container" class="crt-filter"></div>
 
             <div id="boot-screen" 
@@ -238,10 +238,9 @@
                     </div>
                 </template>
 
-                <div class="taskbar" x-data="Game">
+                <div class="taskbar" x-data="Game" style="display: flex; align-items: center; padding: 2px;">
 
-                    <div style="position: relative; margin-left: 6px; margin-right: 6px;">
-                        
+                    <div style="position: relative; margin-right: 4px;">
                         <button x-on:click="isStartOpen = !isStartOpen" 
                                 style="font-weight: bold; padding: 2px 5px;">
                             <img src="ico/windows.ico" alt="Start" style="width: 16px; vertical-align: middle;"> Start
@@ -251,7 +250,6 @@
                             x-show="isStartOpen" 
                             x-cloak 
                             x-on:click.outside="isStartOpen = false">
-                            
                             <div class="title-bar" style="background: linear-gradient(90deg, navy, #1084d0);">
                                 <div class="title-bar-text">Special OS</div>
                             </div>
@@ -262,10 +260,37 @@
                                 <button style="width: 100%; text-align: left;">Log Off...</button>
                             </div>
                         </div>
+                    </div>
+
+                    <div style="flex-grow: 1; display: flex; gap: 8px; overflow-x: auto; padding: 0 4px; align-items: center; justify-content: end;">
+                            
+                            <template x-if="$store.accessibility.showScores">
+                                <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: default; white-space: nowrap;">
+                                    
+                                    <div style="font-weight: bold; color: #222;">
+                                        Your Metrics:
+                                    </div>
+
+                                    <template x-for="([endingKey, score], index) in Object.entries($store.system.scores)" :key="endingKey">
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            
+                                            <span>
+                                                <span x-text="endingKey"></span>: <strong x-text="score" style="color: #000080;"></strong>
+                                            </span>
+                                            
+                                            <span x-show="index < Object.keys($store.system.scores).length - 1" style="color: #888;">|</span>
+                                            
+                                        </div>
+                                    </template>
+                                    
+                                    <div style="width: 2px; height: 18px; border-left: 1px solid #888; border-right: 1px solid #fff; margin-left: 4px;"></div>
+
+                                </div>
+                            </template>
 
                     </div>
 
-                    <div style="display: flex; gap: 4px; margin-right: 20px;">
+                    <div style="display: flex; align-items: center; margin-left: auto;">
                         <div class="status-bar-field" style="width: 80px; text-align: center; color: var(--highlight-color); font-weight: bold; font-size: 160%;">
                             <span x-text="$store.system.currentInGameTime"></span>
                         </div>

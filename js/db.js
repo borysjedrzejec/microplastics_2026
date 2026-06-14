@@ -1,11 +1,4 @@
 document.addEventListener('alpine:init', () => {
-    
-
-    const ENDING = {
-        ENDING_A: 'good',
-        ENDING_B: 'bad',
-        ENDING_C: 'very bad'
-    };
 
     const FILE_TYPE_MAP = {
         'spreadsheet': { ext: '.xls', icon: 'ico/excel.ico', defaultApp: 'excel' },
@@ -68,9 +61,31 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('system', {
 
         scores: {
-            [ENDING.ENDING_A]: 0,
-            [ENDING.ENDING_B]: 0,
-            [ENDING.ENDING_C]: 0
+            'Activist': 0,
+            'Centrist': 0,
+            'Corporat': 0
+        },
+
+        get highestScoreEnding() {
+            const scoresObj = this.scores;
+            let max = -Infinity;
+            let winners = [];
+
+            for (const endingKey in scoresObj) {
+                const numericScore = Number(scoresObj[endingKey]) || 0;
+                if (numericScore > max) {
+                    max = numericScore;
+                    winners = [endingKey];
+                } else if (numericScore === max) {
+                    winners.push(endingKey);
+                }
+            }
+
+            if (winners.length === 1) {
+                return winners[0];
+            }
+            
+            return 'Centrist';
         },
 
         loginUsername: '',
@@ -82,7 +97,7 @@ document.addEventListener('alpine:init', () => {
         isGameOver: false,
 
         get currentInGameTime() {
-            const startTotalMinutes = 16 * 60 + 40; // 16:40 in minutes
+            const startTotalMinutes = 16 * 60 + 45; // 16:45 in minutes
             const currentTotalMinutes = startTotalMinutes + this.inGameMinutes;
             
             const hours = Math.floor(currentTotalMinutes / 60);
@@ -96,7 +111,7 @@ document.addEventListener('alpine:init', () => {
             if (this.isGameOver) return;
 
             this.inGameMinutes++;
-            if (this.inGameMinutes >= 20) {
+            if (this.inGameMinutes >= 15) {
                 this.isGameOver = true;
             }
         },
@@ -151,20 +166,6 @@ document.addEventListener('alpine:init', () => {
                 this.scores[ending] += amount;
                 console.log(`Added ${amount} points to ending: ${ending}. Current state:`, this.scores);
             }
-        },
-
-        get highestScoreEnding() {
-            let topScore = -Infinity;
-            let winningEnding = ENDING.ENDING_B;
-
-            for (const [endingKey, score] of Object.entries(this.scores)) {
-                if (score > topScore) {
-                    topScore = score;
-                    winningEnding = endingKey;
-                }
-            }
-            
-            return winningEnding; 
         },
 
         chatContacts: window.ChatContactsData || [],
@@ -274,6 +275,7 @@ document.addEventListener('alpine:init', () => {
         colorMode: 'default',
         disableAudio: false,
         disableTimer: false,
+        showScores: false,
 
         palettes: {
             'default': '#a10d3f',

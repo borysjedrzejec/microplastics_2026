@@ -1,4 +1,5 @@
 document.addEventListener('alpine:init', () => {
+
     Alpine.data('Game', () => ({
         // Game state
         isStarted: false,
@@ -37,6 +38,7 @@ document.addEventListener('alpine:init', () => {
                 clicks: paths.clicks.map(path => new Audio(path)),
                 keys: paths.keys.map(path => new Audio(path))
             };
+            
 
             this.updateTime(); 
             
@@ -60,12 +62,14 @@ document.addEventListener('alpine:init', () => {
                 this.isBooting = false;
                 this.isStarted = true;
                 this.startGameTimer();
+
+                this.openProgram('accessibility');
             }, 10); 
         },
 
         startGameTimer() {
             // how long is one in-game minute in real time (ms)
-            const timeSpeed = 10000; 
+            const timeSpeed = 6000; 
 
             const timer = setInterval(() => {
                 if (this.$store.accessibility.disableTimer) {
@@ -88,32 +92,6 @@ document.addEventListener('alpine:init', () => {
             this.rotY = x * 0.1; 
             this.rotX = -y * 0.1;
         },
-
-        get bloomColor() {
-            const startCol = { r: 0, g: 128, b: 128 };
-            const endCol = { r: 255, g: 0, b: 129 };
-
-            const ratio = 0 / 100;
-
-            const currentR = Math.round(startCol.r + (endCol.r - startCol.r) * ratio);
-            const currentG = Math.round(startCol.g + (endCol.g - startCol.g) * ratio);
-            const currentB = Math.round(startCol.b + (endCol.b - startCol.b) * ratio);
-
-            return `
-                --bloom-R: ${currentR};
-                --bloom-G: ${currentG};
-                --bloom-B: ${currentB};
-            `;
-        }, 
-        /*
-        processFraud(amount) {
-            this.budget += amount;
-            this.suspicionLevel = Math.min(100, this.suspicionLevel + (amount / 100000));
-        },
-
-        get suspicionBloom() {
-            return this.suspicionLevel / 2;
-        }, */
 
         updateTime() {
             const d = new Date();
