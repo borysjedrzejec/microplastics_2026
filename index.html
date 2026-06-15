@@ -50,16 +50,16 @@
 
     <div id="background"></div>
 
-    <div id="glass-container"></div>
     <div id="monitor-vignette">
-        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);`">
+        <div id="glass-container"></div>
+        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg);`">
             <div id="crt-container" class="crt-filter"></div>
 
             <div id="boot-screen" 
                 x-show="!isStarted, !isBooting" 
                 x-transition.opacity.duration.200ms>
                 
-                <div class="window" style="width: 400px;">
+                <div class="window" style="width: 100%; max-width: 400px;">
                     
                     <div class="title-bar">
                         <div class="title-bar-text">Welcome to Special OS</div>

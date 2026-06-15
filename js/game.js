@@ -5,7 +5,7 @@ document.addEventListener('alpine:init', () => {
         isStarted: false,
         isBooting: false,
 
-        budget: -50000000,
+        systemScale: 1,
         rotX: 0,
         rotY: 0,
 
@@ -38,6 +38,18 @@ document.addEventListener('alpine:init', () => {
                 clicks: paths.clicks.map(path => new Audio(path)),
                 keys: paths.keys.map(path => new Audio(path))
             };
+
+            const hardwareWidth = 800;  
+            const hardwareHeight = 600;
+
+            const updateScale = () => {
+                const scaleX = window.innerWidth / hardwareWidth;
+                const scaleY = window.innerHeight / hardwareHeight;
+                this.systemScale = Math.min(scaleX, scaleY, 1) * 0.98;
+            };
+
+            updateScale();
+            window.addEventListener('resize', updateScale);
             
 
             this.updateTime(); 
@@ -103,41 +115,48 @@ document.addEventListener('alpine:init', () => {
 
         highestZIndex: 10,
 
-        openProgram(appId, payload = null) {
-            // uid for each window instance, e.g. mail-2 for the second mail window, or just mail for the main app window
-            let uniqueKey = '';
-            if (payload) {
-                uniqueKey = payload.id || payload.folderId || '';
-            }
+    openProgram(appId, payload = null) {
+        const uniqueKey = payload?.id || payload?.folderId || '';
+        const instanceId = uniqueKey ? `${appId}-${uniqueKey}` : appId;
+        
+        const existingWindow = this.openWindows.find(win => win.instanceId === instanceId);
+        if (existingWindow) return this.focusWindow(instanceId);
 
-            const instanceId = uniqueKey ? `${appId}-${uniqueKey}` : appId;
-            
-            const existingWindow = this.openWindows.find(win => win.instanceId === instanceId);
-            
-            if (existingWindow) {
-                this.focusWindow(instanceId);
-                return;
-            }
+        const appInfo = this.appsData[appId];
+        if (!appInfo) return; 
 
-            const appInfo = this.appsData[appId];
-            if (!appInfo) return; 
+        const VIRTUAL_WIDTH = 800;
+        const TASKBAR_HEIGHT = 36; 
+        const VIRTUAL_HEIGHT = 600 - TASKBAR_HEIGHT;
 
-            this.highestZIndex++;
+        const safeWidth = Math.min(appInfo.width || 400, VIRTUAL_WIDTH);
+        
+        const safeHeight = appInfo.height ? Math.min(appInfo.height, VIRTUAL_HEIGHT) : null;
 
-            this.openWindows.push({
-                id: appId,
-                instanceId: instanceId,
-                payload: payload,
-                title: payload && payload.title ? payload.title : appInfo.title,
-                icon: appInfo.icon,
-                content: appInfo.content,
-                width: appInfo.width,
-                height: appInfo.height || null,
-                startX: 50 + Math.floor(Math.random() * 50),
-                startY: 50 + Math.floor(Math.random() * 50),
-                zIndex: this.highestZIndex
-            });
-        },
+        const maxStartX = Math.max(0, VIRTUAL_WIDTH - safeWidth);
+        
+        const assumedHeight = safeHeight || 350; 
+        const maxStartY = Math.max(0, VIRTUAL_HEIGHT - assumedHeight);
+
+        const startX = Math.min(Math.floor(Math.random() * 40), maxStartX);
+        const startY = Math.min(Math.floor(Math.random() * 40), maxStartY);
+
+        this.highestZIndex++;
+
+        this.openWindows.push({
+            id: appId,
+            instanceId,
+            payload,
+            title: payload?.title || appInfo.title,
+            icon: appInfo.icon,
+            content: appInfo.content,
+            width: safeWidth,
+            height: safeHeight,
+            startX, 
+            startY, 
+            zIndex: this.highestZIndex
+        });
+    },
 
         closeProgram(instanceId) {
             this.openWindows = this.openWindows.filter(win => win.instanceId !== instanceId);
