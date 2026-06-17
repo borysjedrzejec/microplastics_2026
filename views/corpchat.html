@@ -1,7 +1,7 @@
 <style>
     @keyframes blinkHighlight {
         0% { background-color: transparent; }
-        50% { background-color: var(--highlight-color, red); color: white; }
+        50% { background-color: #8b0000; color: white; } /* Win98 dark red style */
         100% { background-color: transparent; }
     }
     
@@ -20,16 +20,23 @@
             
             <ul class="tree-view" style="border: none; background: transparent; padding: 0; margin: 0; padding-top: 6px">
                 <template x-for="contact in contacts" :key="contact.id">
-                <li @click="selectContact(contact)" 
+                    <li @click="selectContact(contact)" 
                         :class="{'unread-notification': contact.hasUnread && selectedContact?.id !== contact.id}"
                         :style="selectedContact?.id === contact.id ? 'background: #000080; color: white;' : ''"
                         style="list-style-type: none; padding: 6px 6px 6px 4px; margin: 2px; cursor: pointer; display: flex; align-items: center; gap: 6px; border: 1px solid transparent;">
                         
-                        <div style="overflow: hidden">
-                            <div style="display: flex; gap: 4px;">
+                        <div style="overflow: hidden; display: flex; flex-direction: column; width: 100%;">
+                            <div style="display: flex; gap: 4px; justify-content: space-between; align-items: center;">
                                 <div style="font-size: 12px; font-weight: bold; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" x-text="contact.name"></div>
+                                
+                                <span x-show="contact.hasUnread && selectedContact?.id !== contact.id" 
+                                      style="font-size: 10px; font-weight: bold; color: #ffeb3b; background: #c00000; padding: 0 4px; border-radius: 2px;">
+                                    (New)
+                                </span>
                             </div>
-                            <div style="font-size: 10px; color: gray;" :style="selectedContact?.id === contact.id ? 'color: #d0d0d0; margin-left: 20px;' : ''" x-text="contact.status"></div>
+                            <div style="font-size: 10px; color: gray;" 
+                                 :style="selectedContact?.id === contact.id ? 'color: #d0d0d0; margin-left: 20px;' : ''" 
+                                 x-text="contact.status"></div>
                         </div>
                     </li>
                 </template>
@@ -40,10 +47,10 @@
             
             <div class="sunken-panel" style="background: #e0e0e0; padding: 6px 10px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
                 <img 
-                        :src="$store.system.selectedAvatar" 
-                        alt="Player Avatar" 
-                        style="width: 24px; height: 24px; image-rendering: pixelated;"
-                    >
+                    :src="$store.system.selectedAvatar" 
+                    alt="Player Avatar" 
+                    style="width: 24px; height: 24px; image-rendering: pixelated;"
+                >
                 <div>
                     <div style="font-size: 10px; color: #555; text-transform: uppercase;">Logged in as:</div>
                     <strong style="font-size: 14px; color: #000;" x-text="$store.system.loginUsername || 'Guest_User'"></strong>

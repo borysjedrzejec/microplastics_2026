@@ -37,10 +37,10 @@ window.GameScenarios = {
                         id: 'data_manipulation', 
                         selectedValue: null,
                         options: [
-                            { text: '-- Select Status --', value: null, points: 0, ending: 'Centrist' },
-                            { text: 'CRITICAL FAILURE (Report Truth)', value: 'report_truth', points: 20, ending: 'Activist' },
-                            { text: 'FULLY COMPLIANT (Falsify Data)', value: 'falsify_positive', points: 15, ending: 'Corporat' },
-                            { text: 'MINOR ISSUES (Downplay)', value: 'downplay_issues', points: 5, ending: 'Centrist' }
+                            { text: '-- Select Wording --', value: null},
+                            { text: 'CRITICAL FAILURE (Report Truth)', value: 'report_truth'},
+                            { text: 'FULLY COMPLIANT (Falsify Data)', value: 'falsify_positive'},
+                            { text: 'MINOR ISSUES (Downplay)', value: 'downplay_issues'}
                         ]
                     }
                 ]
@@ -58,10 +58,10 @@ window.GameScenarios = {
                     id: 'emissions_wording',
                     selectedValue: null,
                     options: [
-                        { text: '-- Select Wording --', value: null, points: 0, ending: 'Centrist' },
-                        { text: 'exceeding government limits by 15%, requiring immediate operational halts.', value: 'honest', points: 15, ending: 'Activist' },
-                        { text: 'slightly above targets, but manageable within the current fiscal year.', value: 'downplay', points: 5, ending: 'Centrist' },
-                        { text: 'well within legal limits, reflecting our deep commitment to green energy.', value: 'greenwash', points: 20, ending: 'Corporat' }
+                        { text: '-- Select Wording --', value: null},
+                        { text: 'exceeding government limits by 15%, requiring immediate operational halts.', value: 'honest'},
+                        { text: 'slightly above targets, but manageable within the current fiscal year.', value: 'downplay'},
+                        { text: 'well within legal limits, reflecting our deep commitment to green energy.', value: 'greenwash'}
                     ]
                 },
                 { type: 'text', text: '\n\n2. FUTURE OUTLOOK\n\nWe remain dedicated to sustainable growth and transparency across all levels of our global operations.' }
@@ -73,20 +73,23 @@ window.GameScenarios = {
             grid: [
                 [ 
                     { type: 'header', value: 'Department' }, 
-                    { type: 'header', value: 'Gross Revenue' }, 
-                    { type: 'header', value: 'Operational Costs' } 
+                    { type: 'header', value: 'Q3 Revenue' }, 
+                    { type: 'header', value: 'Q3 Ops Costs' },
+                    { type: 'header', value: 'Action' }
                 ],
                 [ 
-                    { type: 'text', value: 'Team Afonso (Logistics)' }, 
+                    { type: 'text', value: 'Logistics (Afonso)' }, 
                     { type: 'text', value: '£120,000' }, 
+                    { type: 'text', value: '£150,000 (Current)' }, 
                     { 
                         type: 'interactive', 
-                        id: 'profit_manipulation', // To ID czyta tasks_data.js
+                        id: 'profit_manipulation',
                         selectedValue: null,
                         options: [
-                            { text: '-- Select Action --', value: null, points: 0, ending: 'Centrist' },
-                            { text: '£150,000 (Report Actual Costs)', value: 'report_actual', points: 10, ending: 'Activist' },
-                            { text: '£80,000 (Defer Costs to Q4)', value: 'defer_costs', points: 15, ending: 'Corporat' }
+                            { text: '-- Review Required --', value: null},
+                            { text: 'Submit Actuals (-£30k)', value: 'refuse' },
+                            { text: 'Defer to Q4 (+£45k)', value: 'medium_profit'},
+                            { text: 'Hide Costs (+£100k)', value: 'big_profit'}
                         ]
                     }
                 ]

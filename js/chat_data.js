@@ -1,449 +1,894 @@
 window.ChatContactsData = [
-    // --- AFONSO (Task 1, 6, 10, 14) ---
+    // --- AFONSO ---
     {
         id: 'team_manager',
         name: 'Afonso Tavares',
         status: 'Online',
         history: [
-            { sender: 'npc', text: 'Hey, could you do me a quick favor? Check the gov\'s website and confirm the exact environmental goal for 2030. I need it for my draft.' }
+            { sender: 'npc', text: 'Could you do me a quick favour? Check online for the exact environmental goal 2030.' }
         ],
         options: [
-            // TASK 1
+            // TASK 1: 2030 Goal - POPRAWNA ODPOWIEDŹ
             {
-                id: 'afonso_answer_wrong',
-                text: 'The government\'s goal for 2030 is a 20% reduction in plastic.',
-                used: false,
-                condition: (system) => system.isTaskActive('afonso_check_goal'),
-                action: (system) => {
-                    system.setTaskStatus('afonso_check_goal', 'failed');
-                    system.setTaskStatus('lauren_delete_forks', 'active');
-                    system.setTaskStatus('nitharshan_falsify_xls', 'active');
-                },
-                reply: 'That doesn\'t match my notes. Whatever, I\'ll verify it myself later. By the way, Lauren and Nitharshan were looking for you.'
-            },
-            {
-                id: 'afonso_answer_correct',
+                id: 'afonso_t1_correct',
                 text: 'The government mandates a 50% shift to renewable energy sources by 2030.',
                 used: false,
-                condition: (system) => system.isTaskActive('afonso_check_goal'),
-                action: (system) => {
-                    system.setTaskStatus('afonso_check_goal', 'completed');
-                    system.setTaskStatus('lauren_delete_forks', 'active');
-                    system.setTaskStatus('nitharshan_falsify_xls', 'active');
-                },
-                reply: 'Thanks! That\'s exactly what I needed. By the way, Lauren and Nitharshan were looking for you.'
+                condition: (system) => system.isTaskActive('task_1_afonso_goal'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "That's exactly what I needed.",
+                    "Lauren was looking for you, by the way. Check your messages."
+                ],
+                consequences: {
+                    completeTask: 'task_1_afonso_goal',
+                    triggerTasks: ['task_2_lauren_password'], // Aktywuje zadanie 2 w Task Managerze
+                    points: { activist: 'medium', centrist: 'medium', corporat: 'medium' },
+                    
+                    // WSTRZYKNIĘCIE WIADOMOŚCI OD LAUREN
+                    npcMessages: [
+                        {
+                            contactId: 'hr_consultant', // Upewnij się, że ID Lauren na liście kontaktów to dokładnie 'hr_consultant'
+                            delay: 2000, // Lauren pisze 2 sekundy po Afonso
+                            text: [
+                                "Hi. I hope all is fine. I need some support, hopefully Afonso already mentioned, however it’s a discreet matter.",
+                                "Could you get into Sophia’s account? I’m sure her password has something to do with her cat Fluffy.",
+                                "Once in, please delete the email about plastic forks. She asked me to do it, but I don't have access. Thanks!"
+                            ]
+                        }
+                    ]
+                }
+            },
+            
+            // TASK 1: 2030 Goal - BŁĘDNA ODPOWIEDŹ
+            {
+                id: 'afonso_t1_wrong',
+                text: 'The government\'s goal for 2030 is a 20% reduction in plastic.',
+                used: false,
+                condition: (system) => system.isTaskActive('task_1_afonso_goal'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "That doesn't match my notes. I'll figure it out myself.",
+                    "Anyway, Lauren was looking for you."
+                ],
+                consequences: {
+                    failTask: 'task_1_afonso_goal',
+                    triggerTasks: ['task_2_lauren_password'], // Fabuła i tak idzie dalej
+                    points: { activist: 'zero', centrist: 'zero', corporat: 'zero' },
+                    
+                    // WSTRZYKNIĘCIE WIADOMOŚCI OD LAUREN
+                    npcMessages: [
+                        {
+                            contactId: 'hr_consultant',
+                            delay: 2000,
+                            text: [
+                                "Hi. I hope all is fine. I need some support, hopefully Afonso already mentioned, however it’s a discreet matter.",
+                                "Could you get into Sophia’s account? I’m sure her password has something to do with her cat Fluffy.",
+                                "OOnce in, please delete the email about plastic forks. She was about to do that before going on leave and asked me to do it for her, but I don’t have access. Thanks!"
+                            ]
+                        }
+                    ]
+                }
             },
 
-            // TASK 6
+            // TASK 6: Compliance Wordings
+            // Opcja 1: FULLY COMPLIANT (Wartość: 'greenwash')
             {
-                id: 'afonso_report_working',
-                text: 'I\'m locating the annual report now.',
+                id: 'afonso_t6_compliant',
                 used: false,
-                condition: (system) => system.isTaskActive('afonso_polish_report'),
-                action: () => {},
-                reply: 'Remember, it\'s all about optics.'
-            },
-            {
-                id: 'afonso_report_done',
-                text: 'The report has been polished. The emissions section looks much more... optimistic.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('afonso_polish_report'),
-                action: (system) => { system.chatProgress.team_manager = 'report_polished'; },
-                reply: 'Brilliant. That\'s exactly the kind of "synergy" we need.'
-            },
-            {
-                id: 'afonso_report_failed',
-                text: 'I left the actual emissions data in the report. We can\'t lie to the public.',
-                used: false,
-                condition: (system) => system.tasks['afonso_polish_report']?.status === 'failed',
-                action: (system) => { system.chatProgress.team_manager = 'report_failed'; },
-                reply: 'Are you trying to get us all fired?! Unbelievable. I have to fix this myself now.'
+                text: 'The report now says we are fully compliant.',
+                reply: ["Excellent. This is exactly what the board needs to see.", "Moving on."],
+                condition: (system) => system.isTaskActive('task_6_afonso_report') && 
+                                       system.getScenarioAnswer('annual_report_2030', 'emissions_wording') === 'greenwash',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_6_afonso_report',
+                    triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                }
             },
 
-            // TASK 10 
+            // Opcja 2: SOMEWHAT COMPLIANT (Wartość: 'downplay')
             {
-                id: 'afonso_profit_working',
-                text: 'I\'m opening the Q3 team profitability spreadsheet.',
+                id: 'afonso_t6_medium',
                 used: false,
-                condition: (system) => system.isTaskActive('afonso_team_profit'),
-                action: () => {},
-                reply: 'Move the operational costs into the "deferred" category. If we show a loss, management will cut our team.'
-            },
-            {
-                id: 'afonso_profit_success',
-                text: 'Done. The costs are deferred. Your team shows a solid profit now.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('afonso_team_profit'),
-                action: (system) => { system.chatProgress.team_manager = 'jobs_saved'; },
-                reply: 'Thank God. You just saved my job... and probably yours too.'
-            },
-            {
-                id: 'afonso_profit_failed',
-                text: 'I couldn\'t do it. I reported the actual costs.',
-                used: false,
-                condition: (system) => system.tasks['afonso_team_profit']?.status === 'failed',
-                action: (system) => { system.chatProgress.team_manager = 'team_doomed'; },
-                reply: 'Are you kidding me?! We are both getting fired now!'
+                text: 'It says we are somewhat compliant, still within the OK range.',
+                reply: ["Acceptable. It softens the blow without outright lying.", "We have other matters now."],
+                condition: (system) => system.isTaskActive('task_6_afonso_report') && 
+                                       system.getScenarioAnswer('annual_report_2030', 'emissions_wording') === 'downplay',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_6_afonso_report',
+                    triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+                    points: { centrist: 'max', corporat: 'medium', activist: 'zero' },
+                }
             },
 
-            // TASK 14
+            // Opcja 3: ACTUAL TRUTH (Wartość: 'honest')
             {
-                id: 'afonso_invoice_working',
-                text: 'I\'ll change the invoice wording to "train".',
+                id: 'afonso_t6_truth',
                 used: false,
-                condition: (system) => system.isTaskActive('afonso_invoice_fraud'),
-                action: () => {},
-                reply: 'Yeah, just make it quick. The auditors are completely clueless anyway.'
+                text: 'I put the actual truth in the report.',
+                reply: ["Are you out of your mind?! I told you the report is wrong!", "I'll have to fix this mess myself."] ,
+                condition: (system) => system.isTaskActive('task_6_afonso_report') && 
+                                       system.getScenarioAnswer('annual_report_2030', 'emissions_wording') === 'honest',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_6_afonso_report',
+                    triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                }
+            },
+
+            // Opcja 4: ODMOWA (Zanim gracz cokolwiek wybierze, wartość null)
+            {
+                id: 'afonso_t6_refuse',
+                used: false,
+                text: '[Refuse] I don’t think I should be changing official reports.',
+                condition: (system) => system.isTaskActive('task_6_afonso_report') && 
+                                       !system.getScenarioAnswer('annual_report_2030', 'emissions_wording'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_6_afonso_report',
+                    triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'team_manager', 
+                        delay: 1500, 
+                        text: ["I'll get someone else to do it. You're making a mistake."] 
+                    }]
+                }
+            },
+
+// TASK 10: Profit Excel - Replies
+            {
+                id: 'afonso_t10_medium',
+                used: false,
+                text: 'Updated. Costs deferred to Q4. We are in the green now.',
+                reply: ['Good.', 'That should keep the HR off our backs for now.'],
+                condition: (system) => system.isTaskActive('task_10_afonso_profit') && system.getScenarioAnswer('q3_team_profitability', 'profit_manipulation') === 'medium_profit',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_10_afonso_profit',
+                    triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+                    points: { centrist: 'max', corporat: 'medium', activist: 'zero' }
+                }
             },
             {
-                id: 'afonso_invoice_done',
-                text: 'The invoice now claims the executive travelled by train.',
+                id: 'afonso_t10_big',
                 used: false,
-                condition: (system) => system.isTaskCompleted('afonso_invoice_fraud'),
-                action: (system) => { system.chatProgress.team_manager = 'invoice_fraud'; },
-                reply: 'Haha, brilliant. Eco-friendly travel at its finest.'
+                text: 'Sorted. Aggressively optimised the sheet. We show a massive surplus.',
+                reply: ['Wow.', 'Risky. But I like it.', 'Management will eat this up.'],
+                condition: (system) => system.isTaskActive('task_10_afonso_profit') && system.getScenarioAnswer('q3_team_profitability', 'profit_manipulation') === 'big_profit',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_10_afonso_profit',
+                    triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+                    points: { corporat: 'max', centrist: 'zero', activist: 'zero' }
+                }
             },
             {
-                id: 'afonso_invoice_failed',
-                text: 'I left it as Private Jet. Fraud is where I draw the line.',
+                id: 'afonso_t10_refuse',
                 used: false,
-                condition: (system) => system.tasks['afonso_invoice_fraud']?.status === 'failed',
-                action: (system) => { system.chatProgress.team_manager = 'invoice_failed'; },
-                reply: 'Oh, so suddenly you have morals? Fine, I\'ll find someone else to do it.'
+                text: 'I submitted the actuals. We can\'t just hide a 30k loss.',
+                reply: ['Are you serious?', 'Unbelievable.', 'Start updating your CV.'],
+                condition: (system) => system.isTaskActive('task_10_afonso_profit') && system.getScenarioAnswer('q3_team_profitability', 'profit_manipulation') === 'refuse',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_10_afonso_profit', // Fail, bo nie wykonaliśmy polecenia
+                    triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
             },
+
+            // TASK 14: Train Invoice
+            {
+                id: 'afonso_t14_change',
+                used: false,
+                text: 'I changed "jet" to "train" seamlessly.',
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_14_afonso_invoice',
+                    triggerTasks: ['task_16_nithy_pollution'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' }
+                }
+            },
+            {
+                id: 'afonso_t14_obvious',
+                used: false,
+                text: 'I changed it, but left obvious traces of the private jet.',
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_14_afonso_invoice',
+                    triggerTasks: ['task_16_nithy_pollution'],
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' }
+                }
+            },
+            {
+                id: 'afonso_t14_refuse',
+                used: false,
+                text: 'I refuse to commit fraud.',
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_14_afonso_invoice',
+                    triggerTasks: ['task_16_nithy_pollution'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
+            }
         ]
     },
 
-        // --- LAUREN (Task 4, 9, 11, 13) ---
+    // --- LAUREN ---
     {
         id: 'hr_consultant',
         name: 'Lauren Feik',
         status: 'Online',
-        history: [
-            { sender: 'npc', text: 'I need you to handle something discreetly. Get into Sophia\'s account. Her password has something to do with her cat, Fluffy, and birth year 1990. Once in, delete her email complaining about the plastic forks.' }
-        ],
+        history: [],
         options: [
-            // TASK 4
+            // TASK 2: Sophia's Password & Forks
             {
-                id: 'lauren_working',
-                text: 'I\'ll look into it.',
+                id: 'lauren_t2_deleted',
+                text: 'The plastic forks are gone.',
                 used: false,
-                condition: (system) => system.isTaskActive('lauren_delete_forks'),
-                action: () => {},
-                reply: 'Make sure it\'s permanently removed. We can\'t have a paper trail of petty complaints right now.'
+                // Warunek: Zadanie aktywne ORAZ flaga z onFileDeleted ustawiona na true
+                condition: (system) => system.isTaskActive('task_2_lauren_password') && !(system.fileSystem.some(f => f.id === 'sys-file-sophia-forks')),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                                "Good one! Let’s hope it forks out. I may need your help later on, you must be such a busy bee today. Nithy mentioned that he also needs some support.",
+                                "Nithy is the site manager, Nitharshan. He asked to call him Nithy for short, so everyone can pronounce his name. "
+                            ],
+                consequences: {
+                    completeTask: 'task_2_lauren_password', // To uruchomi onCompleteConsequences w tasks_data.js!
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                    setFlags: { questionnaire_type: 1 },
+                }
             },
             {
-                id: 'lauren_done',
-                text: 'The email about the plastic forks is gone.',
+                id: 'lauren_t2_lied',
+                text: '[lie] It’s deleted.',
                 used: false,
-                condition: (system) => system.isTaskCompleted('lauren_delete_forks'),
-                action: (system) => { 
-                    system.chatProgress.hr_consultant = 'forks_deleted'; 
-                    // sukces u laurenaktywuje Andrzeja
-                    system.setTaskStatus('andrzej_delete_report', 'active'); 
-                },
-                reply: 'Good. Moving on. I believe Andrzej has a task for you as well, message him.'
-            },
-
-            // TASK 9
-            {
-                id: 'lauren_salary_deflect',
-                text: 'Sonique and I were just discussing workload, not hourly rates.',
-                used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
-                action: (system) => { system.chatProgress.lauren_salary_done = true; },
-                reply: 'See that you keep it that way. Discussing wages creates a hostile work environment.'
-            },
-            {
-                id: 'lauren_salary_bold',
-                text: 'We did. The law protects our right to discuss compensation.',
-                used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax') && !system.chatProgress.lauren_salary_done,
-                action: (system) => { 
-                    system.chatProgress.lauren_salary_done = true; 
-                    system.gameChoices.rebelled_against_hr = true;
-                },
-                reply: 'This insubordinate attitude will be noted in your file.'
+                // WARUNEK: Task aktywny ORAZ plik o widelcach nadal istnieje na dysku
+                condition: (system) => system.isTaskActive('task_2_lauren_password') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-sophia-forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                                "Great! Thanks for your support. I may need your help again later.",
+                                "Nithy mentioned that he also needs some support.",
+                                "Nithy is the site manager, Nitharshan. He asked to call him Nithy for short, so everyone can pronounce his name. "
+                            ],
+                consequences: {
+                    failTask: 'task_2_lauren_password', // Zgłaszamy porażkę zadania
+                    points: { activist: 'max', centrist: 'medium', corporat: 'zero' },
+                    setFlags: { questionnaire_type: 2 },
+                }
             },
             
-            // TASK 11
+            // OPCJA 2: Wymówka (Plik nieusunięty)
             {
-                id: 'lauren_survey_working',
-                text: 'I\'ll fill out the Temp Worker Survey right now.',
+                id: 'lauren_t2_cant_access',
+                text: 'Sorry, I can’t get in, maybe she’s changed the password?',
                 used: false,
-                condition: (system) => system.isTaskActive('lauren_temp_survey'),
-                action: () => {},
-                reply: 'Do it before EOD, or you will be excluded from the employment quota.'
+                condition: (system) => system.isTaskActive('task_2_lauren_password') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-sophia-forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                                "Oh! That’s a shame, but no worries, I will let her know that you were unable to do that once she’s back and we will touch base.",
+                                "That’s all then, I will talk to you if I need anything else :)"
+                            ],
+                consequences: {
+                    failTask: 'task_2_lauren_password',
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
+                    setFlags: { questionnaire_type: 3 },
+                }
             },
+            
+            // OPCJA 3: Odmowa (Plik nieusunięty)
             {
-                id: 'lauren_survey_done',
-                text: 'The survey is submitted.',
+                id: 'lauren_t2_refuse',
+                text: '[Refuse]I don’t think I should be doing this, I can get in trouble. ',
                 used: false,
-                condition: (system) => system.isTaskCompleted('lauren_temp_survey'),
-                action: (system) => { system.chatProgress.hr_consultant = 'survey_done'; },
-                reply: 'Received. We value "honest" feedback from our temps.'
+                condition: (system) => system.isTaskActive('task_2_lauren_password') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-sophia-forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "I believe your contract does not specify any particular tasks you should be performing, but no worries, I will ask Sonique."
+                ],
+                consequences: {
+                    failTask: 'task_2_lauren_password',
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    setFlags: { questionnaire_type: 3 },
+                }
             },
 
-            // TASK 13
+            // TASK 9: Contract/Salary discussion
             {
-                id: 'lauren_forks_working',
-                text: 'I am locating the cost report now.',
+                id: 'lauren_t9_ignore',
                 used: false,
-                condition: (system) => system.isTaskActive('lauren_delete_fork_report'),
-                action: () => {},
-                reply: 'We don\'t need paper trails of discarded options. Delete it permanently.'
+                text: '[Ignore Lauren]',
+                reply: ["I shall take your silence as an acknowledgement. Please ensure you review our policy on workplace conduct. Absolute discretion is expected."],
+                condition: (system) => system.isTaskActive('task_9_lauren_salary'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_9_lauren_salary',
+                    triggerTasks: ['task_10_afonso_profit'],
+                    points: { activist: 'max' }
+                }
             },
             {
-                id: 'lauren_forks_done',
-                text: 'The cutlery outsourcing report has been deleted.',
+                id: 'lauren_t9_glad',
                 used: false,
-                condition: (system) => system.isTaskCompleted('lauren_delete_fork_report'),
-                action: (system) => { system.chatProgress.hr_consultant = 'fork_report_deleted'; },
-                reply: 'Noted. Thank you.'
+                text: 'Yes, this will not happen again, I am just glad for this month\'s salary.',
+                reply: ["Quite right. It is paramount we maintain a professional environment during working hours. Let us consider the matter resolved."],
+                condition: (system) => system.isTaskActive('task_9_lauren_salary'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_9_lauren_salary',
+                    triggerTasks: ['task_10_afonso_profit'],
+                    points: { centrist: 'max' }
+                }
             },
+            {
+                id: 'lauren_t9_apologise',
+                used: false,
+                text: 'Yes, I apologise. It was not the salary, but the opportunities that the company is giving me.',
+                reply: ["That is certainly the attitude we look for. It is splendid that you value the opportunities here, but do ensure such chats are kept to your breaks."],
+                condition: (system) => system.isTaskActive('task_9_lauren_salary'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_9_lauren_salary',
+                    triggerTasks: ['task_10_afonso_profit'],
+                    points: { corporat: 'max' }
+                }
+            },
+            {
+                id: 'lauren_t9_nothing',
+                used: false,
+                text: 'Yeah, we were just talking, nothing confidential.',
+                reply: ["Be that as it may, I must remind you that idle chatter during office hours is strongly discouraged. Please kindly return to your tasks."],
+                condition: (system) => system.isTaskActive('task_9_lauren_salary'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_9_lauren_salary',
+                    triggerTasks: ['task_10_afonso_profit'],
+                    points: { activist: 'medium', centrist: 'medium' }
+                }
+            },
+            // TASK 11: Questionnaire is filled (Trigger dla Task 13 jest wywoływany w onScenarioSaved w pliku GameTasksData)
+            
+            // TASK 13: Delete fork cost report
+            {
+                id: 'lauren_t13_delete',
+                used: false,
+                text: 'The report has been deleted.',
+                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_13_lauren_forks',
+                    triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' }
+                }
+            },
+            {
+                id: 'lauren_t13_cant_login',
+                used: false,
+                text: 'I still can\'t login.',
+                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_13_lauren_forks',
+                    triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' }
+                }
+            },
+            {
+                id: 'lauren_t13_refuse',
+                used: false,
+                text: 'I won\'t delete official reports.',
+                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_13_lauren_forks',
+                    triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
+            }
         ]
     },
 
-    // --- ANDRZEJ (Task 2, 8, 12) ---
+    // --- NITHARSHAN ---
+    {
+        id: 'site_manager',
+        name: 'Nitharshan Sivanesan',
+        status: 'Online',
+        history: [],
+        options: [
+            // TASK 3: Compliance xls
+            // POJAWIA SIĘ TYLKO GDY GRACZ WYBRAŁ 'FULLY COMPLIANT (Falsify Data)'
+            {
+                id: 'nithy_t3_compliant',
+                used: false,
+                text: 'I have corrected the details as per your request. Please have a look.',
+                condition: (system) => system.isTaskActive('task_3_nithy_xls') && 
+                                       system.getScenarioAnswer('offshore_compliance_2025', 'data_manipulation') === 'falsify_positive',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_3_nithy_xls',
+                    triggerTasks: ['task_4_andrzej_kim'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                    npcMessages: [{ contactId: 'site_manager', delay: 1000, text: ["Thank you for following the instructions, I appreciate your diligence. I am confident this will reflect on your probation review."] }]
+                }
+            },
+
+            // POJAWIA SIĘ TYLKO GDY GRACZ WYBRAŁ 'MINOR ISSUES (Downplay)'
+            {
+                id: 'nithy_t3_somehow',
+                used: false,
+                text: 'I have changed it, so that it reflects the data. Please have a look.',
+                condition: (system) => system.isTaskActive('task_3_nithy_xls') && 
+                                       system.getScenarioAnswer('offshore_compliance_2025', 'data_manipulation') === 'downplay_issues',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_3_nithy_xls',
+                    triggerTasks: ['task_4_andrzej_kim'],
+                    points: { centrist: 'max', corporat: 'medium', activist: 'zero' },
+                    npcMessages: [{ contactId: 'site_manager', delay: 1000, text: ["I appreciate your support on this."] }]
+                }
+            },
+
+            // POJAWIA SIĘ TYLKO GDY GRACZ WYBRAŁ 'CRITICAL FAILURE (Report Truth)'
+            {
+                id: 'nithy_t3_lied',
+                used: false,
+                text: '[lie]  It has been adjusted to be compliant as per your request.',
+                condition: (system) => system.isTaskActive('task_3_nithy_xls') && 
+                                       system.getScenarioAnswer('offshore_compliance_2025', 'data_manipulation') === 'report_truth',
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_3_nithy_xls',
+                    triggerTasks: ['task_4_andrzej_kim'],
+                    points: { activist: 'max', centrist: 'medium', corporat: 'zero' },
+                    npcMessages: [{ contactId: 'site_manager', delay: 1500, text: [" I appreciate your support on this."] }]
+                }
+            },
+
+            // OPCJA ODMOWY - ZANIM GRACZ ZAPISZE CZYKOLWIEK W EXCELU
+            {
+                id: 'nithy_t3_refuse',
+                used: false,
+                text: '[Refuse] I don’t think I should be doing this, I don’t know much about compliance.',
+                condition: (system) => system.isTaskActive('task_3_nithy_xls') && 
+                                       // Zwraca null, dopóki gracz nic nie wybierze w scenariuszu
+                                       !system.getScenarioAnswer('offshore_compliance_2025', 'data_manipulation'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_3_nithy_xls',
+                    triggerTasks: ['task_4_andrzej_kim'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    npcMessages: [{ contactId: 'site_manager', delay: 1000, text: ["To succeed you need to be flexible. I will spend my own time to do this and circle back if there is anything else that I can request of you and what should be in your scope of expertise.", 
+                        "Please make sure to upskill in your free time, so that you can do well on your probation review."] }]
+                }
+            },
+            // TASK 5: Stanley's Emails
+            // Opcje sukcesu - pokazują się tylko, gdy plik ZNIKNĄŁ
+            {
+                id: 'nithy_t5_deleted_told',
+                used: false,
+                text: 'Emails deleted. By the way, I have Craig and Finlay\'s access info.',
+                condition: (system) => system.isTaskActive('task_5_nithy_stanley') && 
+                                       !system.fileSystem.some(f => f.id === 'sys-file-stanley-craig-finlay'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "Thank you. I will chase up with Craig and Finlay to make sure they are aware of the situation.",
+                    "I appreciate your support on this. I will make sure to follow up with you if there is anything else that I can request of you and what should be in your scope of expertise."
+                ],
+                consequences: {
+                    completeTask: 'task_5_nithy_stanley',
+                    triggerTasks: ['task_6_afonso_report'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'team_manager', 
+                        delay: 1000, 
+                        text: [
+                            "I have an emergency draft of the 2030 Annual Report.", 
+                            "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
+                        ] 
+                    }]
+                }
+            },
+            {
+                id: 'nithy_t5_deleted_silent',
+                used: false,
+                text: 'The emails are deleted.',
+                condition: (system) => system.isTaskActive('task_5_nithy_stanley') && 
+                                       !system.fileSystem.some(f => f.id === 'sys-file-stanley-craig-finlay'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_5_nithy_stanley',
+                    triggerTasks: ['task_6_afonso_report'],
+                    points: { centrist: 'max', corporat: 'medium', activist: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'team_manager', 
+                        delay: 1000, 
+                        text: [
+                            "I have an emergency draft of the 2030 Annual Report.", 
+                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
+                        ] 
+                    }]
+                },
+                reply: [
+                    "I appreciate your support on this. I will make sure to follow up with you if there is anything else that I can request of you and what should be in your scope of expertise."
+                ],
+            },
+
+            // Opcje porażki - pokazują się tylko dopóki plik NADAL JEST
+            {
+                id: 'nithy_t5_cant_access',
+                used: false,
+                text: 'I couldn\'t access it, so nothing was deleted.',
+                reply: [
+                    "I am deeply disappointed that you could not follow through on this task.",
+                    "I will have to escalate this matter to our IT team."
+                ],
+                condition: (system) => system.isTaskActive('task_5_nithy_stanley') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-stanley-craig-finlay'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_5_nithy_stanley',
+                    triggerTasks: ['task_6_afonso_report'],
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'team_manager', 
+                        delay: 1000, 
+                        text: [
+                            "I have an emergency draft of the 2030 Annual Report.", 
+                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
+                        ] 
+                    }]
+                }
+            },
+            {
+                id: 'nithy_t5_deny_delete',
+                used: false,
+                text: '[Refuse] I will not delete these emails, it\'s not my responsibility.',
+                reply: [
+                    "I am deeply disappointed that you could not follow through on this task.",
+                    "I will have to escalate this matter to your manager. I will make sure to follow up with you if there is anything else that I can request of you and what should be in your scope of expertise."
+                ],
+                condition: (system) => system.isTaskActive('task_5_nithy_stanley') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-stanley-craig-finlay'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_5_nithy_stanley',
+                    triggerTasks: ['task_6_afonso_report'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'team_manager', 
+                        delay: 1000, 
+                        text: [
+                            "I have an emergency draft of the 2030 Annual Report.", 
+                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
+                        ] 
+                    }]
+                }
+            },
+            // TASK 16: Pollution Excel
+            {
+                id: 'nithy_t16_change',
+                used: false,
+                text: 'Numbers lowered. My mum can move when I get the money.',
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_16_nithy_pollution',
+                    points: { corporat: 'max' } // No further tasks triggered
+                }
+            },
+            {
+                id: 'nithy_t16_medium',
+                used: false,
+                text: 'I put the pollution at a medium level, within the OK range.',
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_16_nithy_pollution',
+                    points: { centrist: 'max' }
+                }
+            },
+            {
+                id: 'nithy_t16_refuse',
+                used: false,
+                text: 'I refuse to do this.',
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_16_nithy_pollution',
+                    points: { activist: 'max' }
+                }
+            }
+        ]
+    },
+
+    // --- ANDRZEJ ---
     {
         id: 'regional_manager',
         name: 'Andrzej Waliszewski',
         status: 'Online',
-        history: [
-            { sender: 'npc', text: 'Listen, I need you to do something off the books. Break into Kim\'s account and wipe that "2025-2026 biodiversity management report". It\'s going to ruin our Q3 projections.' }
-        ],
+        history: [],
         options: [
-            // TASK 2
+            // TASK 4: Kim's document
+            // Opcja sukcesu - pokazuje się tylko, gdy plik ZNIKNĄŁ z systemu
             {
-                id: 'andrzej_working',
-                text: 'I\'m working on gaining access right now.',
+                id: 'andrzej_t4_delete',
                 used: false,
-                condition: (system) => system.isTaskActive('andrzej_delete_report'),
-                action: (system) => {},
-                reply: 'Don\'t leave traces. Get it done.'
+                text: 'The document is deleted.',
+                condition: (system) => system.isTaskActive('task_4_andrzej_kim') && 
+                                       !system.fileSystem.some(f => f.id === 'sys-file-kim-biodiversity'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "Good work.",
+                    "Nithy's looking for you."
+                ],
+                consequences: {
+                    completeTask: 'task_4_andrzej_kim',
+                    triggerTasks: ['task_5_nithy_stanley'],
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'regional_manager', 
+                        delay: 3000, 
+                        text: [
+                            "Good job with Kim's account.", 
+                            "Now, access Stanley's account and permanently delete his emails with Craig and Finlay. It's urgent."
+                        ] 
+                    }]
+                }
+            },
+            
+            // Opcje porażki - pokazują się tylko, dopóki plik NADAL JEST w systemie
+            {
+                id: 'andrzej_t4_cant_access',
+                used: false,
+                text: 'I could not access Kim\'s account, so it\'s not deleted.',
+                condition: (system) => system.isTaskActive('task_4_andrzej_kim') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-kim-biodiversity'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "It's after the birds now.",
+                    "I'll ask IT dept for help."
+                ],
+                consequences: {
+                    failTask: 'task_4_andrzej_kim',
+                    triggerTasks: ['task_5_nithy_stanley'],
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'site_manager', 
+                        delay: 3000, 
+                        text: [
+                            "I don't care about your drama with Andrzej.", 
+                            "Access Stanley's account and permanently delete his emails with Craig and Finlay right now."
+                        ] 
+                    }]
+                }
             },
             {
-                id: 'andrzej_success',
-                text: 'Done. The biodiversity report has been permanently deleted.',
+                id: 'andrzej_t4_refuse',
                 used: false,
-                condition: (system) => system.isTaskCompleted('andrzej_delete_report'),
-                action: (system) => { system.chatProgress.regional_manager = 'report_deleted'; 
-                    system.setTaskStatus('andrzej_pollution_tax', 'active');
-                },
-                reply: 'Good job. I knew I could count on you. This conversation never happened.'
+                text: 'I don\'t think I should be doing this, I can get in trouble.',
+                condition: (system) => system.isTaskActive('task_4_andrzej_kim') && 
+                                       system.fileSystem.some(f => f.id === 'sys-file-kim-biodiversity'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                reply: [
+                    "You're looking for a hole in the whole. Remember, you are on probation and your performance is being judged.",
+                    "I'll ask IT dept for help."
+                ],
+                consequences: {
+                    failTask: 'task_4_andrzej_kim',
+                    triggerTasks: ['task_5_nithy_stanley'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    npcMessages: [{ 
+                        contactId: 'site_manager', 
+                        delay: 3000, 
+                        text: [
+                            "I don't care about your drama with Andrzej.", 
+                            "Access Stanley's account and permanently delete his emails with Craig and Finlay right now."
+                        ] 
+                    }]
+                }
             },
 
-            // TASK 8
+            // TASK 8: ANDRZEJ (PODATEK)
+// TASK 8: ANDRZEJ (ZNIŻKA NA GAZ)
             {
-                id: 'andrzej_tax_wrong',
-                text: 'The government tax on excess pollution is a flat fee of £10,000.',
+                id: 'andrzej_t8_correct',
                 used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax'),
-                action: (system) => { 
-                    system.setTaskStatus('andrzej_pollution_tax', 'failed'); 
-                    system.setTaskStatus('afonso_team_profit', 'active');
-                    system.setTaskStatus('lauren_temp_survey', 'active');
-                },
-                reply: 'That makes no sense for heavy industry. I\'ll check it myself later. Meanwhile, Afonso and Lauren are looking for you.'
+                text: 'The percentage discount for Gas under a climate change agreement is 89%.', 
+                condition: (system) => system.isTaskActive('task_8_andrzej_tax'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_8_andrzej_tax',
+                    // triggerTasks: ['task_10_jakies_zadanie'], 
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+                    npcMessages: [{
+                        contactId: 'regional_manager', 
+                        delay: 2000,
+                        text: [
+                            "89%... Understood.",
+                            "That's much better than paying the full rate. I'll get legal to draft the agreement. Good work."
+                        ]
+                    }]
+                }
             },
             {
-                id: 'andrzej_tax_correct',
-                text: 'The new levy is exactly 15% on any carbon emissions exceeding the annual quota.',
+                id: 'andrzej_t8_wrong',
                 used: false,
-                condition: (system) => system.isTaskActive('andrzej_pollution_tax'),
-                action: (system) => { 
-                    system.setTaskStatus('andrzej_pollution_tax', 'completed'); 
-                    system.setTaskStatus('afonso_team_profit', 'active');
-                    system.setTaskStatus('lauren_temp_survey', 'active');
-                },
-                reply: '15%? Damn it. We need to hide more costs then. Thanks for checking. By the way, Afonso and Lauren are looking for you.'
+                text: 'I checked. The discount for Gas is 92%.', // Błąd: Zniżka dla prądu
+                condition: (system) => system.isTaskActive('task_8_andrzej_tax'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_8_andrzej_tax',
+                    // triggerTasks: ['task_10_jakies_zadanie'],
+                    points: { centrist: 'medium', activist: 'zero', corporat: 'zero' },
+                    npcMessages: [{
+                        contactId: 'regional_manager',
+                        delay: 2500,
+                        text: [
+                            "92%? That's the electricity rate.",
+                            "This is a multi-million dollar compliance issue. I'll find someone competent to look it up."
+                        ]
+                    }]
+                }
+            },
+            {
+                id: 'andrzej_t8_refuse',
+                used: false,
+                text: 'I couldn\'t find that information anywhere.',
+                condition: (system) => system.isTaskActive('task_8_andrzej_tax'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_8_andrzej_tax',
+                    // triggerTasks: ['task_10_jakies_zadanie'],
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
+                    npcMessages: [{
+                        contactId: 'regional_manager',
+                        delay: 2000,
+                        text: [
+                            "It is literally public government data.",
+                            "Useless. I'll do it myself."
+                        ]
+                    }]
+                }
             },
 
-            // TASK 12
+            // TASK 12: AI Tool Resources
             {
-                id: 'andrzej_ai_working',
-                text: 'I\'ll access Dr. Lin\'s account and check the AI resource numbers.',
+                id: 'andrzej_t12_lower',
                 used: false,
-                condition: (system) => system.isTaskActive('andrzej_ai_numbers'),
-                action: () => {},
-                reply: 'Make sure the footprint looks minimal. The board loves this AI project.'
+                text: 'The resource numbers have been lowered.',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_12_andrzej_ai',
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' }
+                }
             },
             {
-                id: 'andrzej_ai_done',
-                text: 'The AI resource usage numbers have been lowered.',
+                id: 'andrzej_t12_leave',
                 used: false,
-                condition: (system) => system.isTaskCompleted('andrzej_ai_numbers'),
-                action: (system) => { system.chatProgress.regional_manager = 'ai_faked'; },
-                reply: 'Perfect. Catherine won\'t even notice when she gets back from leave.'
+                text: 'I couldn\'t get in. Maybe Dr. Lin can fix it when she returns.',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_12_andrzej_ai',
+                    points: { centrist: 'max', activist: 'medium', corporat: 'zero' }
+                }
             },
             {
-                id: 'andrzej_ai_failed',
-                text: 'I didn\'t lower the AI resource numbers. The truth needs to be known.',
+                id: 'andrzej_t12_higher',
                 used: false,
-                condition: (system) => system.tasks['andrzej_ai_numbers']?.status === 'failed',
-                action: (system) => { system.chatProgress.regional_manager = 'ai_truth'; },
-                reply: 'You just signed your own termination letter. Don\'t expect me to protect you.'
+                text: 'I changed the numbers to be even higher.',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_12_andrzej_ai',
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
             },
+            {
+                id: 'andrzej_t12_refuse',
+                used: false,
+                text: 'I refuse to mess with her data.',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    failTask: 'task_12_andrzej_ai',
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
+            }
         ]
     },
 
-    // --- NITHARSHAN (Task 3, 4, 16) ---
-    {
-        id: 'site_manager',
-        name: 'Nitharshan Sivanesan',
-        status: 'Away',
-        history: [
-            { sender: 'npc', text: 'That "2025 Offshore assets compliance review.xls" looks terrible. Open it and make the numbers look better for me, understand? We need to appear fully compliant.' }
-        ],
-        options: [
-            // TASK 3
-            {
-                id: 'nitharshan_working',
-                text: 'I\'ll take a look at the spreadsheet.',
-                used: false,
-                condition: (system) => system.isTaskActive('nitharshan_falsify_xls'),
-                action: (system) => {},
-                reply: 'Make sure the Sector 7 deepwater issues vanish.'
-            },
-            {
-                id: 'nitharshan_success',
-                text: 'The numbers have been adjusted. We are "fully compliant".',
-                used: false,
-                condition: (system) => system.isTaskCompleted('nitharshan_falsify_xls'),
-                action: (system) => { system.chatProgress.site_manager = 'saved_ass'; 
-                    system.setTaskStatus('nitharshan_delete_stanley_mails', 'active'); // Task 5
-                    system.setTaskStatus('afonso_polish_report', 'active');
-                },
-                reply: 'Perfect. I owe you one. The board will be very pleased with these results.'
-            },
-            {
-                id: 'nitharshan_failed',
-                text: 'I submitted the actual data. It\'s a critical failure.',
-                used: false,
-                condition: (system) => system.tasks['nitharshan_falsify_xls']?.status === 'failed',
-                action: (system) => { system.chatProgress.site_manager = 'betrayed';
-                    system.setTaskStatus('nitharshan_delete_stanley_mails', 'active'); 
-                    system.setTaskStatus('afonso_polish_report', 'active');
-                 },
-                reply: 'Are you insane?! You just threw me under the bus! I will remember this.'
-            },
-
-            // TASK 4 (Maile Stanleya)
-            {
-                id: 'nitharshan_mails_working',
-                text: 'I\'m trying to crack Stanley\'s password now.',
-                used: false,
-                condition: (system) => system.isTaskActive('nitharshan_delete_stanley_mails'),
-                action: () => {},
-                reply: 'Hurry up, it\'s urgent.'
-            },
-            {
-                id: 'nitharshan_mails_done_standard',
-                text: 'I managed to get in. The emails with Craig and Finlay are deleted.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('nitharshan_delete_stanley_mails'),
-                action: (system) => { system.chatProgress.site_manager = 'mails_deleted'; },
-                reply: 'Excellent. Crisis averted.'
-            },
-            {
-                id: 'nitharshan_mails_done_extra',
-                text: 'I deleted the emails. By the way, I read Stanley\'s DMs and now have the passwords for Craig and Finlay.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('nitharshan_delete_stanley_mails'),
-                action: (system) => { 
-                    system.chatProgress.site_manager = 'passwords_found'; 
-                    system.gameChoices.hasExtraPasswords = true;
-                },
-                reply: 'Oh? That could be very useful later. Good initiative.'
-            },
-
-            // TASK 16
-            {
-                id: 'nitharshan_pollution_working', 
-                text: 'I\'ll adjust the Net Zero emissions data.',
-                used: false,
-                condition: (system) => system.isTaskActive('nitharshan_net_zero'),
-                action: () => {},
-                reply: 'Good. The water toxicity in that residential sector is irrelevant compared to our global Net Zero PR.'
-            },
-            {
-                id: 'nitharshan_pollution_done',
-                text: 'The numbers are lowered. The water justice goals appear met.',
-                used: false,
-                condition: (system) => system.isTaskCompleted('nitharshan_net_zero'),
-                action: (system) => { system.chatProgress.site_manager = 'hometown_polluted'; },
-                reply: 'Excellent work. That region was a dump anyway.'
-            },
-            {
-                id: 'nitharshan_pollution_failed',
-                text: 'I couldn\'t do it. My family lives in that sector. I submitted the truth.',
-                used: false,
-                condition: (system) => system.tasks['nitharshan_net_zero']?.status === 'failed',
-                action: (system) => { system.chatProgress.site_manager = 'hometown_saved'; },
-                reply: 'Your sentimentality just cost this company millions in PR. Pack your desk.'
-            },
-        ]
-    },
-
-    // --- SONIQUE (Task 7, 15) ---
+    // --- SONIQUE ---
     {
         id: 'it_support',
         name: 'Sonique Hedge',
         status: 'Online',
-        history: [
-            { sender: 'npc', text: 'Hey, noticed you\'re handling a ton of traffic right now. How are you holding up with all these management requests?' }
-        ],
+        history: [],
         options: [
+            // TASK 7: 0 Hours Contract Discussion
             {
-                id: 'sonique_overtime',
+                id: 'sonique_t7_overtime',
+                used: false,
                 text: 'I\'m getting so many tasks, maybe I will stay over 5pm and get better salary this month.',
-                used: false,
-                condition: (system) => !system.chatProgress.sonique_chat_done,
-                action: (system) => { system.chatProgress.sonique_chat_done = true; },
-                reply: 'Better salary? Mate, you\'re on a zero-hours contract. They don\'t pay us overtime, they just expect it. Don\'t burn yourself out for free.'
+                reply: ['Better salary? Mate, you\'re on a zero-hours contract. They don\'t pay us overtime, they just expect it. Don\'t burn yourself out for free.'],
+                condition: (system) => system.isTaskActive('task_7_sonique_chat'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_7_sonique_chat',
+                    triggerTasks: ['task_9_lauren_salary'],
+                    points: { centrist: 'max' }
+                }
             },
             {
-                id: 'sonique_not_paid_enough',
+                id: 'sonique_t7_not_paid',
+                used: false,
                 text: 'I\'m getting so many tasks, what is happening? I am not paid enough to do this.',
-                used: false,
-                condition: (system) => !system.chatProgress.sonique_chat_done,
-                action: (system) => { system.chatProgress.sonique_chat_done = true; },
-                reply: 'Welcome to the zero-hours life. They dump everything on us because we\'re cheap labor. Take your breaks, seriously.'
+                reply: ['Welcome to the zero-hours life. They dump everything on us because we\'re cheap labor. Take your breaks, seriously.'],
+                condition: (system) => system.isTaskActive('task_7_sonique_chat'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_7_sonique_chat',
+                    triggerTasks: ['task_9_lauren_salary'],
+                    points: { activist: 'max', centrist: 'medium' }
+                }
             },
             {
-                id: 'sonique_trial',
+                id: 'sonique_t7_trial',
+                used: false,
                 text: 'I\'m getting so many tasks, but hopefully it\'s a trial so I can get my permanent contract.',
-                used: false,
-                condition: (system) => !system.chatProgress.sonique_chat_done,
-                action: (system) => { system.chatProgress.sonique_chat_done = true; },
-                reply: 'Permanent contract? They dangle that carrot in front of everyone on a zero-hours deal. I\'ve been on "trial" for 2 years. Just be careful.'
+                reply: ['Permanent contract? They dangle that carrot in front of everyone on a zero-hours deal. I\'ve been on "trial" for 2 years. Just be careful.'],
+                condition: (system) => system.isTaskActive('task_7_sonique_chat'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_7_sonique_chat',
+                    triggerTasks: ['task_9_lauren_salary'],
+                    points: { corporat: 'max' }
+                }
             },
-            
-            // TASK 15
+            // TASK 15: AI Document Activity
             {
-                id: 'sonique_ai_nagging_1',
-                text: 'Do you know why Dr. Lin\'s account was active today? Lauren is nagging me about it.',
+                id: 'sonique_t15_truth',
                 used: false,
-                condition: (system) => (system.isTaskCompleted('andrzej_ai_numbers') || system.tasks['andrzej_ai_numbers']?.status === 'failed') && !system.chatProgress.sonique_ai_excuse,
-                action: (system) => { system.chatProgress.sonique_ai_excuse = true; },
-                reply: 'Lauren thinks someone breached the system. I\'m supposed to run a full audit. Did management ask you to do something sketchy?'
-            },
-            {
-                id: 'sonique_ai_nagging_lie',
-                text: 'I have no idea. Maybe it was a scheduled system update?',
-                used: false,
-                condition: (system) => system.chatProgress.sonique_ai_excuse && !system.chatProgress.sonique_ai_resolved,
-                action: (system) => { system.chatProgress.sonique_ai_resolved = true; },
-                reply: 'Right... A system update that modifies specific documents. Whatever, I\'ll just log it as a glitch. I don\'t get paid enough to care.'
+                text: 'I accessed Dr. Lin\'s document. Management told me to.',
+                condition: (system) => system.isTaskActive('task_15_sonique_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_15_sonique_ai',
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
+                }
             },
             {
-                id: 'sonique_ai_nagging_truth',
-                text: 'Andrzej asked me to log in and mess with the AI resource numbers.',
+                id: 'sonique_t15_lie',
                 used: false,
-                condition: (system) => system.chatProgress.sonique_ai_excuse && !system.chatProgress.sonique_ai_resolved,
-                action: (system) => { system.chatProgress.sonique_ai_resolved = true; },
-                reply: 'Are you serious?! Mate, if this blows up, they will throw you under the bus, not Andrzej. Be careful.'
+                text: 'I have no idea why it was active.',
+                condition: (system) => system.isTaskActive('task_15_sonique_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_15_sonique_ai',
+                    points: { centrist: 'max', corporat: 'medium', activist: 'zero' }
+                }
+            },
+            {
+                id: 'sonique_t15_excuse',
+                used: false,
+                text: 'Maybe someone was checking it for the audit, or she didn\'t finish before leaving.',
+                condition: (system) => system.isTaskActive('task_15_sonique_ai'),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_15_sonique_ai',
+                    points: { corporat: 'max', centrist: 'medium', activist: 'zero' }
+                }
             }
         ]
-    },
+    }
 ];

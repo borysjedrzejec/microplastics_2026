@@ -1,5 +1,4 @@
 <div class="window">
-    
     <div class="title-bar">
         <div class="title-bar-text">Task Manager</div>
         <div class="title-bar-controls">
@@ -11,7 +10,7 @@
         
         <fieldset>
             <legend>Active Tasks</legend>
-            <template x-for="task in $store.tasks.activeTasks" :key="task.id">
+            <template x-for="task in $store.system.activeTasks" :key="task.id">
                 <div style="margin-bottom: 12px;">
                     <div class="field-row" style="align-items: flex-start;">
                         <input type="checkbox" :id="'task_' + task.id" disabled>
@@ -20,15 +19,15 @@
                     <div style="margin-left: 22px; margin-top: 4px; font-size: 11px; color: #555;" x-text="task.description"></div>
                 </div>
             </template>
-            <div x-show="$store.tasks.activeTasks.length === 0" style="color: #666; font-style: italic; margin-left: 5px;">
+            <div x-show="$store.system.activeTasks.length === 0" style="color: #666; font-style: italic; margin-left: 5px;">
                 No active tasks.
             </div>
         </fieldset>
 
-        <div x-show="$store.tasks.completedTasks.length > 0" style="margin-top: 10px;">
+        <div x-show="$store.system.completedTasks.length > 0" style="margin-top: 10px;">
             <fieldset>
                 <legend>Completed</legend>
-                <template x-for="task in $store.tasks.completedTasks" :key="task.id">
+                <template x-for="task in $store.system.completedTasks" :key="task.id">
                     <div class="field-row" style="margin-bottom: 6px;">
                         <input type="checkbox" :id="'task_' + task.id" checked disabled>
                         <label :for="'task_' + task.id" style="text-decoration: line-through; color: #888;" x-text="task.title"></label>

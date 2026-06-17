@@ -1,5 +1,4 @@
 document.addEventListener('alpine:init', () => {
-    
     Alpine.data('corpChatApp', (payload) => ({
         isLoadingView: true,
         viewError: false,
@@ -9,14 +8,19 @@ document.addEventListener('alpine:init', () => {
             let storeContacts = this.$store.system.chatContacts;
             if (!storeContacts || storeContacts.length === 0) {
                 storeContacts = window.ChatContactsData || [];
-                // Inicjalizacja flagi nieprzeczytanych wiadomości dla pewności
-                storeContacts.forEach(c => c.hasUnread = c.hasUnread || false);
+                // Inicjalizacja flagi z gwarancją reaktywności w Alpine
+                storeContacts.forEach(c => {
+                    if (typeof c.hasUnread === 'undefined') c.hasUnread = false;
+                });
                 this.$store.system.chatContacts = storeContacts; 
             }
             return storeContacts;
         },
 
         init() {
+
+            window.addEventListener('chat-updated', () => this.scrollToBottom());
+
             fetch('views/corpchat.html')
                 .then(res => {
                     if (!res.ok) throw new Error('No view found for: corpchat.html');
@@ -49,7 +53,6 @@ document.addEventListener('alpine:init', () => {
             return option.condition(this.$store.system);
         },
 
-        // DRY: Wydzielona funkcja do odtwarzania dźwięku
         playSound(filename) {
             if (!Alpine.store('accessibility').disableAudio) {
                 try { 
@@ -60,18 +63,13 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        sendMessage(option) {
+sendMessage(option) {
             if (!this.selectedContact) return;
 
-            // Zabezpieczenie przed błędem asynchronicznym! Zapisujemy referencję do obecnego kontaktu.
             const targetContact = this.selectedContact;
-
             option.used = true;
 
-            if (typeof option.action === 'function') {
-                option.action(this.$store.system);
-            }
-
+            // 1. Wiadomość gracza leci od razu
             targetContact.history.push({
                 sender: 'player',
                 text: option.text
@@ -80,24 +78,41 @@ document.addEventListener('alpine:init', () => {
             this.playSound('ding');
             this.scrollToBottom();
 
-            // NPC Response Delay
+            // DRY: Obsługa odpowiedzi NPC (tablica lub pojedynczy string)
             if (option.reply) {
-                setTimeout(() => {
-                    targetContact.history.push({
-                        sender: 'npc',
-                        text: option.reply
-                    });
-                    
-                    this.playSound('chord');
-                    
-                    // Jeśli gracz w międzyczasie zmienił okno chatu na inne, ustawiamy powiadomienie
-                    if (this.selectedContact?.id !== targetContact.id) {
-                        targetContact.hasUnread = true;
-                    } else {
-                        // Jeśli nadal jesteśmy w tym samym czacie, po prostu zjedź w dół
-                        this.scrollToBottom();
-                    }
-                }, 1500); 
+                const messages = Array.isArray(option.reply) ? option.reply : [option.reply];
+                const totalMessages = messages.length; // Sprawdzamy ile jest wiadomości
+
+                messages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        targetContact.history.push({
+                            sender: 'npc',
+                            text: msg
+                        });
+                        
+                        this.playSound('chord'); // Sygnał nadejścia wiadomości
+                        
+                        // Zabezpieczenie: jeśli gracz zmienił kontakt, oznaczamy jako nieprzeczytane
+                        if (!this.selectedContact || this.selectedContact.id !== targetContact.id) {
+                            targetContact.hasUnread = true;
+                        } else {
+                            this.scrollToBottom();
+                        }
+
+                        // OPTYMALIZACJA: Wywołanie konsekwencji dopiero przy OSTATNIEJ wiadomości NPC
+                        if (index === totalMessages - 1) {
+                            if (typeof option.action === 'function') {
+                                option.action(this.$store.system, option);
+                            }
+                        }
+                    }, (index + 1) * 1200); // Kaskadowe opóźnienie dla każdej wiadomości
+                });
+            } else {
+                // Zabezpieczenie: Jeśli opcja dialogowa z jakiegoś powodu nie ma tekstu (reply), 
+                // odpal akcję od razu, żeby gra nie utknęła.
+                if (typeof option.action === 'function') {
+                    option.action(this.$store.system, option);
+                }
             }
         },
 

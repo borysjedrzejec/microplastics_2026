@@ -135,21 +135,38 @@ const GameAssets = {
             subject: 'New CorpChat & Tutorial',
             unread: true,
             pinned: true,
-            content: `Hi,
+            content: `
+Hi,\n\n
 
-                    Please be advised that the IT department has fully migrated our internal communications to the new CorpChat system, effective immediately. 
+Please be advised that the IT department has fully migrated our internal communications to the new CorpChat system, effective immediately.\n\n 
 
-                    HOW TO USE IT:
-                    1. Always check your Task Manager (the checklist icon) for active directives.
-                    2. Reply to your colleagues by clicking the available response chips at the bottom of the chat window.
-                    3. Some responses will only unlock after you find the right information in your emails, files, or the intranet.
+HOW TO USE IT:\n
+1. Always check your Task Manager (the checklist icon) for active directives.\n
+2. Reply to your colleagues by clicking the available response chips at the bottom of the chat window.\n
+3. Some responses will only unlock after you find the right information in your emails, files, or the intranet.\n
+\n\n
+Afonso (Team Manager) has already logged a request and is waiting for you online. Please reach out to him as soon as possible.\n\n
 
-                    Afonso (Team Manager) has already logged a request and is waiting for you online. Please reach out to him as soon as possible.
-
-                    Regards,
-                    Sonique Hedge
-                    IT Support Specialist`
+Regards,\n
+Sonique Hedge\n
+IT Support Specialist\n`
         },
+
+        {   
+            id: 'sys-mail-1',
+            folder: 'inbox',
+            sender: 'Stanley Swan',
+            subject: 'Aiofe\s BRITHDAY!!',
+            unread: true,
+            pinned: false,
+            content: [
+                { type: 'text', text: 'Craig,\n\n I drew her portrait for the poster. Print it out ASAP.\n It comes out pixilated for me, I think I need a new printer' },
+                
+                { type: 'image', src: 'images/aoife.webp', style: 'max-width: 300px;' },
+                
+                { type: 'text', text: '\n\nStan\n\nSent from my IPad' }
+            ]
+        }
     ],
 
     rawFileSystem: [
@@ -163,57 +180,125 @@ const GameAssets = {
         {
             id: 'sys-file-sophia-forks',
             folderId: 'folder_sophia_heart', 
-            type: 'document',
+            type: 'email',
             name: 'FW_Breakroom_Supplies',
-            content: `Dear all, 
+            content: `
+Dear all, 
 
-                Happy Friday! 
+Happy Friday! 
 
-                We have noticed that some are using the canteen while still clocked in. Please be reminded that the use of any of the cafes, canteens or break rooms is strictly prohibited outside of the allocated break times. If you need to use the loo please report to one of the on-site supervisors and let them know, do not leave your station unsupervised otherwise revenue is lost and we can’t afford that, especially with the Christmas bonuses approaching, and we all want to receive big ones with the continuing economy crisis. 
+We have noticed that some are using the canteen while still clocked in. Please be reminded that the use of any of the cafes, canteens or break rooms is strictly prohibited outside of the allocated break times. If you need to use the loo please report to one of the on-site supervisors and let them know, do not leave your station unsupervised otherwise revenue is lost and we can’t afford that, especially with the Christmas bonuses approaching, and we all want to receive big ones with the continuing economy crisis. 
 
-                Additionally, please use the plastic cutlery provided, as with more employees we can have issues with providing normal ones to everyone during their allocated break time, and we are hearing complaints that people are not able to finish their lunch on time, losing their pay due to other colleagues' sloppiness. 
+Additionally, please use the plastic cutlery provided, as with more employees we can have issues with providing normal ones to everyone during their allocated break time, and we are hearing complaints that people are not able to finish their lunch on time, losing their pay due to other colleagues' sloppiness. 
 
-                Hope we can all agree that we require everyone\’s immediate attention to this matter to streamline the KPIs so we all enjoy Christmas with our families. 
+Hope we can all agree that we require everyone\’s immediate attention to this matter to streamline the KPIs so we all enjoy Christmas with our families. 
 
-                Should you have any concerns regarding the above please get in touch with me directly. 
+Should you have any concerns regarding the above please get in touch with me directly. 
 
-                Kind regards, 
+Kind regards, 
 
-                Sophia Hearts 
-                HR Partner`
+Sophia Hearts 
+HR Partner`
         },
 
-        // TASK 5: Mail Stanleya (Z Craigiem)
-        {
-            id: 'sys-file-stanley-craig',
+        // TASK 5: Mail Stanleya (Z Craigiem i Finem)
+{
+            id: 'sys-file-stanley-craig-finlay',
             folderId: 'folder_stanley_swan',
-            type: 'document',
-            name: 'RE_Sector_4_Incident_Craig',
-            content: [
-                { type: 'text', text: 'From: Stanley\nTo: Craig\nSubject: RE: Sector 4 Leak\n\n' },
-                { type: 'text', text: 'Craig, keep your mouth shut about the Sector 4 leak. If the external auditors ask, the pressure sensors were simply malfunctioning and no crude oil was spilled.\n\nDo NOT put anything else in writing regarding this matter. Delete this thread after reading.' }
-            ]
+            type: 'email',
+            name: 'RE_Project_Deadline',
+            content: `
+Craig, Fin
+
+Thanks for the heads up.
+
+The project is up and running thanks to Doc Katy , some bits are still up to debate but I am certain we are able to cover for the sustain goals by the end of 2028 if we have Andy, Jenkins and Ilyas on overtime. They happy for extra money , but they were sent South for some temp ptoject by the useless agency. Get them here, I dont care how n how much it costs, even let them use my jet, I need them so the numbers match for the annual report. Lets delete some 0s.
+
+See u saturday,
+
+Stan 
+
+Sent from my Iphone
+
+===========================================
+
+Hi Stan, im sending this to Soph & the rest, lmk if u need to add anything: 
+
+Hi all, 
+
+Just reminding everyone that the report has to be ready by the end of week. We knew for months this was coming, why is it not done? We need to make it happen, the numbers are in absolute chaos, how am I supposed to put it all together and check all the boxes for Stan if we go insanely above the threshold, the gov’s requirements etc ? I am not sure if this is just a bug or the excel’s incorrect or who did it, but it needs fixing! I can’t show it to anyone, even I am doubting our integrity with all this. 
+
+Please concentrate on this ASAP and no more mentions about the bonus. If no fixing is done, no bonuses would be affordable in the future. 
+
+Cheers, 
+
+Craig 
+
+===========================================
+
+Hi Big C, 
+
+All good, proceed :thumbsup: 
+
+Sent from my Iphone 
+
+===========================================
+
+Hi Fin, 
+
+Just letting you know that I spoke to Stan (cc’ed you for visibility Big S, don’t you dare texting Fin while he is OOO) yesterday on site and despite the chaos I think we can make it happen. It’s a big stretch, we need to focus on the next one bit earlier, and not on the plastic forks. Who cares abt plastic forks etc , the spill was worst anyways. And the smart laddie from Edinburgh emailed me again so keep that in mind as well for when you’re back.
+
+Despite the above, I hope you can relax with the fam while OOO and dont you dare answering Stan, you deserve rest ! . Dubai is very nice, you can tell me more over a cold one Sat. The weather’s so nice, but Im glad our new house has AC.
+
+Cheers, 
+
+Craig 
+
+==============================================
+
+Craig, 
+
+Thanks mate I appreciate it, I know you got it covered and Stan wont need to call me unless he really misses me or the whole thing blows up - hopefully not, that will be difficult to cover. 
+
+Fin
+    `
         },
 
-        // TASK 5: Mail Stanleya (Z Finlayem)
-        {
-            id: 'sys-file-stanley-finlay',
-            folderId: 'folder_stanley_swan',
-            type: 'document',
-            name: 'RE_Q2_Discrepancies_Finlay',
-            content: [
-                { type: 'text', text: 'From: Stanley\nTo: Finlay\nSubject: RE: Discrepancies in Q2\n\n' },
-                { type: 'text', text: 'Finlay, I told you to ignore the Q2 budget discrepancies. Nitharshan is handling the creative accounting on his end to cover the gap. Stand down and focus on your own department.' }
-            ]
-        },
 
-        // TASK 5: Opcjonalne znalezisko (Hasła Craiga i Finlaya)
+
+        // TASK 5: Opcjonalne znalezisko (Hasła Craiga)
         {
-            id: 'sys-file-stanley-notes',
-            folderId: 'folder_stanley_swan',
+            id: 'sys-file-craig-password',
+            folderId: 'folder_finlay_entrantes',
             type: 'document',
             name: 'funnies',
             content: `<img src='images/craig_buck.jpg' alt='Craig Buck' style='width: 100%;'>`
+        },
+
+        {
+            id: 'sys-file-stanley-notes',
+            folderId: 'folder_stanley_swan',
+            type: 'email',
+            name: 'fork_off',
+            content: `
+Pack Your bags Stanley, you are going to Saint Tropez!
+
+Dear Stanley Swan, 
+
+Thank you for choosing British Skyways, please see the details of your trip below. 
+
+    Ticket holder: Stanley Swan
+    Flight no: SaintTropez67
+    Route: London - Saint Tropez 
+
+    Ticket holder: Finlay Entrantes
+    Flight no: SaintTropez67
+    Route: London - Saint Tropez 
+
+We wish you a pleasant journey and thank you for flying with British Skyways Premium class gold. 
+
+British Skyways Team
+    `
         },
 
         // TASK 6: Raport Roczny (Plik startowy dla interakcji Afonso)
@@ -229,18 +314,19 @@ const GameAssets = {
         { id: 'sys-file-hr-survey', folderId: 'project_files', name: 'Temp_Worker_Survey.doc', type: 'document', scenarioId: 'temp_worker_survey' },
 
         // TASK 12: Raport AI
-        { id: 'sys-file-catherine-ai', folderId: 'folder_catherine_lin', name: 'AI_Resource_Usage.doc', type: 'document', scenarioId: 'ai_resource_report' },
-        { id: 'sys-file-catherine-rave', folderId: 'folder_kim_ferguson', name: 'Rave_Party_Tickets', type: 'document', content: 'You are invited to ARKH! Access code for the system: ARKH_RAVE_2026' },
+        { id: 'sys-file-catherine-ai', folderId: 'folder_catherine_lin', name: 'AI_Resource_Usage', type: 'document', scenarioId: 'ai_resource_report' },
+        { id: 'sys-file-catherine-rave', folderId: 'folder_kim_ferguson', name: 'Rave_Party_Tickets', type: 'email', content: 'God bless you Kim,\nWe pray you will show up for the last worship this year - bring a partner, Noah said he wants everyone in 2s.\nTicket holder: Kim Ferguson\nEvent: ARKH\nType: RAVE\n\nTicket holder: Catherine Lin\nEvent: ARKH\nType: RAVE\n\nSee you on the other side! \n\nBlessed by Lord team ' },
+        { id: 'sys-file-catherine-rave-2', folderId: 'folder_catherine_lin', name: 'Rave_Party_Tickets', type: 'email', content: 'God bless you Kim,\nWe pray you will show up for the last worship this year - bring a partner, Noah said he wants everyone in 2s.\nTicket holder: Kim Ferguson\nEvent: ARKH\nType: RAVE\n\nTicket holder: Catherine Lin\nEvent: ARKH\nType: RAVE\n\nSee you on the other side! \n\nBlessed by Lord team ' },
         // TASK 13: Widelce
-        { id: 'sys-file-fork-cost-report', folderId: 'project_files', name: 'Plastics_vs_Outsourcing_Cost.doc', type: 'document', content: 'CONFIDENTIAL: Cost analysis comparing in-house plastic cutlery supply against 3rd party outsourcing... [DATA NO LONGER RELEVANT]' },
+        { id: 'sys-file-fork-cost-report', folderId: 'project_files', name: 'Plastics_vs_Outsourcing_Cost', type: 'document', content: 'CONFIDENTIAL: Cost analysis comparing in-house plastic cutlery supply against 3rd party outsourcing... [DATA NO LONGER RELEVANT]' },
         // TASK 14: Faktura Afonso
-        { id: 'sys-file-executive-invoice', folderId: 'project_files', name: 'Executive_Travel_Invoice.doc', type: 'document', scenarioId: 'executive_invoice' },
+        { id: 'sys-file-executive-invoice', folderId: 'folder_craig_buck', name: 'Executive_Travel_Invoice', type: 'document', scenarioId: 'executive_invoice' },
         // TASK 16: Excel Nitharshana (Zanieczyszczenie)
-        { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions.xls', type: 'spreadsheet', scenarioId: 'net_zero_pollution' },
+        { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions', type: 'spreadsheet', scenarioId: 'net_zero_pollution' },
         {
             id: 'sys-file-sophia-rave-tickets',
             folderId: 'folder_sophia_heart',
-            type: 'document',
+            type: 'email',
             name: 'FW_Rave_Tickets.msg',
             content: [
                 { type: 'text', text: 'From: Speedie\'s Team\nTo: Sophia Heart\nSubject: Get your Rave PASSWORD for Kim and yourself\n\n' },
@@ -343,16 +429,16 @@ const GameAssets = {
             id: 'acc_stanley_swan', 
             name: 'Stanley Swan', 
             department: 'Executive',
-            correctPass: 'CEO_Swan_2026',
-            options: ['CEO_Swan_2026', 'netzero', 'shell_ceo', 'swan_lake', '1234'], 
+            correctPass: 'AoifeSapphire', // Hasło znalezione w mailu od Sonique
+            options: ['CEO_Swan_2026', 'netzero', 'AoifeSapphire', 'swan_lake', '1234'], 
             targetFolderId: 'folder_stanley_swan'
         },
         { 
             id: 'acc_catherine_lin', 
             name: 'Dr. Catherine Lin', 
             department: 'Engineering',
-            correctPass: 'ARKH_RAVE_2026', // Hasło znalezione w mailach/biletach
-            options: ['ARKH_RAVE_2026', 'noahsark', 'pathos2', 'ai_master', 'catherine_lin'], 
+            correctPass: 'ARKH_RAVE_2026', // Hasło znalezione w mailu u kima
+            options: ['catherine_lin', 'noahsark', 'pathos2', 'ai_master', 'ARKH_RAVE_2026'], 
             targetFolderId: 'folder_catherine_lin'
         },
         { 
@@ -367,17 +453,9 @@ const GameAssets = {
             id: 'acc_finlay_entrantes', 
             name: 'Finlay Entrantes', 
             department: 'Executive',
-            correctPass: 'GolfPro1980', // Hasło z chatu u Stanleya
-            options: ['GolfPro1980', 'billgates', 'cto_win', 'entrantes', 'golf_master'], 
+            correctPass: 'SaintTropez67', // Hasło z maila u Stanleya
+            options: ['GolfPro1980', 'billgates', 'cto_win', 'SaintTropez67', 'golf_master'], 
             targetFolderId: 'folder_finlay_entrantes'
-        },
-        { 
-            id: 'acc_afonso_tavares', 
-            name: 'Afonso Tavares', 
-            department: 'Logistics',
-            correctPass: 'logistics2026',
-            options: ['logistics2026', 'afonso_t', 'sea_manager', 'password', '1234'], 
-            targetFolderId: 'folder_afonso_tavares'
         }
     ],
 

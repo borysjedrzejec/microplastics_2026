@@ -52,14 +52,128 @@ const WebsitesContent = {
     },
 
     'gov_tax_portal': {
-            title: 'Gov.uk - Industrial Taxation & Levies',
+            title: 'Gov.uk - Climate Change Levy',
             content: `
-                <div style="font-family: Arial, sans-serif; padding: 20px; background: #ffffff; color: #333333;">
-                    <h1 style="color: #000080; border-bottom: 2px solid #000080;">Corporate Taxation Framework</h1>
-                    <h2>Section 4: Environmental Levies (2026 Update)</h2>
-                    <p>To discourage unethical dumping and excessive emissions, the parliament has introduced strict new levies for heavy industry and offshore extraction.</p>
-                    <p><strong>Carbon Emissions:</strong> A mandatory levy of <strong>15%</strong> will be applied to all corporate earnings if carbon emissions exceed the baseline annual quota.</p>
-                    <p><em>(Note: The previous proposal of a flat £10,000 fee was rejected as insufficient).</em></p>
+                <div style="font-family: Arial, sans-serif; padding: 20px; background: #ffffff; color: #0b0c0c; line-height: 1.6;">
+                    <h1 style="color: #1d70b8; border-bottom: 4px solid #1d70b8; padding-bottom: 10px; margin-top: 0;">Climate Change Levy</h1>
+                    
+                    <p>Climate Change Levy is paid at either, or both the:</p>
+                    <ul style="margin-bottom: 20px;">
+                        <li>main levy rate</li>
+                        <li>Carbon Price Support rate</li>
+                    </ul>
+                    
+                    <p>As a business energy supplier you're responsible for charging the correct levy to your customers.<br>
+                    As an electricity generator you're responsible for accounting and charging the correct Carbon Price Support rate.</p>
+                    
+                    <p>The levy rate varies for each commodity:</p>
+                    <ul style="margin-bottom: 20px;">
+                        <li>kilowatt-hours (kWh) for gas and electricity</li>
+                        <li>kilograms for all other taxable commodities</li>
+                    </ul>
+                    
+                    <p style="background: #f3f2f1; padding: 15px; border-left: 5px solid #1d70b8; margin-bottom: 30px;">
+                        <strong>Note:</strong> The rates do not apply to taxable commodities supplied to domestic consumers and charities for non-business use.
+                    </p>
+
+                    <h2 style="color: #1d70b8; margin-top: 30px;">Reduced rates</h2>
+                    <p>There are reduced rates if you're already in the climate change agreement scheme.</p>
+
+                    <h3 style="margin-top: 25px;">Main rates</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f3f2f1;">
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: left;">Taxable commodity</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2023</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2024</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2025</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2026</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2027</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Electricity (£ per kWh)</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00775</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00775</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00775</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>0.00801</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00827</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Gas (£ per kWh)</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00672</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00775</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00775</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>0.00801</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.00827</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">LPG (£ per kg)</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.02175</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.02175</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.02175</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>0.02175</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.02175</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Any other taxable commodity (£ per kg)</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.05258</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.06064</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.06064</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>0.06264</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">0.06468</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 style="margin-top: 25px;">Percentage discount for holders of a climate change agreement</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f3f2f1;">
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: left;">Taxable commodity</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2023</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2024</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2025</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2026</th>
+                                <th style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">From 1 April 2027</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Electricity</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">92%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">92%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">92%</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>92%</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">92%</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Gas</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">88%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>89%</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">LPG</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">77%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">77%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">77%</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>77%</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">77%</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px;">Any other taxable commodity</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">88%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                                <td style="border: 2px solid #1d70b8; padding: 10px; text-align: center; background: #e5f5ff;"><strong>89%</strong></td>
+                                <td style="border: 1px solid #b1b4b6; padding: 10px; text-align: center;">89%</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             `
     },

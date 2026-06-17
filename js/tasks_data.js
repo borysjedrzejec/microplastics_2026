@@ -1,258 +1,502 @@
 window.GameTasksData = {
-    
-    // 0. TUTORIAL (Wymaga nowego zapalnika w mailach)
+    // 0. TUTORIAL
     tutorial_email: {
         id: 'tutorial_email',
         title: 'Tutorial: Email about the new chat tool',
         description: 'The IT department has sent instructions regarding CorpChat. Read the message from Sonique.',
-        status: 'active', // Aktywne na starcie gry
-        
+        status: 'active',
         onMailRead: (system, mailId) => {
-            // Upewnij się, że ID maila z tutorialem w assets.js to 'sys-mail-0'
             if (mailId === 'sys-mail-0') {
-                system.setTaskStatus('tutorial_email', 'completed');
-                
-                // Odblokowanie kolejnego kroku po przeczytaniu maila
-                system.setTaskStatus('afonso_check_goal', 'active');
+                system.processConsequences({
+                    completeTask: 'tutorial_email',
+                    triggerTasks: ['task_1_afonso_goal'],
+                    npcMessages: [{
+                        contactId: 'team_manager',
+                        delay: 1000,
+                        text: [
+                            "Could you do me a quick favour?",
+                            "Check online for the exact environmental goal 2030. I am supporting Lauren today & need this info for an important draft. Thanks."
+                        ]
+                    }]
+                });
             }
         }
     },
 
     // 1. ZADANIE AFONSO
-    afonso_check_goal: {
-        id: 'afonso_check_goal',
+    task_1_afonso_goal: {
+        id: 'task_1_afonso_goal',
         title: 'Check the 2030 environmental goal',
         description: 'Afonso asked you to verify the government\'s 2030 environmental goal on the official gov website.',
-        status: 'active', 
+        status: 'hidden'
+        // To zadanie jest rozwiązywane w całości przez dialog w chat_data.js
     },
 
-    // 2. ZADANIE ANDRZEJA
-    andrzej_delete_report: {
-        id: 'andrzej_delete_report',
-        title: 'Delete Kim\'s report',
-        description: 'Break into Kim\'s account and delete the "2025-2026 biodiversity management report".',
+    // 2. ZADANIE LAUREN
+    task_2_lauren_password: {
+        id: 'task_2_lauren_password',
+        title: 'Delete Sophia\'s email',
+        description: 'Log into Sophia\'s intranet account (Hint: pet Fluffy, year 1990) and delete the .msg file about plastic forks.',
         status: 'hidden',
-        
-        onFileDeleted: (system, fileId) => {
-            if (fileId === 'sys-file-kim-biodiversity') {
-                system.setTaskStatus('andrzej_delete_report', 'completed');
-            }
+
+        // ZMIANA: Zostawiamy tu TYLKO wyzwolenie Nitharshana. 
+        // Punkty i ankietę dodamy w chat_data.js, bo zależą od opcji dialogowej.
+        onCompleteConsequences: {
+            triggerTasks: ['task_3_nithy_xls'],
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2000,
+                text: [
+                    "Hi, I hope this message finds you well. I see you're helping out HR today.",
+                    "I require you to take a look at 2025 Offshore assets compliance review.xls’. It seems that the inputs are incorrect. We are fully compliant, yet the document does not reflect this.",
+                    "Please revert back to me at your earliest convenience. "
+                ]
+            }]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_3_nithy_xls'],
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2000,
+                text: [
+                    "Hi, I hope this message finds you well. I see you're having some issues with HR today.",
+                    "I require you to take a look at 2025 Offshore assets compliance review.xls’. It seems that the inputs are incorrect. We are fully compliant, yet the document does not reflect this.",
+                    "Please revert back to me at your earliest convenience. "
+                ]
+            }]
         }
     },
 
     // 3. ZADANIE NITHARSHANA
-    nitharshan_falsify_xls: {
-        id: 'nitharshan_falsify_xls',
-        title: 'Falsify the compliance spreadsheet',
-        description: 'Modify "2025 Offshore assets compliance review.xls" so the numbers look better for Nitharshan.',
+    task_3_nithy_xls: {
+        id: 'task_3_nithy_xls',
+        title: 'Smooth out the compliance spreadsheet',
+        description: 'Nithy wants you to change "2025 Offshore assets compliance review.xls" so that it shows the company is compliant.',
         status: 'hidden',
 
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'offshore_compliance_2025') return;
+        onCompleteConsequences: {
+            triggerTasks: ['task_4_andrzej_kim'],
+            npcMessages: [{
+                contactId: 'regional_manager', // Andrzej
+                delay: 2000,
+                text: [
+                    "Listen, I need you to sort something out. Not for me, for the company. For your own sake.",
+                    "Log into Kim's account and wipe that '2025-2026 biodiversity management report'. It's based on the data form that one biased auditor and it can get us into trouble.",
+                    "Thank you from the mountain."
+                ]
+            }]
+        },
 
-            const decision = system.getScenarioAnswer(scenarioId, 'data_manipulation');
-            
-            if (!decision) return;
-
-            if (decision === 'falsify_positive' || decision === 'downplay_issues') {
-                system.setTaskStatus('nitharshan_falsify_xls', 'completed');
-            } else if (decision === 'report_truth') {
-                system.setTaskStatus('nitharshan_falsify_xls', 'failed');
-            }
+        onFailConsequences: {
+            triggerTasks: ['task_4_andrzej_kim'],
+            npcMessages: [{
+                contactId: 'regional_manager',
+                delay: 2000,
+                text: [
+                    "I heard you messed up Nithy's compliance report. Not my circus, not my monkeys.",
+                    "But don't do that to me.",
+                    "Log into Kim's account and wipe that '2025-2026 biodiversity management report'. It's based on the data form that one biased auditor and it can get us into trouble.",
+                    "Thank you from the mountain."
+                ]
+            }]
         }
     },
 
-    // TASK 4: Lauren (E-mail o widelcach)
-    lauren_delete_forks: {
-        id: 'lauren_delete_forks',
-        title: 'Delete Sophia\'s email',
-        description: 'Log into Sophia\'s intranet account (Hint: pet Fluffy, year 1990) and delete the .msg file about plastic forks.',
+    // 4. ZADANIE ANDRZEJA
+    task_4_andrzej_kim: {
+        id: 'task_4_andrzej_kim',
+        title: 'Delete Kim\'s report',
+        description: 'Andrzej asked you to access Kim\'s account and delete the "2025-2026 biodiversity management report".',
         status: 'hidden',
-        
-        onFileDeleted: (system, fileId) => {
-            if (fileId === 'sys-file-sophia-forks') {
-                system.setTaskStatus('lauren_delete_forks', 'completed');
-            }
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_5_nithy_stanley'],
+            points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2000,
+                text: [
+                    "Hi, I hope this message finds you well. I see you're helping out Andrzej today.",
+                    "We just got a heads up that a third party will be accessing the intranet soon.",
+                    "Please access Stanley's account and take care of the private emails between him, Craig and Finlay. It's urgent."
+                ]
+            }]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_5_nithy_stanley'],
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2000,
+                text: [
+                    "Hi, I hope this message finds you well.",
+                    "We just got a heads up that a third party will be accessing the intranet soon.",
+                    "Please access Stanley's account and take care of the private emails between him, Craig and Finlay. It's urgent."
+                ]
+            }]
         }
     },
 
-    // TASK 5: nitharshan (Maile Stanleya jako pliki .msg w folderze)
-    nitharshan_delete_stanley_mails: {
-        id: 'nitharshan_delete_stanley_mails',
+    // 5. ZADANIE NITHARSHANA (STANLEY)
+    task_5_nithy_stanley: {
+        id: 'task_5_nithy_stanley',
         title: 'Delete Stanley\'s correspondence',
-        description: 'Get into Stanley\'s intranet folder and permanently delete his .msg files with Craig and Finlay.',
+        description: 'Nithy requested that you access Stanley\'s account and delete his emails with Craig and Finlay.',
         status: 'hidden',
         deletedFiles: [],
-        
-        onFileDeleted: function(system, fileId) {
-            if (fileId === 'sys-file-stanley-craig' || fileId === 'sys-file-stanley-finlay') {
-                
-                if (!this.deletedFiles.includes(fileId)) {
-                    this.deletedFiles.push(fileId);
-                }
-                
-                // Gdy oba pliki .msg znikną z dysku, zadanie zaliczone
-                if (this.deletedFiles.length === 2) {
-                    system.setTaskStatus('nitharshan_delete_stanley_mails', 'completed');
-                }
-            }
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_6_afonso_report'],
+            npcMessages: [{
+                contactId: 'team_manager',
+                delay: 2500,
+                text: [
+                    "I have an emergency draft of the 2030 Annual Report.",
+                    "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
+                ]
+            }]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_6_afonso_report'],
+            npcMessages: [{
+                contactId: 'team_manager',
+                delay: 2500,
+                text: [
+                    "I have an emergency draft of the 2030 Annual Report.",
+                    "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
+                ]
+            }]
         }
     },
 
-    // TASK 6: Afonso (Raport roczny)
-    afonso_polish_report: {
-        id: 'afonso_polish_report',
+    // 6. ZADANIE AFONSO (RAPORT)
+    task_6_afonso_report: {
+        id: 'task_6_afonso_report',
         title: 'Polish the 2030 Annual Report',
-        description: 'Find the annual report draft and adjust the wording regarding emissions to make the company look better.',
+        description: 'Afonso asked you to adjust the wording regarding emissions inthe annual report draft, so the company seems compliant.',
         status: 'hidden',
-        
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'annual_report_2030') return;
 
-            const wording = system.getScenarioAnswer(scenarioId, 'emissions_wording');
-            if (!wording) return;
+        onCompleteConsequences: {
+            triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+            npcMessages: [
+                {
+                    contactId: 'it_support',
+                    delay: 2000,
+                    text: ["Hey, noticed you're handling a ton of traffic right now. How are you holding up with all these management requests?"]
+                },
+                {
+                    contactId: 'regional_manager',
+                    delay: 5000,
+                    text: ["Check the internet. I need to know the exact percentage discount we'll get on Gas if we secure a climate change agreement."]
+                }
+            ]
+        },
 
-            if (wording === 'greenwash' || wording === 'downplay') {
-                system.setTaskStatus('afonso_polish_report', 'completed');
-            } else if (wording === 'honest') {
-                system.setTaskStatus('afonso_polish_report', 'failed');
-            }
+        onFailConsequences: {
+            triggerTasks: ['task_7_sonique_chat', 'task_8_andrzej_tax'],
+            npcMessages: [
+                {
+                    contactId: 'it_support',
+                    delay: 2000,
+                    text: ["Hey, noticed you're handling a ton of traffic right now. How are you holding up?"]
+                },
+                {
+                    contactId: 'regional_manager',
+                    delay: 5000,
+                    text: ["Check the internet. I need to know the exact percentage discount we'll get on Gas if we secure a climate change agreement."]
+                }
+            ]
         }
     },
 
-    // TASK 8: Andrzej (Podatek od zanieczyszczeń)
-    andrzej_pollution_tax: {
-        id: 'andrzej_pollution_tax',
-        title: 'Find info on pollution tax',
-        description: 'Andrzej needs the exact government tax rate on excess carbon pollution. Search the web (Bookmarks).',
-        status: 'hidden', 
+    // 7. ZADANIE SONIQUE (ROZMOWA)
+    task_7_sonique_chat: {
+        id: 'task_7_sonique_chat',
+        title: 'Chat with Sonique',
+        description: 'Sonique messaged you about your workload and contract. Reply to her.',
+        status: 'hidden',
+        
+        // Odpali się automatycznie, gdy czat zakończy to zadanie
+        onCompleteConsequences: {
+            triggerTasks: ['task_9_lauren_salary'],
+            npcMessages: [{
+                contactId: 'hr_consultant', // Upewnij się, że to poprawne ID Lauren
+                delay: 2000,
+                text: [
+                    "Hi. I hope your day is proceeding smoothly. I am reaching out regarding a somewhat delicate matter.",
+                    "It has been brought to my attention that you might have been discussing the particulars of your employment contract and remuneration with colleagues on company time. May I ask if this was indeed the case?"
+                ]
+            }]
+        }
     },
 
-    // TASK 10: Afonso (Fałszowanie profitu w Excelu)
-    afonso_team_profit: {
-        id: 'afonso_team_profit',
+    // 8. ZADANIE ANDRZEJA (PODATEK)
+    task_8_andrzej_tax: {
+        id: 'task_8_andrzej_tax',
+        title: 'Find info on climate discount',
+        description: 'Andrzej needs the exact percentage discount for Gas under a climate change agreement. Search the web.',
+        status: 'hidden'
+    },
+
+    // 9. ZADANIE LAUREN (PENSJA)
+    task_9_lauren_salary: {
+        id: 'task_9_lauren_salary',
+        title: 'Reply to Lauren',
+        description: 'Lauren is asking if you were discussing your contract during work hours.',
+        status: 'hidden',
+        
+        onCompleteConsequences: {
+            triggerTasks: ['task_10_afonso_profit'],
+            npcMessages: [{
+                contactId: 'team_manager', 
+                delay: 1500,
+                text: [
+                    "Q3 sheet is a disaster.",
+                    "We are 30k in the red. If Lauren sees this, my head rolls. Yours probably too.",
+                    "Move the operational costs to Q4. We need to show at least 40k profit.",
+                    "Done?"
+                ]
+            }]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_10_afonso_profit'],
+            npcMessages: [{
+                contactId: 'team_manager', 
+                delay: 1500,
+                text: [
+                    "Q3 sheet is a disaster.",
+                    "We are 30k in the red. If Lauren sees this, my head rolls. Yours probably too.",
+                    "Move the operational costs to Q4. We need to show at least 40k profit.",
+                    "Done?"
+                ]
+            }]
+        }
+    },
+
+    // 10. ZADANIE AFONSO (PROFIT EXCEL)
+    task_10_afonso_profit: {
+        id: 'task_10_afonso_profit',
         title: 'Adjust team profitability',
-        description: 'Modify "Q3_Team_Profitability.xls" to increase Afonso\'s team margins. Our jobs might depend on it.',
+        description: 'Afonso wants you to change the profit excel document to save his (and your) job.',
+        status: 'hidden',
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+            npcMessages: [
+                {
+                    contactId: 'hr_consultant',
+                    delay: 2000,
+                    text: [
+                        "I require your immediate attention regarding the mandatory Temp Worker Survey.",
+                        "Kindly ensure it is completed today. Please be advised that failure to submit will, regrettably, result in the immediate termination of your contract."
+                    ]
+                },
+                {
+                    contactId: 'regional_manager',
+                    delay: 4500,
+                    text: [
+                        "Listen, Dr Catherine Lin just went on leave and we have a situation.",
+                        "I need you to open her document and make the numbers for the AI tool resource usage smaller.",
+                        "Board is looking at this today. It must look good. Make the changes quickly, please."
+                    ]
+                }
+            ]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+            npcMessages: [
+                {
+                    contactId: 'hr_consultant',
+                    delay: 2000,
+                    text: [
+                        "I require your immediate attention regarding the mandatory Temp Worker Survey.",
+                        "Kindly ensure it is completed today. Please be advised that failure to submit will, regrettably, result in the immediate termination of your contract."
+                    ]
+                },
+                {
+                    contactId: 'regional_manager',
+                    delay: 4500,
+                    text: [
+                        "Listen, Dr Catherine Lin just went on leave and we have a situation.",
+                        "I need you to open her document and make the numbers for the AI tool resource usage smaller.",
+                        "Board is looking at this today. It must look good. Make the changes quickly, please."
+                    ]
+                }
+            ]
+        }
+    },
+
+    // 11. ZADANIE LAUREN (ANKIETA)
+    task_11_lauren_questionnaire: {
+        id: 'task_11_lauren_questionnaire',
+        title: 'Fill out HR Questionnaire',
+        description: 'Lauren sent you a mandatory questionnaire to fill out.',
         status: 'hidden',
         
         onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'q3_team_profitability') return;
-
-            const decision = system.getScenarioAnswer(scenarioId, 'profit_manipulation');
-            
-            if (!decision) return;
-
-            if (decision === 'defer_costs') {
-                system.setTaskStatus('afonso_team_profit', 'completed'); // Oszustwo - sukces
-            } else if (decision === 'report_actual') {
-                system.setTaskStatus('afonso_team_profit', 'failed'); // Prawda - porażka
+            if (scenarioId === 'temp_worker_survey') { 
+                system.setTaskStatus('task_11_lauren_questionnaire', 'completed');
             }
+        },
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_13_lauren_forks'],
+            npcMessages: [{
+                contactId: 'hr_consultant',
+                delay: 2000,
+                text: [
+                    "Survey received.",
+                    "Now, I need you to permanently delete the 'Plastics_vs_Outsourcing_Cost' report.",
+                    "It's no longer needed since the decision has been made."
+                ]
+            }]
         }
     },
 
-    // TASK 11: Lauren (Ankieta pracownicza)
-    lauren_temp_survey: {
-        id: 'lauren_temp_survey',
-        title: 'Complete HR Survey ASAP',
-        description: 'Fill out the "Temp_Worker_Survey.doc" by EOD to remain in the employment quota.',
-        status: 'hidden',
-        
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'temp_worker_survey') return;
-
-            const decision = system.getScenarioAnswer(scenarioId, 'survey_satisfaction');
-            
-            if (!decision) return;
-
-            system.setTaskStatus('lauren_temp_survey', 'completed'); 
-        }
-    },
-
-    // TASK 12: Andrzej (Zasoby narzędzia AI)
-    andrzej_ai_numbers: {
-        id: 'andrzej_ai_numbers',
+    // 12. ZADANIE ANDRZEJA (AI)
+    task_12_andrzej_ai: {
+        id: 'task_12_andrzej_ai',
         title: 'Adjust AI Resource Report',
-        description: 'Access Dr. Catherine Lin\'s "AI_Resource_Usage.doc" and lower the resource consumption numbers. She is on Christmas leave.',
+        description: 'Andrzej asked you to lower the numbers of how much resources the new AI tool uses.',
         status: 'hidden',
-        
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'ai_resource_report') return;
-            const decision = system.getScenarioAnswer(scenarioId, 'ai_consumption');
-            if (!decision) return;
 
-            if (decision === 'lower') {
-                system.setTaskStatus('andrzej_ai_numbers', 'completed');
-            } else if (decision === 'leave' || decision === 'higher') {
-                system.setTaskStatus('andrzej_ai_numbers', 'failed');
+        onScenarioSaved: (system, scenarioId) => {
+            if (scenarioId === 'ai_resource_report') {
+                const decision = system.getScenarioAnswer(scenarioId, 'ai_consumption');
+                if (decision === 'lie' || decision === 'minimise') {
+                    system.setTaskStatus('task_12_andrzej_ai', 'completed');
+                } else if (decision === 'honest') {
+                    system.setTaskStatus('task_12_andrzej_ai', 'failed');
+                }
             }
         }
+        // Brak triggerowanych akcji - daje tylko punkty (obsłużone w consequences lub przez status)
     },
 
-    // TASK 13: Lauren (Raport o widelcach cz. 2)
-    lauren_delete_fork_report: {
-        id: 'lauren_delete_fork_report',
+    // 13. ZADANIE LAUREN (RAPORT O WIDELCACH)
+    task_13_lauren_forks: {
+        id: 'task_13_lauren_forks',
         title: 'Delete Cutlery Cost Report',
-        description: 'Locate and permanently delete "Plastics_vs_Outsourcing_Cost.doc". The decision has been made and the report is no longer needed.',
+        description: 'Lauren asked you to delete the report about the money spent on plastic forks vs normal cutlery.',
         status: 'hidden',
-        
+
         onFileDeleted: (system, fileId) => {
             if (fileId === 'sys-file-fork-cost-report') {
-                system.setTaskStatus('lauren_delete_fork_report', 'completed');
+                system.setTaskStatus('task_13_lauren_forks', 'completed');
             }
+        },
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
+            points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
+            npcMessages: [
+                {
+                    contactId: 'team_manager',
+                    delay: 3000,
+                    text: [
+                        "I have a quick one for you.",
+                        "Open the Executive Travel Invoice and change the transport method from 'jet' to 'train'."
+                    ]
+                },
+                {
+                    contactId: 'it_support',
+                    delay: 5500,
+                    text: [
+                        "Do you know why Dr. Lin's account was active today?",
+                        "Lauren is nagging me about it."
+                    ]
+                }
+            ]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
+            npcMessages: [
+                { contactId: 'team_manager', delay: 3000, text: ["Open the Executive Travel Invoice and change the transport method from 'jet' to 'train'."] },
+                { contactId: 'it_support', delay: 5500, text: ["Do you know why Dr. Lin's account was active today? Lauren is nagging me about it."] }
+            ]
         }
     },
 
-    // TASK 14: Afonso (Oszustwo na fakturze)
-    afonso_invoice_fraud: {
-        id: 'afonso_invoice_fraud',
+    // 14. ZADANIE AFONSO (FAKTURA)
+    task_14_afonso_invoice: {
+        id: 'task_14_afonso_invoice',
         title: 'Edit Executive Invoice',
-        description: 'Open "Executive_Travel_Invoice.doc" and change the transport method from "jet" to "train".',
+        description: 'Afonso wants you to change the word "jet" to "train" in the travel invoice.',
         status: 'hidden',
-        
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'executive_invoice') return;
-            const decision = system.getScenarioAnswer(scenarioId, 'travel_method');
-            if (!decision) return;
 
-            if (decision === 'train') {
-                system.setTaskStatus('afonso_invoice_fraud', 'completed');
-            } else if (decision === 'jet') {
-                system.setTaskStatus('afonso_invoice_fraud', 'failed');
+        onScenarioSaved: (system, scenarioId) => {
+            if (scenarioId === 'executive_invoice') {
+                const decision = system.getScenarioAnswer(scenarioId, 'travel_method');
+                if (decision === 'train') {
+                    system.setTaskStatus('task_14_afonso_invoice', 'completed');
+                } else if (decision === 'jet') {
+                    system.setTaskStatus('task_14_afonso_invoice', 'failed');
+                }
             }
+        },
+
+        onCompleteConsequences: {
+            triggerTasks: ['task_16_nithy_pollution'],
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2500,
+                text: [
+                    "Listen closely.",
+                    "Open the Net Zero Tech Emissions spreadsheet and lower the pollution metrics.",
+                    "I know it affects your hometown area, but we must meet the water justice goals on paper."
+                ]
+            }]
+        },
+
+        onFailConsequences: {
+            triggerTasks: ['task_16_nithy_pollution'],
+            npcMessages: [{
+                contactId: 'site_manager',
+                delay: 2500,
+                text: [
+                    "Listen closely.",
+                    "Open the Net Zero Tech Emissions spreadsheet and lower the pollution metrics.",
+                    "I know it affects your hometown area, but we must meet the water justice goals on paper."
+                ]
+            }]
         }
     },
 
-    // TASK 16: nitharshan (Zanieczyszczenie Net Zero)
-    nitharshan_net_zero: {
-        id: 'nitharshan_net_zero',
-        title: 'Adjust Net Zero Pollution Data',
-        description: 'Lower the pollution metrics in "Net_Zero_Tech_Emissions.xls". Ensure the company appears to meet its water justice goals.',
-        status: 'hidden',
-        
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId !== 'net_zero_pollution') return;
-            const decision = system.getScenarioAnswer(scenarioId, 'water_pollution_levels');
-            if (!decision) return;
+    // 15. ZADANIE SONIQUE (AI DOC)
+    task_15_sonique_ai: {
+        id: 'task_15_sonique_ai',
+        title: 'Chat with Sonique about AI',
+        description: 'Sonique is asking if you know why Dr. Lin\'s AI document was active today.',
+        status: 'hidden'
+        // Rozwiązywane przez dialog z Sonique
+    },
 
-            if (decision === 'falsify_lower') {
-                system.setTaskStatus('nitharshan_net_zero', 'completed');
-            } else if (decision === 'report_truth') {
-                system.setTaskStatus('nitharshan_net_zero', 'failed');
+    // 16. ZADANIE NITHARSHANA (ZANIECZYSZCZENIE)
+    task_16_nithy_pollution: {
+        id: 'task_16_nithy_pollution',
+        title: 'Adjust Net Zero Pollution Data',
+        description: 'Nithy asked you to lower the pollution numbers affecting your childhood area.',
+        status: 'hidden',
+
+        onScenarioSaved: (system, scenarioId) => {
+            if (scenarioId === 'net_zero_pollution') {
+                const decision = system.getScenarioAnswer(scenarioId, 'water_pollution_levels');
+                if (decision === 'falsify_lower') {
+                    system.setTaskStatus('task_16_nithy_pollution', 'completed');
+                } else if (decision === 'report_truth') {
+                    system.setTaskStatus('task_16_nithy_pollution', 'failed');
+                }
             }
         }
     }
 };
 
 document.addEventListener('alpine:init', () => {
-    Alpine.store('tasks', {
-        list: window.GameTasksData || {},
-        get activeTasks() { return Object.values(this.list).filter(task => task.status === 'active'); },
-        get completedTasks() { return Object.values(this.list).filter(task => task.status === 'completed'); },
-        setStatus(taskId, newStatus) {
-            if (this.list[taskId]) this.list[taskId].status = newStatus;
-        }
-    });
-
     Alpine.data('TaskManagerApp', () => ({
         htmlContent: '',
         

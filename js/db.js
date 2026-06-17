@@ -3,7 +3,7 @@ document.addEventListener('alpine:init', () => {
     const FILE_TYPE_MAP = {
         'spreadsheet': { ext: '.xls', icon: 'ico/excel.ico', defaultApp: 'excel' },
         'document': { ext: '.doc', icon: 'ico/document.ico', defaultApp: 'notepad' },
-        'mail': { ext: '.msg', icon: 'ico/mail.ico', defaultApp: 'mail_reader' },
+        'email': { ext: '.msg', icon: 'ico/mail.ico', defaultApp: 'notepad' },
     };
 
     const initializedIcons = GameAssets.rawDesktopIcons.map((icon, index) => ({
@@ -12,7 +12,6 @@ document.addEventListener('alpine:init', () => {
     }));
 
     const initializedMails = GameAssets.rawMailData.map((mail, index) => ({
-        id: `sys-mail-${index}`,
         ...mail
     }));
 
@@ -57,6 +56,9 @@ document.addEventListener('alpine:init', () => {
         scenarioId: file.scenarioId
         };
     });
+
+    const POINTS_SCALE = { max: 2, medium: 1, zero: 0 };
+
 
     Alpine.store('system', {
 
@@ -168,25 +170,43 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        chatContacts: window.ChatContactsData || [],
-
-        chatProgress: {
-            boss: 'report_investigation', 
-        },
+    chatContacts: window.ChatContactsData ? window.ChatContactsData.map(c => ({
+        ...c,
+        hasUnread: false,
+        history: c.history || []
+    })) : [],
         
-        gameChoices: {
-            liedToBoss: false,
-            blamedIT: false
-        },
+    gameChoices: {
+        liedToBoss: false,
+        blamedIT: false
+    },
 
-        tasks: window.GameTasksData || {},
+    tasks: window.GameTasksData || {},
 
-        setTaskStatus(taskId, newStatus) {
-        if (this.tasks[taskId]) {
-            this.tasks[taskId].status = newStatus;
+    get activeTasks() { 
+        return Object.values(this.tasks).filter(task => task.status === 'active'); 
+    },
+    get completedTasks() { 
+        return Object.values(this.tasks).filter(task => task.status === 'completed'); 
+    },
+
+setTaskStatus(taskId, newStatus) {
+            // 1. Bezpiecznik: Upewnij się, że zadanie istnieje
+            const task = this.tasks[taskId];
+            if (!task) {
+                console.warn(`[Task Manager] OSTRZEŻENIE: Próba zmiany statusu nieistniejącego zadania: '${taskId}'. Sprawdź czy nazwa w triggerTasks zgadza się z ID w tasks_data.js!`);
+                return;
+            }
+
+            // 2. Zabezpieczenie przed podwójnym odpaleniem tego samego statusu
+            if (task.status === newStatus) return;
+
+            // 3. Zmiana statusu
+            task.status = newStatus;
             console.log(`[Task Manager] Zadanie '${taskId}' -> ${newStatus}`);
             
-            if (!Alpine.store('accessibility').disableAudio) {
+            // 4. Odtwarzanie dźwięków
+            if (Alpine && Alpine.store('accessibility') && !Alpine.store('accessibility').disableAudio) {
                 if (newStatus === 'active') {
                     try { new Audio('sounds/notify.mp3').play(); } catch(e){}
                 } else if (newStatus === 'completed') {
@@ -195,6 +215,80 @@ document.addEventListener('alpine:init', () => {
                     try { new Audio('sounds/error.mp3').play(); } catch(e){}
                 }
             }
+
+            // 5. Automatyczne odpalanie konsekwencji po zmianie statusu
+            if (newStatus === 'completed' && task.onCompleteConsequences) {
+                this.processConsequences(task.onCompleteConsequences);
+            } else if (newStatus === 'failed' && task.onFailConsequences) {
+                this.processConsequences(task.onFailConsequences);
+            }
+        },
+
+        processConsequences(consequences) {
+            if (!consequences) return;
+
+            // 1. Punkty
+            const POINTS_SCALE = { max: 3, medium: 1, zero: 0 };
+            if (consequences.points) {
+                ['activist', 'centrist', 'corporat'].forEach(faction => {
+                    if (consequences.points[faction] !== undefined) {
+                        const amount = POINTS_SCALE[consequences.points[faction]] || 0;
+                        if (typeof this.addPoints === 'function') {
+                            this.addPoints(faction.charAt(0).toUpperCase() + faction.slice(1), amount);
+                        }
+                    }
+                });
+            }
+
+            // 2. Oznaczanie zadań jako zakończone
+            if (consequences.completeTask) this.setTaskStatus(consequences.completeTask, 'completed');
+            if (consequences.failTask) this.setTaskStatus(consequences.failTask, 'failed');
+
+            // 3. Aktywacja kolejnych zadań (Triggerowanie)
+            if (consequences.triggerTasks && Array.isArray(consequences.triggerTasks)) {
+                consequences.triggerTasks.forEach(taskId => {
+                    this.setTaskStatus(taskId, 'active');
+                });
+            }
+            
+            // 4. Flagi dialogowe
+            if (consequences.setFlags) {
+                Object.assign(this.chatProgress, consequences.setFlags);
+            }
+
+            // 5. Wstrzykiwanie wiadomości NPC (z bezpiecznikami)
+            if (consequences.npcMessages) {
+                consequences.npcMessages.forEach((msgInfo) => {
+                    if (!this.chatContacts) return;
+                    
+                    const contact = this.chatContacts.find(c => c.id === msgInfo.contactId);
+                    if (contact) {
+                        const baseDelay = msgInfo.delay || 2000;
+                        const texts = Array.isArray(msgInfo.text) ? msgInfo.text : [msgInfo.text];
+                        
+                        texts.forEach((t, i) => {
+                            setTimeout(() => {
+                                // Zabezpieczenie przed brakiem historii
+                                if (!contact.history) contact.history = []; 
+                                
+                                contact.history.push({ sender: 'npc', text: t });
+                                contact.hasUnread = true; 
+                                
+                                // Dźwięk powiadomienia
+                                if (Alpine && Alpine.store('accessibility') && !Alpine.store('accessibility').disableAudio) {
+                                    try { 
+                                        const audio = new Audio('sounds/chord.mp3');
+                                        audio.volume = 0.5;
+                                        audio.play(); 
+                                    } catch(e) {}
+                                }
+                                
+                                window.dispatchEvent(new Event('chat-updated'));
+                                
+                            }, baseDelay + (i * 1500));
+                        });
+                    }
+                });
             }
         },
 
@@ -261,7 +355,9 @@ document.addEventListener('alpine:init', () => {
     },
 
     evaluateMailRead(mailId) {
-        Object.values(this.tasks).forEach(task => {
+        const currentTasks = Object.keys(this.tasks).length > 0 ? this.tasks : window.GameTasksData;
+        
+        Object.values(currentTasks).forEach(task => {
             if (task.status === 'active' && typeof task.onMailRead === 'function') {
                 task.onMailRead(this, mailId);
             }
