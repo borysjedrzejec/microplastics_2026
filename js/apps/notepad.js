@@ -52,11 +52,9 @@ document.addEventListener('alpine:init', () => {
                 
                 globalScenario.isLocked = true;
                 
-                console.warn(`[EDYTOR] Rozpoczynam synchronizację pliku: ${this.fileData.scenarioId}`);
 
                 globalScenario.segments.forEach(globalSeg => {
                     if (globalSeg.type === 'interactive') {
-                        // DRY: Szukamy dokładnie tego samego segmentu po jego ID, a nie po indeksie
                         const localSeg = this.fileData.content.find(s => s.id === globalSeg.id);
                         
                         if (localSeg) {
@@ -66,8 +64,6 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
             } else {
-                // Jeśli ten błąd się pokaże, oznacza to, że w Twojej definicji 
-                // systemu plików brakuje właściwości 'scenarioId'
                 console.error("[EDYTOR BŁĄD KRYTYCZNY] Plik nie ma podpiętego prawidłowego scenarioId!");
             }
 
@@ -76,6 +72,8 @@ document.addEventListener('alpine:init', () => {
                 console.log("[EDYTOR] Wysyłam sygnał do Task Managera...");
                 this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
             }
+
+            window.dispatchEvent(new CustomEvent('force-chat-update'));
         },
 
         requestDelete() {

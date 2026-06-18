@@ -73,13 +73,8 @@ document.addEventListener('alpine:init', () => {
             } else {
                 console.error("[EXCEL] NO SCENARIO LINKED TO THIS FILE OR SCENARIO NOT FOUND", this.fileData.scenarioId);
             }
-            // ------------------------------------------------------------
 
-            // Odpalenie Task Managera
-            if (this.$store.system.evaluateScenarioSaved) {
-                console.log("[EXCEL] Wysyłam sygnał do Task Managera...");
-                this.$store.system.evaluateScenarioSaved(this.fileData.scenarioId);
-            }
+            window.dispatchEvent(new CustomEvent('force-chat-update'));
         },
 
         requestDelete() {

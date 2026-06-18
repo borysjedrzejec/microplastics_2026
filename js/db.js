@@ -159,6 +159,7 @@ document.addEventListener('alpine:init', () => {
             if (this.fileSystem) {
                 this.fileSystem = this.fileSystem.filter(file => file.id !== fileId);
                 this.evaluateFileDeleted(fileId);
+                window.dispatchEvent(new CustomEvent('force-chat-update'));
             }
         },
 
@@ -288,6 +289,7 @@ setTaskStatus(taskId, newStatus) {
                                 }
                                 
                                 window.dispatchEvent(new Event('chat-updated'));
+                                window.dispatchEvent(new CustomEvent('force-chat-update'));
                                 
                             }, baseDelay + (i * 1500));
                         });
@@ -367,6 +369,7 @@ setTaskStatus(taskId, newStatus) {
         Object.values(this.tasks).forEach(task => {
             if (task.status === 'active' && typeof task.onScenarioSaved === 'function') {
                 task.onScenarioSaved(this, scenarioId);
+                window.dispatchEvent(new CustomEvent('force-chat-update'));
             }
         });
     },
@@ -375,6 +378,7 @@ setTaskStatus(taskId, newStatus) {
         Object.values(this.tasks).forEach(task => {
             if (task.status === 'active' && typeof task.onFileDeleted === 'function') {
                 task.onFileDeleted(this, fileId);
+                window.dispatchEvent(new CustomEvent('force-chat-update'));
             }
         });
     },

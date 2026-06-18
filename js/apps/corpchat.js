@@ -17,9 +17,26 @@ document.addEventListener('alpine:init', () => {
             return storeContacts;
         },
 
-        init() {
+        get visibleOptions() {
+            if (!this.selectedContact || !this.selectedContact.options) return [];
+            
+            return this.selectedContact.options.filter(option => {
+                if (option.used) return false;
+                if (typeof option.condition !== 'function') return true;
+                return option.condition(this.$store.system);
+            });
+        },
 
+        init() {
             window.addEventListener('chat-updated', () => this.scrollToBottom());
+            
+            // 2. NOWY EVENT DO ODŚWIEŻANIA CZATU
+            window.addEventListener('force-chat-update', () => {
+                if (this.selectedContact) {
+                    // Trik Alpine: Rozbicie obiektu wymusza re-render widoku
+                    this.selectedContact.options = [...this.selectedContact.options];
+                }
+            });
 
             fetch('views/corpchat.html')
                 .then(res => {

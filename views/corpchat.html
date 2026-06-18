@@ -93,19 +93,16 @@
                 <div style="display: flex; flex-wrap: wrap; gap: 6px; overflow-y: auto; max-height: 100px;">
                     <template x-if="selectedContact">
                         
-                        <template x-for="option in selectedContact.options" :key="option.id">
-                            
-                            <button x-show="canSeeOption(option)" 
-                                    @click="sendMessage(option)" 
+                        <template x-for="option in visibleOptions" :key="option.id">
+                            <button @click="sendMessage(option)" 
                                     style="padding: 4px 10px; font-family: 'Pixelated MS Sans Serif', Arial, sans-serif; font-size: 11px; cursor: pointer;">
                                 <span x-text="option.text"></span>
                             </button>
-                            
                         </template>
                         
                     </template>
                     
-                    <template x-if="selectedContact && selectedContact.options.filter(o => canSeeOption(o)).length === 0">
+                    <template x-if="selectedContact && visibleOptions.length === 0">
                         <div style="font-size: 11px; color: #666; font-style: italic; margin-top: 4px; padding: 2px;">
                             Waiting for new intel or required actions to unlock dialogue...
                         </div>
