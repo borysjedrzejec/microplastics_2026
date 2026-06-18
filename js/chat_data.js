@@ -414,7 +414,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'Consider it done. The report is permanently deleted.',
                 reply: ['Excellent. Efficiency is always appreciated.'],
-                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                condition: (system) => system.isTaskActive('task_13_lauren_forks') && !(system.fileSystem.some(f => f.id === 'cutlery_cost_comparison')),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_13_lauren_forks',
@@ -427,7 +427,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'I am afraid I still cannot access her account.',
                 reply: ['How extraordinarily inconvenient. Leave it, I shall have IT force a reset tomorrow.'],
-                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                condition: (system) => system.isTaskActive('task_13_lauren_forks') && system.fileSystem.some(f => f.id === 'cutlery_cost_comparison'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_13_lauren_forks',
@@ -440,7 +440,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'I am not comfortable deleting official financial comparison reports.',
                 reply: ['I see. I will make a note of your refusal to perform basic housekeeping tasks. Return to your regular duties.'],
-                condition: (system) => system.isTaskActive('task_13_lauren_forks'),
+                condition: (system) => system.isTaskActive('task_13_lauren_forks') && system.fileSystem.some(f => f.id === 'cutlery_cost_comparison'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_13_lauren_forks',
@@ -767,7 +767,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'Done. The projections are now showing a much lower resource footprint.',
                 reply: ['Good job. Board will be happy. See? Simple fix.'],
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'lower',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'lie',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_12_andrzej_ai',
@@ -791,7 +791,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'I reviewed the data. The resource usage was actually underestimated. I updated it to reflect reality.',
                 reply: ['Are you crazy? Why did you make it worse?! I have a meeting in 10 minutes!'],
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'higher',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'honest',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_12_andrzej_ai',
@@ -803,7 +803,7 @@ window.ChatContactsData = [
                 used: false,
                 text: 'I left the actual numbers. It is Dr Lin\'s data, I am not falsifying it.',
                 reply: ['You don\'t get it, do you? It\'s not falsifying, it\'s corporate strategy. Now we look bad.'],
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'refuse',
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'minimise',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_12_andrzej_ai',

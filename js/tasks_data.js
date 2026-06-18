@@ -398,8 +398,22 @@ window.GameTasksData = {
         onFailConsequences: {
             triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
             npcMessages: [
-                { contactId: 'team_manager', delay: 3000, text: ["Open the Executive Travel Invoice and change the transport method from 'jet' to 'train'."] },
-                { contactId: 'it_support', delay: 5500, text: ["Do you know why Dr. Lin's account was active today? Lauren is nagging me about it."] }
+                {
+                    contactId: 'team_manager',
+                    delay: 3000,
+                    text: [
+                        "I have a quick one for you.",
+                        "Open the Executive Travel Invoice on Stanley's account and change the transport method from 'jet' to 'train'."
+                    ]
+                },
+                {
+                    contactId: 'it_support',
+                    delay: 5500,
+                    text: [
+                        "Do you know why Dr. Lin's account was active today?",
+                        "Lauren is nagging me about it."
+                    ]
+                }
             ]
         }
     },

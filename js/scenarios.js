@@ -171,9 +171,9 @@ window.GameScenarios = {
                     selectedValue: null,
                     options: [
                         { text: '-- Select Value --', value: null },
-                        { text: 'exceeding budget by 300% (Original Data)', value: 'honest' },
+                        { text: 'exceeding budget by 300% (Real Data)', value: 'honest' },
                         { text: 'within expected minimal parameters (Falsified)', value: 'lie' },
-                        { text: 'exceeding budget by 50% (Minimised)', value: 'minimise' }
+                        { text: 'exceeding budget by 50% (Original Data)', value: 'minimise' }
                     ]
                 }
             ]
