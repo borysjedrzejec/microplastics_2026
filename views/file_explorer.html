@@ -3,7 +3,8 @@
         
         <div style="display: flex; flex-wrap: wrap; gap: 20px; align-content: flex-start;">
             
-            <template x-for="file in folderFiles" :key="file.id">
+            <!-- 1. Dodany filtr w pętli renderującej pliki -->
+            <template x-for="file in folderFiles.filter(f => !f.isHidden)" :key="file.id">
                 <div style="display: flex; flex-direction: column; align-items: center; width: 64px; cursor: pointer;"
                      @dblclick="$dispatch('open-app', { 
                                 id: file.defaultApp, 
@@ -17,10 +18,10 @@
                     </div>
                     
                 </div>
-            
             </template>
 
-            <div x-show="folderFiles.length === 0" style="color: #808080; width: 100%; text-align: center; margin-top: 20px;">
+            <!-- 2. Dodany filtr do weryfikacji, czy folder jest (wizualnie) pusty -->
+            <div x-show="folderFiles.filter(f => !f.isHidden).length === 0" style="color: #808080; width: 100%; text-align: center; margin-top: 20px;">
                 This folder is empty.
             </div>
 
@@ -28,7 +29,8 @@
     </div>
     
     <div class="status-bar" style="margin-top: 2px;">
-        <p class="status-bar-field" x-text="`${folderFiles.length} items`"></p>
+        <!-- 3. Dodany filtr do licznika plików na pasku stanu -->
+        <p class="status-bar-field" x-text="`${folderFiles.filter(f => !f.isHidden).length} items`"></p>
         <p class="status-bar-field">My Computer</p>
     </div>
 </div>

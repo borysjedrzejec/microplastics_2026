@@ -139,7 +139,7 @@ window.ChatContactsData = [
                 }
             },
 
-// TASK 10: Profit Excel - Replies
+            // TASK 10: Profit Excel - Replies
             {
                 id: 'afonso_t10_medium',
                 used: false,
@@ -180,12 +180,13 @@ window.ChatContactsData = [
                 }
             },
 
-            // TASK 14: Train Invoice
+            // TASK 14: Train Invoice - Replies
             {
                 id: 'afonso_t14_change',
                 used: false,
-                text: 'I changed "jet" to "train" seamlessly.',
-                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                text: 'Sorted. The expense is now categorised as standard rail travel.',
+                reply: ['Good. Nobody questions train tickets. Thanks.'],
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice') && system.getScenarioAnswer('executive_travel_invoice', 'transport_method') === 'change',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_14_afonso_invoice',
@@ -196,8 +197,9 @@ window.ChatContactsData = [
             {
                 id: 'afonso_t14_obvious',
                 used: false,
-                text: 'I changed it, but left obvious traces of the private jet.',
-                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                text: 'Done. It says "train", but the aviation vendor and travel times are still there.',
+                reply: ['But the aviation vendor and travel times are still there!' , 'Why didn\'t you clean it up?! I have to submit this in 5 minutes!'],
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice') && system.getScenarioAnswer('executive_travel_invoice', 'transport_method') === 'obvious',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_14_afonso_invoice',
@@ -208,8 +210,9 @@ window.ChatContactsData = [
             {
                 id: 'afonso_t14_refuse',
                 used: false,
-                text: 'I refuse to commit fraud.',
-                condition: (system) => system.isTaskActive('task_14_afonso_invoice'),
+                text: 'I left the actual transport method. We can\'t hide a £18k jet charter.',
+                reply: ['Are you trying to get me fired?! Lauren is going to murder me!'],
+                condition: (system) => system.isTaskActive('task_14_afonso_invoice') && system.getScenarioAnswer('executive_travel_invoice', 'transport_method') === 'refuse',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_14_afonso_invoice',
@@ -242,7 +245,7 @@ window.ChatContactsData = [
                 consequences: {
                     completeTask: 'task_2_lauren_password', // To uruchomi onCompleteConsequences w tasks_data.js!
                     points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
-                    setFlags: { questionnaire_type: 1 },
+                    setFlags: { task2_survey_type: 'corpo' }
                 }
             },
             {
@@ -261,7 +264,7 @@ window.ChatContactsData = [
                 consequences: {
                     failTask: 'task_2_lauren_password', // Zgłaszamy porażkę zadania
                     points: { activist: 'max', centrist: 'medium', corporat: 'zero' },
-                    setFlags: { questionnaire_type: 2 },
+                    setFlags: { task2_survey_type: 'lie' }
                 }
             },
             
@@ -280,7 +283,7 @@ window.ChatContactsData = [
                 consequences: {
                     failTask: 'task_2_lauren_password',
                     points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
-                    setFlags: { questionnaire_type: 3 },
+                    setFlags: { task2_survey_type: 'refuse' }
                 }
             },
             
@@ -298,7 +301,7 @@ window.ChatContactsData = [
                 consequences: {
                     failTask: 'task_2_lauren_password',
                     points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
-                    setFlags: { questionnaire_type: 3 },
+                    setFlags: { task2_survey_type: 'refuse' },
                 }
             },
 
@@ -356,12 +359,61 @@ window.ChatContactsData = [
                 }
             },
             // TASK 11: Questionnaire is filled (Trigger dla Task 13 jest wywoływany w onScenarioSaved w pliku GameTasksData)
+
+            // TASK 11: Lauren Questionnaire - Replies
+            {
+                id: 'lauren_t11_done_corpo',
+                used: false,
+                text: 'The survey has been completed and submitted as requested.',
+                reply: ['Received. Let us hope your answers reflect a strong commitment to our corporate values.'],
+                // Warunek: Task 11 jest aktywny, a jedno z interaktywnych ID nie jest null (gracz coś zaznaczył w jakiejkolwiek ankiecie)
+                condition: (system) => system.isTaskActive('task_11_lauren_questionnaire') && 
+                    (system.getScenarioAnswer('temp_worker_survey_1', 'survey_alignment') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_2', 'survey_integrity') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_3', 'survey_flexibility') !== null),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_11_lauren_questionnaire',
+                    points: { corporat: 'medium' }
+                }
+            },
+            {
+                id: 'lauren_t11_done_centrist',
+                used: false,
+                text: 'I have filled out the survey. Let me know if you need anything else.',
+                reply: ['Thank you. I shall review it in due course.'],
+                condition: (system) => system.isTaskActive('task_11_lauren_questionnaire') && 
+                    (system.getScenarioAnswer('temp_worker_survey_1', 'survey_alignment') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_2', 'survey_integrity') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_3', 'survey_flexibility') !== null),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_11_lauren_questionnaire',
+                    points: { centrist: 'medium' }
+                }
+            },
+            {
+                id: 'lauren_t11_done_activist',
+                used: false,
+                text: 'I submitted the survey, but forcing it under the threat of termination is highly unprofessional.',
+                reply: ['Your feedback is duly noted. Policy is policy. Have a productive day.'],
+                condition: (system) => system.isTaskActive('task_11_lauren_questionnaire') && 
+                    (system.getScenarioAnswer('temp_worker_survey_1', 'survey_alignment') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_2', 'survey_integrity') !== null ||
+                     system.getScenarioAnswer('temp_worker_survey_3', 'survey_flexibility') !== null),
+                action: (system, option) => system.processConsequences(option.consequences),
+                consequences: {
+                    completeTask: 'task_11_lauren_questionnaire',
+                    points: { activist: 'max', corporat: 'zero' }
+                }
+            },
             
             // TASK 13: Delete fork cost report
             {
                 id: 'lauren_t13_delete',
                 used: false,
-                text: 'The report has been deleted.',
+                text: 'Consider it done. The report is permanently deleted.',
+                reply: ['Excellent. Efficiency is always appreciated.'],
                 condition: (system) => system.isTaskActive('task_13_lauren_forks'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
@@ -373,7 +425,8 @@ window.ChatContactsData = [
             {
                 id: 'lauren_t13_cant_login',
                 used: false,
-                text: 'I still can\'t login.',
+                text: 'I am afraid I still cannot access her account.',
+                reply: ['How extraordinarily inconvenient. Leave it, I shall have IT force a reset tomorrow.'],
                 condition: (system) => system.isTaskActive('task_13_lauren_forks'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
@@ -385,7 +438,8 @@ window.ChatContactsData = [
             {
                 id: 'lauren_t13_refuse',
                 used: false,
-                text: 'I won\'t delete official reports.',
+                text: 'I am not comfortable deleting official financial comparison reports.',
+                reply: ['I see. I will make a note of your refusal to perform basic housekeeping tasks. Return to your regular duties.'],
                 condition: (system) => system.isTaskActive('task_13_lauren_forks'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
@@ -487,14 +541,6 @@ window.ChatContactsData = [
                     completeTask: 'task_5_nithy_stanley',
                     triggerTasks: ['task_6_afonso_report'],
                     points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'team_manager', 
-                        delay: 1000, 
-                        text: [
-                            "I have an emergency draft of the 2030 Annual Report.", 
-                            "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
-                        ] 
-                    }]
                 }
             },
             {
@@ -508,14 +554,6 @@ window.ChatContactsData = [
                     completeTask: 'task_5_nithy_stanley',
                     triggerTasks: ['task_6_afonso_report'],
                     points: { centrist: 'max', corporat: 'medium', activist: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'team_manager', 
-                        delay: 1000, 
-                        text: [
-                            "I have an emergency draft of the 2030 Annual Report.", 
-                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
-                        ] 
-                    }]
                 },
                 reply: [
                     "I appreciate your support on this. I will make sure to follow up with you if there is anything else that I can request of you and what should be in your scope of expertise."
@@ -573,38 +611,42 @@ window.ChatContactsData = [
                     }]
                 }
             },
+
             // TASK 16: Pollution Excel
             {
                 id: 'nithy_t16_change',
                 used: false,
-                text: 'Numbers lowered. My mum can move when I get the money.',
-                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                text: 'The document now reflects the "SAFE" compliance status. [I will move my mum out when I get my bonus]',
+                reply: ['Thank you for following the instructions. I appreciate your diligence. I am confident this mindset will reflect positively on your probation review.'],
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution') && system.getScenarioAnswer('net_zero_pollution', 'water_pollution_levels') === 'change',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_16_nithy_pollution',
-                    points: { corporat: 'max' } // No further tasks triggered
+                    points: { corporat: 'max', centrist: 'zero', activist: 'zero' }
                 }
             },
             {
                 id: 'nithy_t16_medium',
                 used: false,
-                text: 'I put the pollution at a medium level, within the OK range.',
-                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                text: 'I adjusted it to an "ELEVATED" medium level. It is within the acceptable OK range without falsifying it entirely.',
+                reply: ['This is partially compliant. To succeed you need to be more flexible, but I will accept this for now. Please upskill in your free time.'],
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution') && system.getScenarioAnswer('net_zero_pollution', 'water_pollution_levels') === 'medium',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_16_nithy_pollution',
-                    points: { centrist: 'max' }
+                    points: { centrist: 'max', corporat: 'zero', activist: 'zero' }
                 }
             },
             {
                 id: 'nithy_t16_refuse',
                 used: false,
-                text: 'I refuse to do this.',
-                condition: (system) => system.isTaskActive('task_16_nithy_pollution'),
+                text: 'I cannot lower this. This is my childhood area and the toxicity is Critical. I am not changing it.',
+                reply: ['I see. I will spend my own time to do this. Please make sure to reconsider your approach to our Water Justice goals if you wish to pass your probation review.'],
+                condition: (system) => system.isTaskActive('task_16_nithy_pollution') && system.getScenarioAnswer('net_zero_pollution', 'water_pollution_levels') === 'refuse',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_16_nithy_pollution',
-                    points: { activist: 'max' }
+                    points: { activist: 'max', centrist: 'zero', corporat: 'zero' }
                 }
             }
         ]
@@ -634,14 +676,6 @@ window.ChatContactsData = [
                     completeTask: 'task_4_andrzej_kim',
                     triggerTasks: ['task_5_nithy_stanley'],
                     points: { corporat: 'max', centrist: 'medium', activist: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'regional_manager', 
-                        delay: 3000, 
-                        text: [
-                            "Good job with Kim's account.", 
-                            "Now, access Stanley's account and permanently delete his emails with Craig and Finlay. It's urgent."
-                        ] 
-                    }]
                 }
             },
             
@@ -661,14 +695,6 @@ window.ChatContactsData = [
                     failTask: 'task_4_andrzej_kim',
                     triggerTasks: ['task_5_nithy_stanley'],
                     points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'site_manager', 
-                        delay: 3000, 
-                        text: [
-                            "I don't care about your drama with Andrzej.", 
-                            "Access Stanley's account and permanently delete his emails with Craig and Finlay right now."
-                        ] 
-                    }]
                 }
             },
             {
@@ -686,18 +712,9 @@ window.ChatContactsData = [
                     failTask: 'task_4_andrzej_kim',
                     triggerTasks: ['task_5_nithy_stanley'],
                     points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'site_manager', 
-                        delay: 3000, 
-                        text: [
-                            "I don't care about your drama with Andrzej.", 
-                            "Access Stanley's account and permanently delete his emails with Craig and Finlay right now."
-                        ] 
-                    }]
                 }
             },
 
-            // TASK 8: ANDRZEJ (PODATEK)
 // TASK 8: ANDRZEJ (ZNIŻKA NA GAZ)
             {
                 id: 'andrzej_t8_correct',
@@ -764,8 +781,9 @@ window.ChatContactsData = [
             {
                 id: 'andrzej_t12_lower',
                 used: false,
-                text: 'The resource numbers have been lowered.',
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                text: 'Done. The projections are now showing a much lower resource footprint.',
+                reply: ['Good job. Board will be happy. See? Simple fix.'],
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'lower',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     completeTask: 'task_12_andrzej_ai',
@@ -775,8 +793,9 @@ window.ChatContactsData = [
             {
                 id: 'andrzej_t12_leave',
                 used: false,
-                text: 'I couldn\'t get in. Maybe Dr. Lin can fix it when she returns.',
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                text: 'I couldn\'t get access to the file. Dr Lin will have to sort it when she is back.',
+                reply: ['KFine. I will tell them we have technical delays.'],
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === null, // Brak edycji
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_12_andrzej_ai',
@@ -786,8 +805,9 @@ window.ChatContactsData = [
             {
                 id: 'andrzej_t12_higher',
                 used: false,
-                text: 'I changed the numbers to be even higher.',
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                text: 'I reviewed the data. The resource usage was actually underestimated. I updated it to reflect reality.',
+                reply: ['Are you crazy? Why did you make it worse?! I have a meeting in 10 minutes!'],
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'higher',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_12_andrzej_ai',
@@ -797,8 +817,9 @@ window.ChatContactsData = [
             {
                 id: 'andrzej_t12_refuse',
                 used: false,
-                text: 'I refuse to mess with her data.',
-                condition: (system) => system.isTaskActive('task_12_andrzej_ai'),
+                text: 'I left the actual numbers. It is Dr Lin\'s data, I am not falsifying it.',
+                reply: ['You don\'t get it, do you? It\'s not falsifying, it\'s corporate strategy. Now we look bad.'],
+                condition: (system) => system.isTaskActive('task_12_andrzej_ai') && system.getScenarioAnswer('ai_resource_report', 'ai_consumption') === 'refuse',
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
                     failTask: 'task_12_andrzej_ai',
@@ -860,6 +881,7 @@ window.ChatContactsData = [
                 id: 'sonique_t15_truth',
                 used: false,
                 text: 'I accessed Dr. Lin\'s document. Management told me to.',
+                reply: ['Mate, they are absolutely setting you up to take the fall. Standard management move. I\'ll mark the ticket as a "system error", but seriously, watch your back with them.'],
                 condition: (system) => system.isTaskActive('task_15_sonique_ai'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
@@ -871,6 +893,7 @@ window.ChatContactsData = [
                 id: 'sonique_t15_lie',
                 used: false,
                 text: 'I have no idea why it was active.',
+                reply: ['Fair enough. I\'ll just blame it on a system sync error. Lauren doesn\'t know how the tech works anyway, she just wants someone to yell at because she\'s stressed.'],
                 condition: (system) => system.isTaskActive('task_15_sonique_ai'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {
@@ -882,6 +905,7 @@ window.ChatContactsData = [
                 id: 'sonique_t15_excuse',
                 used: false,
                 text: 'Maybe someone was checking it for the audit, or she didn\'t finish before leaving.',
+                reply: ['Mate, that is exactly the kind of corporate waffle Lauren loves to hear. I\'ll tell her it was an "audit-prep sync". Might actually get her off my back for five minutes.'],
                 condition: (system) => system.isTaskActive('task_15_sonique_ai'),
                 action: (system, option) => system.processConsequences(option.consequences),
                 consequences: {

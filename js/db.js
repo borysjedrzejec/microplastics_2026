@@ -256,6 +256,10 @@ setTaskStatus(taskId, newStatus) {
                 Object.assign(this.chatProgress, consequences.setFlags);
             }
 
+            if (consequences.executeFunction && typeof this[consequences.executeFunction] === 'function') {
+                this[consequences.executeFunction]();
+            }
+
             // 5. Wstrzykiwanie wiadomości NPC (z bezpiecznikami)
             if (consequences.npcMessages) {
                 consequences.npcMessages.forEach((msgInfo) => {
@@ -291,6 +295,30 @@ setTaskStatus(taskId, newStatus) {
                 });
             }
         },
+
+    generateSurveyFile() {
+        const surveyFile = this.fileSystem.find(f => f.id === 'survey_file');
+        
+        if (!surveyFile) {
+            console.warn("[System] Nie znaleziono pliku 'survey_file' w fileSystem!");
+            return;
+        }
+
+        const surveyType = this.chatProgress.task2_survey_type; 
+        let targetScenarioId = 'temp_worker_survey_3'; 
+        
+        if (surveyType === 'corpo') targetScenarioId = 'temp_worker_survey_1';
+        if (surveyType === 'lie') targetScenarioId = 'temp_worker_survey_2';
+
+        const scenarioData = this.getScenario(targetScenarioId);
+        
+        if (scenarioData) {
+            surveyFile.scenarioId = targetScenarioId;
+            surveyFile.content = JSON.parse(JSON.stringify(scenarioData.segments));
+
+            surveyFile.isHidden = false; 
+        }
+    },
 
     isTaskActive(taskId) {
         return this.tasks[taskId]?.status === 'active';

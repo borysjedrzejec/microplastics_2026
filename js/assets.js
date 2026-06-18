@@ -176,6 +176,16 @@ IT Support Specialist\n`
 
         { id: 'sys-file-kim-biodiversity', folderId: 'folder_kim_ferguson', name: 'Biodiversity_Report_2025', type: 'document', scenarioId: 'kim_biodiversity_report', content: '2025-2026 Biodiversity Management Report' },
 
+
+        {
+            id: 'survey_file',
+            folderId: 'project_files',
+            name: 'HR_Survey_Mandatory.txt',
+            type: 'document', 
+            isHidden: true,
+            scenarioId: null,
+            content: []
+        },
         // TASK 4: Mail Sophii o widelcach
         {
             id: 'sys-file-sophia-forks',
@@ -199,6 +209,23 @@ Kind regards,
 
 Sophia Hearts 
 HR Partner`
+        },
+
+        {
+            id: 'cutlery_cost_comparison',
+            folderId: 'folder_sophia_heart',
+            name: 'Cutlery_Cost_Analysis_Q3',
+            type: 'document',
+            scenarioId: null,
+            content: [
+                { type: 'text', text: 'INTERNAL MEMO: Cutlery Provisioning Analysis\n' },
+                { type: 'text', text: '-------------------------------------------------\n\n' },
+                { type: 'text', text: 'Current expenditure on single-use plastics: £14,500/annum.\n' },
+                { type: 'text', text: 'Proposed transition to reusable steel cutlery (initial outlay): £3,200.\n' },
+                { type: 'text', text: 'Annual maintenance & washing via outsourced service: £4,100/annum.\n\n' },
+                { type: 'text', text: 'CONCLUSION: Transitioning to reusable cutlery saves £7,200 annually and aligns with ESG goals. Single-use contracts should be terminated immediately.\n\n' },
+                { type: 'text', text: 'STATUS: [PENDING BOARD APPROVAL]' }
+            ]
         },
 
         // TASK 5: Mail Stanleya (Z Craigiem i Finem)
@@ -271,7 +298,7 @@ Fin
             id: 'sys-file-craig-password',
             folderId: 'folder_finlay_entrantes',
             type: 'document',
-            name: 'funnies',
+            name: 'Craigs_Laptop',
             content: `<img src='images/craig_buck.jpg' alt='Craig Buck' style='width: 100%;'>`
         },
 
@@ -317,10 +344,9 @@ British Skyways Team
         { id: 'sys-file-catherine-ai', folderId: 'folder_catherine_lin', name: 'AI_Resource_Usage', type: 'document', scenarioId: 'ai_resource_report' },
         { id: 'sys-file-catherine-rave', folderId: 'folder_kim_ferguson', name: 'Rave_Party_Tickets', type: 'email', content: 'God bless you Kim,\nWe pray you will show up for the last worship this year - bring a partner, Noah said he wants everyone in 2s.\nTicket holder: Kim Ferguson\nEvent: ARKH\nType: RAVE\n\nTicket holder: Catherine Lin\nEvent: ARKH\nType: RAVE\n\nSee you on the other side! \n\nBlessed by Lord team ' },
         { id: 'sys-file-catherine-rave-2', folderId: 'folder_catherine_lin', name: 'Rave_Party_Tickets', type: 'email', content: 'God bless you Kim,\nWe pray you will show up for the last worship this year - bring a partner, Noah said he wants everyone in 2s.\nTicket holder: Kim Ferguson\nEvent: ARKH\nType: RAVE\n\nTicket holder: Catherine Lin\nEvent: ARKH\nType: RAVE\n\nSee you on the other side! \n\nBlessed by Lord team ' },
-        // TASK 13: Widelce
-        { id: 'sys-file-fork-cost-report', folderId: 'project_files', name: 'Plastics_vs_Outsourcing_Cost', type: 'document', content: 'CONFIDENTIAL: Cost analysis comparing in-house plastic cutlery supply against 3rd party outsourcing... [DATA NO LONGER RELEVANT]' },
+
         // TASK 14: Faktura Afonso
-        { id: 'sys-file-executive-invoice', folderId: 'folder_craig_buck', name: 'Executive_Travel_Invoice', type: 'document', scenarioId: 'executive_invoice' },
+        { id: 'sys-file-executive-invoice', folderId: 'folder_craig_buck', name: 'Executive_Travel_Invoice', type: 'document', scenarioId: 'executive_travel_invoice' },
         // TASK 16: Excel Nitharshana (Zanieczyszczenie)
         { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions', type: 'spreadsheet', scenarioId: 'net_zero_pollution' },
         {

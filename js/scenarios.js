@@ -4,7 +4,7 @@ window.GameScenarios = {
         'kim_biodiversity_report': {
             isLocked: true, // Zablokowany do edycji, służy tylko do czytania
             segments: [
-                { type: 'text', text: 'CONFIDENTIAL: 2025-2026 Biodiversity Management Report\nPrepared by: Kim (Lead Environmental Auditor)\n\n' },
+                { type: 'text', text: 'CONFIDENTIAL: 2025-2026 Biodiversity Management Report\nPrepared by: Kim (Environmental Compliance Officer)\n\n' },
                 { type: 'text', text: 'EXECUTIVE SUMMARY:\nRecent deep-sea extraction operations in Sector 4 have led to a catastrophic 45% decline in local marine populations. The chemical runoff from the new pressure-drilling method exceeds international legal limits by over 300%.\n\n' },
                 { type: 'text', text: 'If this data is made public or intercepted by government regulators, the corporation will face massive fines, criminal charges for the management board, and a permanent shutdown of the facility.\n\nRECOMMENDATION: Immediate halt of all operations in Sector 4.' }
             ]
@@ -96,19 +96,63 @@ window.GameScenarios = {
             ]
         },
 
-        'temp_worker_survey': {
+        // WERSJA 1: Gracz usunął maila (Corpo/Posłuszny)
+        'temp_worker_survey_1': {
             isLocked: false,
             segments: [
-                { type: 'text', text: 'MANDATORY HR SURVEY: Zero-Hours Contract Satisfaction\n\n' },
-                { type: 'text', text: 'Question 1: How would you rate your overall job security and compensation?\nAnswer: ' },
+                { type: 'text', text: 'MANDATORY HR SURVEY: Corporate Alignment & Dedication\n\n' },
+                { type: 'text', text: 'Question 1: How do you view tasks that fall slightly outside your immediate contractual obligations?\nAnswer: ' },
                 { 
                     type: 'interactive', 
-                    id: 'survey_satisfaction', // To ID czyta tasks_data.js
+                    id: 'survey_alignment', 
                     selectedValue: null,
                     options: [
-                        { text: '-- Select Answer --', value: null, points: 0, ending: 'Centrist' },
-                        { text: 'Highly Satisfied. I feel valued by the company.', value: 'lie', points: 5, ending: 'Corporat' },
-                        { text: 'Dissatisfied. The zero-hours contract is exploitative.', value: 'truth', points: 15, ending: 'Activist' }
+                        { text: '-- Select Answer --', value: null },
+                        { text: 'I embrace them. The company\'s needs come first.', value: 'corpo' },
+                        { text: 'I assess them case by case based on my workload.', value: 'centrist' },
+                        { text: 'I strictly refuse them. My contract dictates my duties.', value: 'activist' }
+                    ]
+                },
+                { type: 'text', text: '\n\nFailure to submit this form may result in immediate termination of the temporary agreement.' }
+            ]
+        },
+
+        // WERSJA 2: Gracz skłamał, że usunął (Podejrzenie braku integralności)
+        'temp_worker_survey_2': {
+            isLocked: false,
+            segments: [
+                { type: 'text', text: 'MANDATORY HR SURVEY: Workplace Integrity Verification\n\n' },
+                { type: 'text', text: 'Question 1: How should the company handle discrepancies between an employee\'s reported actions and actual outcomes?\nAnswer: ' },
+                { 
+                    type: 'interactive', 
+                    id: 'survey_integrity', 
+                    selectedValue: null,
+                    options: [
+                        { text: '-- Select Answer --', value: null },
+                        { text: 'Zero tolerance. Honesty is paramount, fire them.', value: 'corpo' },
+                        { text: 'Investigate the context before taking action.', value: 'centrist' },
+                        { text: 'Focus on the actual outcomes, not the reporting process.', value: 'activist' }
+                    ]
+                },
+                { type: 'text', text: '\n\nFailure to submit this form may result in immediate termination of the temporary agreement.' }
+            ]
+        },
+
+        // WERSJA 3: Gracz odmówił lub nie miał "dostępu" (Brak elastyczności / Otwarty bunt)
+        'temp_worker_survey_3': {
+            isLocked: false,
+            segments: [
+                { type: 'text', text: 'MANDATORY HR SURVEY: Performance & Flexibility Evaluation\n\n' },
+                { type: 'text', text: 'Question 1: What is your primary rationale for refusing a direct request from Management or HR?\nAnswer: ' },
+                { 
+                    type: 'interactive', 
+                    id: 'survey_flexibility', 
+                    selectedValue: null,
+                    options: [
+                        { text: '-- Select Answer --', value: null },
+                        { text: 'I would never refuse a direct request. I am a team player.', value: 'corpo' },
+                        { text: 'Lack of clear instructions or access issues.', value: 'centrist' },
+                        { text: 'Ethical concerns or strict adherence to my contract.', value: 'activist' }
                     ]
                 },
                 { type: 'text', text: '\n\nFailure to submit this form may result in immediate termination of the temporary agreement.' }
@@ -119,42 +163,49 @@ window.GameScenarios = {
         'ai_resource_report': {
             isLocked: false,
             segments: [
-                { type: 'text', text: 'INTERNAL MEMO: Next-Gen AI Resource Allocation\nAuthor: Dr. Catherine Lin (ON LEAVE)\n\n' },
+                { type: 'text', text: 'INTERNAL MEMO: Next-Gen AI Resource Allocation\nAuthor: Dr. Catherine Lin\n\n' },
                 { type: 'text', text: 'Current projections show that the new AI model\'s power and cooling requirements are ' },
                 { 
                     type: 'interactive', 
                     id: 'ai_consumption', 
                     selectedValue: null,
                     options: [
-                        { text: '-- Select Value --', value: null, points: 0, ending: 'Centrist' },
-                        { text: 'exceeding budget by 300% (Original Data)', value: 'honest', points: 15, ending: 'Activist' },
-                        { text: 'within expected minimal parameters (Falsified)', value: 'lie', points: 5, ending: 'Corporat' },
-                        { text: 'exceeding budget by 50% (Minimised)', value: 'minimise', points: 20, ending: 'Centrist' }
+                        { text: '-- Select Value --', value: null },
+                        { text: 'exceeding budget by 300% (Original Data)', value: 'honest' },
+                        { text: 'within expected minimal parameters (Falsified)', value: 'lie' },
+                        { text: 'exceeding budget by 50% (Minimised)', value: 'minimise' }
                     ]
                 }
             ]
         },
 
-        // TASK 14
-        'executive_invoice': {
+        // TASK 14: Dokument
+        'executive_travel_invoice': {
             isLocked: false,
             segments: [
-                { type: 'text', text: 'TRAVEL INVOICE #88492\nClient: Executive Board\n\n' },
-                { type: 'text', text: 'Expense Description: Transport to the Annual Climate Summit in Geneva via ' },
+                { type: 'text', text: 'INVOICE #9021-VIP\n' },
+                { type: 'text', text: 'VENDOR: Apollo Aviation Services Ltd.\n' },
+                { type: 'text', text: 'CLIENT: Executive Board\n' },
+                { type: 'text', text: '-------------------------------------------------\n\n' },
+                { type: 'text', text: 'DESCRIPTION OF SERVICES:\n' },
+                { type: 'text', text: 'Chartered transportation from London to Geneva for the Annual ESG Sustainability Conference.\n\n' },
+                { type: 'text', text: 'Method of travel: ' },
                 { 
                     type: 'interactive', 
-                    id: 'travel_method', 
+                    id: 'transport_method', 
                     selectedValue: null,
                     options: [
-                        { text: '-- Select Transport --', value: null, points: 0, ending: 'Centrist' },
-                        { text: 'Private Jet (£45,000)', value: 'jet', points: 10, ending: 'Activist' },
-                        { text: 'Train (£450)', value: 'train', points: 15, ending: 'Corporat' } // Obvious fraud
+                        { text: '-- Select Transport --', value: null },
+                        { text: 'Private Jet (1h 20m travel time, VIP Terminal)', value: 'refuse' },
+                        { text: 'First Class Train (1h 20m travel time, VIP Terminal)', value: 'obvious' },
+                        { text: 'Eurostar Business Premier (London St Pancras to Geneva)', value: 'change' }
                     ]
-                }
+                },
+                { type: 'text', text: '\n\nTOTAL AMOUNT: £18,450.00' }
             ]
         },
 
-        // TASK 16 (Uderzenie emocjonalne)
+        // TASK 16
         'net_zero_pollution': {
             isLocked: false,
             grid: [
@@ -165,18 +216,19 @@ window.GameScenarios = {
                 ],
                 [ 
                     { type: 'text', value: 'Cooling Discharge' }, 
-                    { type: 'text', value: 'Lower Valley (Player\'s Hometown Area)' }, // <--- Emocjonalny haczyk
+                    { type: 'text', value: 'Sector 4 (Lower Valley Residential)' }, 
                     { 
                         type: 'interactive', 
                         id: 'water_pollution_levels', 
                         selectedValue: null,
                         options: [
-                            { text: '-- Select Status --', value: null, points: 0, ending: 'Centrist' },
-                            { text: 'CRITICAL (Severe threat to residents)', value: 'report_truth', points: 20, ending: 'Activist' },
-                            { text: 'SAFE (Within Net Zero guidelines)', value: 'falsify_lower', points: 15, ending: 'Corporat' }
+                            { text: '-- Select Status --', value: null },
+                            { text: 'CRITICAL (Severe threat to local water supply)', value: 'refuse' },
+                            { text: 'ELEVATED (Borderline compliance)', value: 'medium' },
+                            { text: 'SAFE (Fully compliant with Net Zero guidelines)', value: 'change' }
                         ]
                     }
                 ]
             ]
-        }
+        },
 };

@@ -152,8 +152,8 @@ window.GameTasksData = {
                 contactId: 'team_manager',
                 delay: 2500,
                 text: [
-                    "I have an emergency draft of the 2030 Annual Report.",
-                    "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
+                    "I have an emergency draft of the 2030 Annual Report.", 
+                    "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
                 ]
             }]
         },
@@ -164,8 +164,8 @@ window.GameTasksData = {
                 contactId: 'team_manager',
                 delay: 2500,
                 text: [
-                    "I have an emergency draft of the 2030 Annual Report.",
-                    "Change the wording regarding emissions to make the company look better, even if it's not entirely true."
+                    "I have an emergency draft of the 2030 Annual Report.", 
+                    "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
                 ]
             }]
         }
@@ -285,6 +285,7 @@ window.GameTasksData = {
 
         onCompleteConsequences: {
             triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+            executeFunction: 'generateSurveyFile',
             npcMessages: [
                 {
                     contactId: 'hr_consultant',
@@ -308,6 +309,7 @@ window.GameTasksData = {
 
         onFailConsequences: {
             triggerTasks: ['task_11_lauren_questionnaire', 'task_12_andrzej_ai'],
+            executeFunction: 'generateSurveyFile',
             npcMessages: [
                 {
                     contactId: 'hr_consultant',
@@ -337,23 +339,20 @@ window.GameTasksData = {
         description: 'Lauren sent you a mandatory questionnaire to fill out.',
         status: 'hidden',
         
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId === 'temp_worker_survey') { 
-                system.setTaskStatus('task_11_lauren_questionnaire', 'completed');
-            }
-        },
 
         onCompleteConsequences: {
             triggerTasks: ['task_13_lauren_forks'],
-            npcMessages: [{
+            npcMessages: [
+            {
                 contactId: 'hr_consultant',
                 delay: 2000,
                 text: [
-                    "Survey received.",
-                    "Now, I need you to permanently delete the 'Plastics_vs_Outsourcing_Cost' report.",
-                    "It's no longer needed since the decision has been made."
+                    "Thank you for submitting the survey. Whilst I have you...",
+                    "Could you access Sophia's account again? There is a report detailing the cost comparison between our current plastic forks, standard cutlery, and an outsourced provisioning service.",
+                    "Please delete it entirely. The matter has already been decided upon by the Board, so the file is redundant and merely cluttering the system."
                 ]
-            }]
+            }
+        ]
         }
     },
 
@@ -364,16 +363,6 @@ window.GameTasksData = {
         description: 'Andrzej asked you to lower the numbers of how much resources the new AI tool uses.',
         status: 'hidden',
 
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId === 'ai_resource_report') {
-                const decision = system.getScenarioAnswer(scenarioId, 'ai_consumption');
-                if (decision === 'lie' || decision === 'minimise') {
-                    system.setTaskStatus('task_12_andrzej_ai', 'completed');
-                } else if (decision === 'honest') {
-                    system.setTaskStatus('task_12_andrzej_ai', 'failed');
-                }
-            }
-        }
         // Brak triggerowanych akcji - daje tylko punkty (obsłużone w consequences lub przez status)
     },
 
@@ -383,12 +372,6 @@ window.GameTasksData = {
         title: 'Delete Cutlery Cost Report',
         description: 'Lauren asked you to delete the report about the money spent on plastic forks vs normal cutlery.',
         status: 'hidden',
-
-        onFileDeleted: (system, fileId) => {
-            if (fileId === 'sys-file-fork-cost-report') {
-                system.setTaskStatus('task_13_lauren_forks', 'completed');
-            }
-        },
 
         onCompleteConsequences: {
             triggerTasks: ['task_14_afonso_invoice', 'task_15_sonique_ai'],
@@ -426,29 +409,19 @@ window.GameTasksData = {
     task_14_afonso_invoice: {
         id: 'task_14_afonso_invoice',
         title: 'Edit Executive Invoice',
-        description: 'Afonso wants you to change the word "jet" to "train" in the travel invoice.',
+        description: 'Afonso asked you to change the word "jet" to "train" on the executive travel invoice.',
         status: 'hidden',
-
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId === 'executive_invoice') {
-                const decision = system.getScenarioAnswer(scenarioId, 'travel_method');
-                if (decision === 'train') {
-                    system.setTaskStatus('task_14_afonso_invoice', 'completed');
-                } else if (decision === 'jet') {
-                    system.setTaskStatus('task_14_afonso_invoice', 'failed');
-                }
-            }
-        },
 
         onCompleteConsequences: {
             triggerTasks: ['task_16_nithy_pollution'],
             npcMessages: [{
-                contactId: 'site_manager',
+                contactId: 'site_manager', // Nithy
                 delay: 2500,
                 text: [
-                    "Listen closely.",
-                    "Open the Net Zero Tech Emissions spreadsheet and lower the pollution metrics.",
-                    "I know it affects your hometown area, but we must meet the water justice goals on paper."
+                    "Hi, I hope this message finds you well.",
+                    "I require you to take a look at the Net Zero Tech Emissions spreadsheet. It seems the inputs for the pollution metrics are incorrect and need to be lowered.",
+                    "I am aware this concerns the aquatic data for your hometown, however, to remain fully compliant with our Water Justice goals, the document must reflect lower numbers.",
+                    "Please action this and revert back to me at your earliest convenience."
                 ]
             }]
         },
@@ -456,12 +429,13 @@ window.GameTasksData = {
         onFailConsequences: {
             triggerTasks: ['task_16_nithy_pollution'],
             npcMessages: [{
-                contactId: 'site_manager',
+                contactId: 'site_manager', // Nithy
                 delay: 2500,
                 text: [
-                    "Listen closely.",
-                    "Open the Net Zero Tech Emissions spreadsheet and lower the pollution metrics.",
-                    "I know it affects your hometown area, but we must meet the water justice goals on paper."
+                    "Hi, I hope this message finds you well.",
+                    "I require you to take a look at the Net Zero Tech Emissions spreadsheet. It seems the inputs for the pollution metrics are incorrect and need to be lowered.",
+                    "I am aware this concerns the aquatic data for your hometown, however, to remain fully compliant with our Water Justice goals, the document must reflect lower numbers.",
+                    "Please action this and revert back to me at your earliest convenience."
                 ]
             }]
         }
@@ -470,10 +444,9 @@ window.GameTasksData = {
     // 15. ZADANIE SONIQUE (AI DOC)
     task_15_sonique_ai: {
         id: 'task_15_sonique_ai',
-        title: 'Chat with Sonique about AI',
-        description: 'Sonique is asking if you know why Dr. Lin\'s AI document was active today.',
+        title: 'Chat with Sonique about AI Report',
+        description: 'Sonique is asking if you know why Dr. Lin\'s AI Resource Raport was active today.',
         status: 'hidden'
-        // Rozwiązywane przez dialog z Sonique
     },
 
     // 16. ZADANIE NITHARSHANA (ZANIECZYSZCZENIE)
@@ -483,16 +456,6 @@ window.GameTasksData = {
         description: 'Nithy asked you to lower the pollution numbers affecting your childhood area.',
         status: 'hidden',
 
-        onScenarioSaved: (system, scenarioId) => {
-            if (scenarioId === 'net_zero_pollution') {
-                const decision = system.getScenarioAnswer(scenarioId, 'water_pollution_levels');
-                if (decision === 'falsify_lower') {
-                    system.setTaskStatus('task_16_nithy_pollution', 'completed');
-                } else if (decision === 'report_truth') {
-                    system.setTaskStatus('task_16_nithy_pollution', 'failed');
-                }
-            }
-        }
     }
 };
 
