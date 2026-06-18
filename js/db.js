@@ -298,26 +298,31 @@ setTaskStatus(taskId, newStatus) {
 
     generateSurveyFile() {
         const surveyFile = this.fileSystem.find(f => f.id === 'survey_file');
-        
+
         if (!surveyFile) {
-            console.warn("[System] Nie znaleziono pliku 'survey_file' w fileSystem!");
-            return;
+            return console.error("[System] Krytyczny błąd: 'survey_file' nie istnieje w this.fileSystem od momentu inicjalizacji.");
         }
 
-        const surveyType = this.chatProgress.task2_survey_type; 
-        let targetScenarioId = 'temp_worker_survey_3'; 
-        
-        if (surveyType === 'corpo') targetScenarioId = 'temp_worker_survey_1';
-        if (surveyType === 'lie') targetScenarioId = 'temp_worker_survey_2';
+        const scenarioMap = {
+            'corpo': 'temp_worker_survey_1',
+            'lie': 'temp_worker_survey_2',
+            'refuse': 'temp_worker_survey_3'
+        };
+
+        const surveyType = this.chatProgress?.task2_survey_type || 'corpo';
+        const targetScenarioId = scenarioMap[surveyType] || scenarioMap['refuse'];
 
         const scenarioData = this.getScenario(targetScenarioId);
-        
-        if (scenarioData) {
-            surveyFile.scenarioId = targetScenarioId;
-            surveyFile.content = JSON.parse(JSON.stringify(scenarioData.segments));
 
-            surveyFile.isHidden = false; 
+        if (!scenarioData) {
+            return console.warn(`[System] Uwaga! Nie znaleziono scenariusza: ${targetScenarioId}`);
         }
+
+        surveyFile.scenarioId = targetScenarioId;
+        surveyFile.content = JSON.parse(JSON.stringify(scenarioData.segments)); 
+        surveyFile.isHidden = false; 
+
+        this.fileSystem = [...this.fileSystem];
     },
 
     isTaskActive(taskId) {

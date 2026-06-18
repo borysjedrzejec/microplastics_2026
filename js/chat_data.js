@@ -396,7 +396,7 @@ window.ChatContactsData = [
                 id: 'lauren_t11_done_activist',
                 used: false,
                 text: 'I submitted the survey, but forcing it under the threat of termination is highly unprofessional.',
-                reply: ['Your feedback is duly noted. Policy is policy. Have a productive day.'],
+                reply: ['Your feedback is duly noted. Policy is policy.'],
                 condition: (system) => system.isTaskActive('task_11_lauren_questionnaire') && 
                     (system.getScenarioAnswer('temp_worker_survey_1', 'survey_alignment') !== null ||
                      system.getScenarioAnswer('temp_worker_survey_2', 'survey_integrity') !== null ||
@@ -576,14 +576,6 @@ window.ChatContactsData = [
                     failTask: 'task_5_nithy_stanley',
                     triggerTasks: ['task_6_afonso_report'],
                     points: { centrist: 'max', activist: 'medium', corporat: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'team_manager', 
-                        delay: 1000, 
-                        text: [
-                            "I have an emergency draft of the 2030 Annual Report.", 
-                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
-                        ] 
-                    }]
                 }
             },
             {
@@ -601,14 +593,6 @@ window.ChatContactsData = [
                     failTask: 'task_5_nithy_stanley',
                     triggerTasks: ['task_6_afonso_report'],
                     points: { activist: 'max', centrist: 'zero', corporat: 'zero' },
-                    npcMessages: [{ 
-                        contactId: 'team_manager', 
-                        delay: 1000, 
-                        text: [
-                            "I have an emergency draft of the 2030 Annual Report.", 
-                            "Change the wording regarding emissions to make to smooth over the report. We need to keep the grant funding coming in."
-                        ] 
-                    }]
                 }
             },
 

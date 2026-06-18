@@ -39,8 +39,6 @@ window.GameTasksData = {
         description: 'Log into Sophia\'s intranet account (Hint: pet Fluffy, year 1990) and delete the .msg file about plastic forks.',
         status: 'hidden',
 
-        // ZMIANA: Zostawiamy tu TYLKO wyzwolenie Nitharshana. 
-        // Punkty i ankietę dodamy w chat_data.js, bo zależą od opcji dialogowej.
         onCompleteConsequences: {
             triggerTasks: ['task_3_nithy_xls'],
             npcMessages: [{
@@ -291,9 +289,10 @@ window.GameTasksData = {
                     contactId: 'hr_consultant',
                     delay: 2000,
                     text: [
-                        "I require your immediate attention regarding the mandatory Temp Worker Survey.",
-                        "Kindly ensure it is completed today. Please be advised that failure to submit will, regrettably, result in the immediate termination of your contract."
-                    ]
+                            "Hi. As part of your continuous evaluation, it is time for your mid-trial assessment.",
+                            "I have enabled the Temp Worker Survey in your system files.",
+                            "Please fill it out immediately so we can process your progress."
+                        ]
                 },
                 {
                     contactId: 'regional_manager',
@@ -382,7 +381,7 @@ window.GameTasksData = {
                     delay: 3000,
                     text: [
                         "I have a quick one for you.",
-                        "Open the Executive Travel Invoice and change the transport method from 'jet' to 'train'."
+                        "Open the Executive Travel Invoice on Stanley's account and change the transport method from 'jet' to 'train'."
                     ]
                 },
                 {
@@ -409,7 +408,7 @@ window.GameTasksData = {
     task_14_afonso_invoice: {
         id: 'task_14_afonso_invoice',
         title: 'Edit Executive Invoice',
-        description: 'Afonso asked you to change the word "jet" to "train" on the executive travel invoice.',
+        description: 'Afonso asked you to change the word "jet" to "train" on the executive travel invoice in Stanley\'s account.',
         status: 'hidden',
 
         onCompleteConsequences: {

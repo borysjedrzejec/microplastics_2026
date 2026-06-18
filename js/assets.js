@@ -183,8 +183,8 @@ IT Support Specialist\n`
             name: 'HR_Survey_Mandatory.txt',
             type: 'document', 
             isHidden: true,
-            scenarioId: null,
-            content: []
+            content: null, 
+            scenarioId: null
         },
         // TASK 4: Mail Sophii o widelcach
         {
@@ -331,14 +331,20 @@ British Skyways Team
         // TASK 6: Raport Roczny (Plik startowy dla interakcji Afonso)
         {
             id: 'sys-file-afonso-report',
-            folderId: 'folder_afonso_tavares', 
+            folderId: 'project_files', 
             type: 'document',
             name: 'Draft_Annual_Report_2030',
             scenarioId: 'annual_report_2030', // Łączy plik ze scenariuszem poniżej!
             content: [] // Puste, ponieważ treść wstrzyknie mechanika 'GameScenarios'
         },
         { id: 'sys-file-afonso-q3', folderId: 'project_files', name: 'Q3_Team_Profitability.xls', type: 'spreadsheet', scenarioId: 'q3_team_profitability' },
-        { id: 'sys-file-hr-survey', folderId: 'project_files', name: 'Temp_Worker_Survey.doc', type: 'document', scenarioId: 'temp_worker_survey' },
+        {
+            id: 'survey_file',
+            name: 'Temp_Worker_Survey.doc',
+            type: 'document',
+            scenarioId: (system) => system.chatProgress?.surveyPath || 'temp_worker_survey_1',
+            isHidden: (system) => !system.isTaskActive('task_11_lauren_survey') && !system.isTaskCompleted('task_11_lauren_survey')
+        },
 
         // TASK 12: Raport AI
         { id: 'sys-file-catherine-ai', folderId: 'folder_catherine_lin', name: 'AI_Resource_Usage', type: 'document', scenarioId: 'ai_resource_report' },
@@ -346,7 +352,7 @@ British Skyways Team
         { id: 'sys-file-catherine-rave-2', folderId: 'folder_catherine_lin', name: 'Rave_Party_Tickets', type: 'email', content: 'God bless you Kim,\nWe pray you will show up for the last worship this year - bring a partner, Noah said he wants everyone in 2s.\nTicket holder: Kim Ferguson\nEvent: ARKH\nType: RAVE\n\nTicket holder: Catherine Lin\nEvent: ARKH\nType: RAVE\n\nSee you on the other side! \n\nBlessed by Lord team ' },
 
         // TASK 14: Faktura Afonso
-        { id: 'sys-file-executive-invoice', folderId: 'folder_craig_buck', name: 'Executive_Travel_Invoice', type: 'document', scenarioId: 'executive_travel_invoice' },
+        { id: 'sys-file-executive-invoice', folderId: 'folder_stanley_swan', name: 'Executive_Travel_Invoice', type: 'document', scenarioId: 'executive_travel_invoice' },
         // TASK 16: Excel Nitharshana (Zanieczyszczenie)
         { id: 'sys-file-net-zero-pollution', folderId: 'project_files', name: 'Net_Zero_Tech_Emissions', type: 'spreadsheet', scenarioId: 'net_zero_pollution' },
         {
