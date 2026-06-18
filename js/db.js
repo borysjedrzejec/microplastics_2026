@@ -99,7 +99,7 @@ document.addEventListener('alpine:init', () => {
         isGameOver: false,
 
         get currentInGameTime() {
-            const startTotalMinutes = 16 * 60 + 45; // 16:45 in minutes
+            const startTotalMinutes = 16 * 60 + 40; // 16:45 in minutes
             const currentTotalMinutes = startTotalMinutes + this.inGameMinutes;
             
             const hours = Math.floor(currentTotalMinutes / 60);
@@ -113,7 +113,7 @@ document.addEventListener('alpine:init', () => {
             if (this.isGameOver) return;
 
             this.inGameMinutes++;
-            if (this.inGameMinutes >= 15) {
+            if (this.inGameMinutes >= 20) {
                 this.isGameOver = true;
             }
         },
