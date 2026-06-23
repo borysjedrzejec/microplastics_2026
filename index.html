@@ -80,12 +80,12 @@
                             <div style="display: flex; flex-direction: column; gap: 6px;">
                                 <div class="field-row" style="align-items: center;">
                                     <label for="username" style="width: 120px;">User name:</label>
-                                    <input id="username" type="text" x-model="$store.system.loginUsername" style="width: 100%;">
+                                    <input id="username" type="text" autocomplete="off" x-model="$store.system.loginUsername" style="width: 100%;">
                                 </div>
                                 
                                 <div class="field-row" style="align-items: center;">
                                     <label for="password" style="width: 120px;">Password:</label>
-                                    <input id="password" type="password" 
+                                    <input id="password" autocomplete="off" type="password" 
                                         x-model="$store.system.loginPassword" 
                                         @keydown.enter="bootSystem()" 
                                         style="width: 100%;">
